@@ -1,0 +1,86 @@
+import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client'
+
+export const blocklytics = new ApolloClient({
+    link: createHttpLink({
+        uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks'
+    }),
+    cache: new InMemoryCache(),
+    shouldBatch: true
+})
+
+export const masterchef = new ApolloClient({
+    link: createHttpLink({
+        uri: 'https://api.thegraph.com/subgraphs/name/sushiswap/master-chef'
+    }),
+    cache: new InMemoryCache(),
+    shouldBatch: true
+})
+
+export const client = new ApolloClient({
+    link: createHttpLink({
+        uri: 'https://api.thegraph.com/subgraphs/name/jiro-ono/sushiswap-v1-exchange'
+    }),
+    cache: new InMemoryCache(),
+    shouldBatch: true
+})
+
+export const exchange = new ApolloClient({
+    link: createHttpLink({
+        uri: 'https://api.thegraph.com/subgraphs/name/matthewlilley/exchange'
+    }),
+    cache: new InMemoryCache(),
+    shouldBatch: true
+})
+
+export const healthClient = new ApolloClient({
+    link: createHttpLink({
+        uri: 'https://api.thegraph.com/index-node/graphql'
+    }),
+    cache: new InMemoryCache(),
+    shouldBatch: true
+})
+
+export const blockClient = new ApolloClient({
+    link: createHttpLink({
+        uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks'
+    }),
+    cache: new InMemoryCache()
+})
+
+// export const topDog = new ApolloClient({
+//     link: createHttpLink({
+//         uri: 'https://api.thegraph.com/subgraphs/name/kaaldhairya/topdogkovanv4'
+//     }),
+//     cache: new InMemoryCache(),
+//     shouldBatch: true
+// })
+export const topDog = new ApolloClient({
+    link: createHttpLink({
+        uri: 'https://api.thegraph.com/subgraphs/name/shibaswaparmy/topdog'
+    }),
+    cache: new InMemoryCache(),
+    shouldBatch: true
+})
+
+// export const shibaExchange = new ApolloClient({
+//     link: createHttpLink({
+//         uri: 'https://api.thegraph.com/subgraphs/name/kaaldhairya/exchangekv1'
+//     }),
+//     cache: new InMemoryCache(),
+//     shouldBatch: true
+// })
+
+export const shibaExchange = new ApolloClient({
+    link: createHttpLink({
+        uri: 'https://api.thegraph.com/subgraphs/name/shibaswaparmy/exchange'
+    }),
+    cache: new InMemoryCache(),
+    shouldBatch: true
+})
+export const snapshotHub = new ApolloClient({
+    link: createHttpLink({
+        uri: 'https://hub.snapshot.org/graphql'
+    }),
+    cache: new InMemoryCache(),
+    shouldBatch: true
+})

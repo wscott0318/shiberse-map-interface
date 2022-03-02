@@ -1,0 +1,39 @@
+$black: black;
+$white: white;
+$red: #6e2f38;
+$green: green;
+$blue: lighten(#1a1d2b, 10%);
+$orange: orange;
+$teal: teal;
+$yellow: #ffa409;
+$gray-1: #111111;
+$gray-2: #444444;
+$gray-3: #777777;
+$gray-4: #919193;
+$gray-5: #d5d5d5;
+
+$gray: $gray-3;
+$light: $gray-5;
+$dark: $gray-1;
+
+$color-primary: $yellow;
+$color-secondary: $gray-2;
+$color-info: $teal;
+$color-warning: $orange;
+$color-danger: $red;
+$color-success: $green;
+
+$bg-color: $dark;
+$text-color: $light;
+
+$spacing: 0.2rem;
+
+$font-serif: 'Metric';
+$font-size: 12pt;
+
+$breakpoint-xs: 0;
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+$breakpoint-xxl: 1400px;

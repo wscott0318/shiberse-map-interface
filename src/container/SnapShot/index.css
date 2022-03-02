@@ -1,0 +1,31 @@
+text.CircularProgressbar-text {
+    dominant-baseline: middle;
+    text-anchor: middle;
+}
+button:disabled, .btn:disabled, .btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed !important;
+}
+table.MuiTable-root td, table.MuiTable-root th, table.MuiTable-root tr, table.MuiTable-root span {
+    color: #fff;
+    font-family: 'Kanit' !important;
+    font-weight: 500;
+}
+
+.MuiTableSortLabel-root.MuiTableSortLabel-active, .MuiTypography-colorInherit, .MuiSelect-icon, .MuiSvgIcon-root {
+    color: rgba(207, 207, 207, 0.87) !important;
+}
+.MuiTableSortLabel-root.MuiTableSortLabel-active.MuiTableSortLabel-root.MuiTableSortLabel-active .MuiTableSortLabel-icon {
+    color: rgb(207, 207, 207, 0.87) !important;
+    font-family: 'Kanit' !important;
+    font-weight: 500;
+}
+.MuiTypography-root, .MuiTablePagination-input, .MuiSelect-icon {
+    color: #fff;
+    font-family: 'Kanit' !important;
+    font-weight: 500;
+}
+.MuiSelect-select.MuiSelect-select {
+    padding-right: 24px;
+    color: #fff;
+}

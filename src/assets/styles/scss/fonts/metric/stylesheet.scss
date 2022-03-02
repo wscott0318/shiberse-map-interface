@@ -1,0 +1,193 @@
+@font-face {
+  font-family: 'Metric - RegularItalic';
+  src: url('/fonts/metric/Metric-RegularItalic.eot');
+  src: url('/fonts/metric/Metric-RegularItalic.eot?#iefix')
+      format('embedded-opentype'),
+    url('/fonts/metric/Metric-RegularItalic.woff2') format('woff2'),
+    url('/fonts/metric/Metric-RegularItalic.woff') format('woff'),
+    url('/fonts/metric/Metric-RegularItalic.ttf') format('truetype'),
+    url('/fonts/metric/Metric-RegularItalic.svg#Metric-RegularItalic')
+      format('svg');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Metric - ThinItalic';
+  src: url('/fonts/metric/Metric-ThinItalic.eot');
+  src: url('/fonts/metric/Metric-ThinItalic.eot?#iefix')
+      format('embedded-opentype'),
+    url('/fonts/metric/Metric-ThinItalic.woff2') format('woff2'),
+    url('/fonts/metric/Metric-ThinItalic.woff') format('woff'),
+    url('/fonts/metric/Metric-ThinItalic.ttf') format('truetype'),
+    url('/fonts/metric/Metric-ThinItalic.svg#Metric-ThinItalic') format('svg');
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Metric - Regular';
+  src: url('/fonts/metric/Metric-Regular.eot');
+  src: url('/fonts/metric/Metric-Regular.eot?#iefix')
+      format('embedded-opentype'),
+    url('/fonts/metric/Metric-Regular.woff2') format('woff2'),
+    url('/fonts/metric/Metric-Regular.woff') format('woff'),
+    url('/fonts/metric/Metric-Regular.ttf') format('truetype'),
+    url('/fonts/metric/Metric-Regular.svg#Metric-Regular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Metric - BlackItalic';
+  src: url('/fonts/metric/Metric-BlackItalic.eot');
+  src: url('/fonts/metric/Metric-BlackItalic.eot?#iefix')
+      format('embedded-opentype'),
+    url('/fonts/metric/Metric-BlackItalic.woff2') format('woff2'),
+    url('/fonts/metric/Metric-BlackItalic.woff') format('woff'),
+    url('/fonts/metric/Metric-BlackItalic.ttf') format('truetype'),
+    url('/fonts/metric/Metric-BlackItalic.svg#Metric-BlackItalic') format('svg');
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Metric - LightItalic';
+  src: url('/fonts/metric/Metric-LightItalic.eot');
+  src: url('/fonts/metric/Metric-LightItalic.eot?#iefix')
+      format('embedded-opentype'),
+    url('/fonts/metric/Metric-LightItalic.woff2') format('woff2'),
+    url('/fonts/metric/Metric-LightItalic.woff') format('woff'),
+    url('/fonts/metric/Metric-LightItalic.ttf') format('truetype'),
+    url('/fonts/metric/Metric-LightItalic.svg#Metric-LightItalic') format('svg');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Metric - MediumItalic';
+  src: url('/fonts/metric/Metric-MediumItalic.eot');
+  src: url('/fonts/metric/Metric-MediumItalic.eot?#iefix')
+      format('embedded-opentype'),
+    url('/fonts/metric/Metric-MediumItalic.woff2') format('woff2'),
+    url('/fonts/metric/Metric-MediumItalic.woff') format('woff'),
+    url('/fonts/metric/Metric-MediumItalic.ttf') format('truetype'),
+    url('/fonts/metric/Metric-MediumItalic.svg#Metric-MediumItalic')
+      format('svg');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Metric - Light';
+  src: url('/fonts/metric/Metric-Light.eot');
+  src: url('/fonts/metric/Metric-Light.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/metric/Metric-Light.woff2') format('woff2'),
+    url('/fonts/metric/Metric-Light.woff') format('woff'),
+    url('/fonts/metric/Metric-Light.ttf') format('truetype'),
+    url('/fonts/metric/Metric-Light.svg#Metric-Light') format('svg');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Metric - SemiboldItalic';
+  src: url('/fonts/metric/Metric-SemiboldItalic.eot');
+  src: url('/fonts/metric/Metric-SemiboldItalic.eot?#iefix')
+      format('embedded-opentype'),
+    url('/fonts/metric/Metric-SemiboldItalic.woff2') format('woff2'),
+    url('/fonts/metric/Metric-SemiboldItalic.woff') format('woff'),
+    url('/fonts/metric/Metric-SemiboldItalic.ttf') format('truetype'),
+    url('/fonts/metric/Metric-SemiboldItalic.svg#Metric-SemiboldItalic')
+      format('svg');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Metric - Medium';
+  src: url('/fonts/metric/Metric-Medium.eot');
+  src: url('/fonts/metric/Metric-Medium.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/metric/Metric-Medium.woff2') format('woff2'),
+    url('/fonts/metric/Metric-Medium.woff') format('woff'),
+    url('/fonts/metric/Metric-Medium.ttf') format('truetype'),
+    url('/fonts/metric/Metric-Medium.svg#Metric-Medium') format('svg');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Metric - Bold';
+  src: url('/fonts/metric/Metric-Bold.eot');
+  src: url('/fonts/metric/Metric-Bold.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/metric/Metric-Bold.woff2') format('woff2'),
+    url('/fonts/metric/Metric-Bold.woff') format('woff'),
+    url('/fonts/metric/Metric-Bold.ttf') format('truetype'),
+    url('/fonts/metric/Metric-Bold.svg#Metric-Bold') format('svg');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Metric - Thin';
+  src: url('/fonts/metric/Metric-Thin.eot');
+  src: url('/fonts/metric/Metric-Thin.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/metric/Metric-Thin.woff2') format('woff2'),
+    url('/fonts/metric/Metric-Thin.woff') format('woff'),
+    url('/fonts/metric/Metric-Thin.ttf') format('truetype'),
+    url('/fonts/metric/Metric-Thin.svg#Metric-Thin') format('svg');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Metric - Black';
+  src: url('/fonts/metric/Metric-Black.eot');
+  src: url('/fonts/metric/Metric-Black.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/metric/Metric-Black.woff2') format('woff2'),
+    url('/fonts/metric/Metric-Black.woff') format('woff'),
+    url('/fonts/metric/Metric-Black.ttf') format('truetype'),
+    url('/fonts/metric/Metric-Black.svg#Metric-Black') format('svg');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Metric - BoldItalic';
+  src: url('/fonts/metric/Metric-BoldItalic.eot');
+  src: url('/fonts/metric/Metric-BoldItalic.eot?#iefix')
+      format('embedded-opentype'),
+    url('/fonts/metric/Metric-BoldItalic.woff2') format('woff2'),
+    url('/fonts/metric/Metric-BoldItalic.woff') format('woff'),
+    url('/fonts/metric/Metric-BoldItalic.ttf') format('truetype'),
+    url('/fonts/metric/Metric-BoldItalic.svg#Metric-BoldItalic') format('svg');
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Metric - Semibold';
+  src: url('/fonts/metric/Metric-Semibold.eot');
+  src: url('/fonts/metric/Metric-Semibold.eot?#iefix')
+      format('embedded-opentype'),
+    url('/fonts/metric/Metric-Semibold.woff2') format('woff2'),
+    url('/fonts/metric/Metric-Semibold.woff') format('woff'),
+    url('/fonts/metric/Metric-Semibold.ttf') format('truetype'),
+    url('/fonts/metric/Metric-Semibold.svg#Metric-Semibold') format('svg');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}

@@ -43,7 +43,7 @@ export default function Header(): JSX.Element {
     ];
 
     return (
-        <Disclosure as="nav" className="w-screen bg-transparent gradiant-border-bottom z-10">
+        <Disclosure as="nav" className="w-screen gradiant-border-bottom z-10" style={{ backgroundColor: 'rgb(13, 16, 26)' }}>
             {({ open }) => (
                 <>
                     <div style={{padding: "1rem",background: "transparent", border:"none"}} className="header">

@@ -1,11 +1,8 @@
-import { ChainId } from '@shibaswap/sdk'
 import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import Header from '../components/Header'
-import Polling from '../components/Header/Polling'
 import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
-import PublicRoute from '../hocs/PublicRoute'
 import { useActiveWeb3React } from '../hooks/index'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
@@ -25,6 +22,7 @@ import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redir
 import BuryDogYard from './Bury/BuryDogYard'
 import Bonefolio from './Bonefolio'
 import Swap from './Swap'
+import Map from './Map'
 
 import Proposal from '../container/Proposal/Proposal'
 import SnapShot from '../container/SnapShot/SnapShot'
@@ -99,6 +97,7 @@ function App(): JSX.Element {
                                 <Route exact strict path="/faq" component={Faq} />
                                 <Route exact strict path="/create" component={RedirectToAddLiquidity} />
                                 <Route exact path="/add" component={AddLiquidity} />
+                                <Route exact strict path="/map" component={Map} />
                                 <Route
                                     exact
                                     path="/add/:currencyIdA"

@@ -101,6 +101,15 @@ export default function Menu() {
                                     >
                                         <p className="nav-menu-submenu-text">FAQ</p>
                                     </NavLink>
+
+                                    <NavLink
+                                        className="-m-3 p-3 block rounded-md transition ease-in-out duration-150"
+                                        exact
+                                        strict
+                                        to="/map"
+                                    >
+                                        <p className="nav-menu-submenu-text">MAP</p>
+                                    </NavLink>
                                 </div>
                             </div>
                         </Popover.Panel>

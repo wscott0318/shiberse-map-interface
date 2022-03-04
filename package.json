@@ -184,7 +184,9 @@
     "@walletconnect/web3-provider": "^1.6.6",
     "graphql-tag": "^2.12.6",
     "node-sass": "^6.0.1",
+    "pixi.js": "^6.2.2",
     "react-circular-progressbar": "^2.0.4",
-    "react-gauge-chart": "^0.4.0"
+    "react-gauge-chart": "^0.4.0",
+    "sass": "^1.49.9"
   }
 }

@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 * {
-  font-family: 'Kanit' !important;
+  font-family: 'Poppins';
 }
 
 button:focus {
@@ -115,26 +115,17 @@ input:focus {
 .n-margin-right {
   margin-right: 30px;
 }
-.logo-text {
-  color: #ffa409;
-  font-size: 2rem;
-  align-self: center;
-  line-height: 2rem;
-  font-family: Kanit, Avenir, Helvetica, Arial, sans-serif;
-  
-}
 .logo-name {
   margin-right: 0.5rem;
   align-items: center;
 }
 .nav-tvl-btn {
   display: flex;
-  width: 8rem;
   margin-left: 1rem;
   justify-content: center;
   line-height: 1rem !important;
   font-size: 1rem;
-  font-family: 'Kaint';
+  font-family: 'Poppins';
 }
 .nav-left-bar {
   text-decoration: none;
@@ -389,7 +380,7 @@ div[data-reach-dialog-overlay] .modal_fetch{
 }
 div[data-reach-dialog-overlay] div[data-reach-dialog-content]{
   margin: 0px !important;
-  border: 1px solid #e4e4e4;
+  border: 1px solid #B96A05;
 }
 
 /* Accordion styles */
@@ -461,9 +452,6 @@ div[data-reach-dialog-overlay] div[data-reach-dialog-content]{
 @media screen and (max-height: 750px){
   .main-container-section{
     margin-bottom: 4px !important;
-  }
-  .container.my-auto.home-container{
-    margin-top: revert !important;
   }
 }
 @media only screen and (max-width: 350px) {
@@ -567,10 +555,6 @@ div[data-reach-dialog-overlay] div[data-reach-dialog-content]{
   .nav-prices,
   .nav-price-alert-btn,
   .nav-tvl-btn,
-  .logo-text {
-    display: none !important;
-    padding: .3rem;
-  }
   .nav-menu-submenu{
     position: relative;
     float: right;
@@ -595,9 +579,6 @@ div[data-reach-dialog-overlay] div[data-reach-dialog-content]{
 @media (min-width: 601px) and (max-width: 1024px) {
   .nav-prices,
   .nav-price-alert-btn,
-  .logo-text {
-    display: none !important;
-  }
   .nav-menu-submenu{
     position: relative;
     float: right;
@@ -655,3 +636,35 @@ div[data-reach-dialog-overlay] div[data-reach-dialog-content]{
   }
 }
 
+.font-passion-one {
+  font-family: 'Passion One' !important;
+}
+
+.header-wrapper {
+  position: fixed;
+  top: -63px;
+
+  background: #201f31bf;
+  backdrop-filter: blur(10px);
+
+  transition: all .5s;
+}
+
+.header-wrapper.active {
+  top: 0;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+::-webkit-scrollbar-thumb {
+  background-color: #B96A05;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #F8A93E;
+}

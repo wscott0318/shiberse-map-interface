@@ -5,6 +5,7 @@ import React, { useMemo } from 'react'
 import { Activity } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
+import { MenuButton, GradientButton } from 'theme'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import LatticeIcon from '../../assets/images/gridPlusWallet.png'
@@ -16,13 +17,15 @@ import useENSName from '../../hooks/useENSName'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/reducer'
-import { shortenAddress } from '../../utils'
+import { shortenAddress, shortenDouble } from '../../utils'
 import { ButtonSecondary } from '../ButtonLegacy'
-import Identicon from '../Identicon'
 import Loader from '../Loader'
-import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
-import { ReactComponent as Chef } from '../../assets/images/chef.svg'
+import metamaskImage from '../../assets/images/home/metamask.png'
+import { useETHBalances } from 'state/wallet/hooks'
+import { NETWORK_ICON, NETWORK_LABEL } from 'constants/networks'
+import { Currency } from '@shibaswap/sdk'
+import ProfileMenu from '../ProfileMenu'
 
 const IconWrapper = styled.div<{ size?: number }>`
     ${({ theme }) => theme.flexColumnNoWrap};
@@ -56,72 +59,6 @@ const Web3StatusError = styled(Web3StatusGeneric)`
         background-color: ${({ theme }) => darken(0.1, theme.red1)};
     }
 `
-const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
-    padding: 0.4rem 0.8rem;
-    outline: none;
-    background-color: white;
-    border: solid 1px #919193;
-    display: inline-block;
-    border-radius: 20px;
-    border-width: 1px;
-    color: black;
-
-    :hover{
-        // font-family: Kanit, Avenir, Helvetica, Arial, sans-serif;
-        // padding: 0.4rem 0.8rem;
-        // outline: none;
-        // background-color: white;
-        // border: solid 1px #919193;
-        // display: inline-block;
-        // border-radius: 20px;
-        // border-width: 2.5px;
-        // color: black;
-    }
-`
-// const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
-//     background-color: ${({ theme }) => theme.primary4};
-//     border: none;
-//     color: ${({ theme }) => theme.primaryText1};
-//     font-weight: 500;
-
-//     :hover,
-//     :focus {
-//         border: 1px solid ${({ theme }) => darken(0.05, theme.primary4)};
-//         color: ${({ theme }) => theme.primaryText1};
-//     }
-
-//     ${({ faded }) =>
-//         faded &&
-//         css`
-//             background-color: ${({ theme }) => theme.primary5};
-//             border: 1px solid ${({ theme }) => theme.primary5};
-//             color: ${({ theme }) => theme.primaryText1};
-
-//             :hover,
-//             :focus {
-//                 border: 1px solid ${({ theme }) => darken(0.05, theme.primary4)};
-//                 color: ${({ theme }) => darken(0.05, theme.primaryText1)};
-//             }
-//         `}
-// `
-
-const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
-    background-color: ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg2)};
-    border: 1px solid ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg3)};
-    color: ${({ pending, theme }) => (pending ? theme.white : theme.text1)};
-    font-weight: 500;
-    font-family: Kanit;
-    :hover,
-    :focus {
-        background-color: ${({ pending, theme }) =>
-            pending ? darken(0.05, theme.primary1) : lighten(0.05, theme.bg2)};
-
-        :focus {
-            border: 1px solid
-                ${({ pending, theme }) => (pending ? darken(0.1, theme.primary1) : darken(0.1, theme.bg3))};
-        }
-    }
-`
 
 const Text = styled.p`
     flex: 1 1 auto;
@@ -142,16 +79,14 @@ const NetworkIcon = styled(Activity)`
     height: 16px;
 `
 
+const WalletBalance = styled.div`
+    color: white;
+`
+
 // we want the latest one to come first, so return negative if a is after b
 function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
     return b.addedTime - a.addedTime
 }
-
-const SOCK = (
-    <span role="img" aria-label="has socks emoji" style={{ marginTop: -4, marginBottom: -4 }}>
-        🧦
-    </span>
-)
 
 // eslint-disable-next-line react/prop-types
 function StatusIcon({ connector }: { connector: AbstractConnector }) {
@@ -194,7 +129,14 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
 
 function Web3StatusInner() {
     const { t } = useTranslation()
-    const { account, connector, error } = useWeb3React()
+    const { account, connector, error, chainId } = useWeb3React()
+
+    const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
+    
+    const chainLabel = NETWORK_LABEL[(chainId as keyof typeof NETWORK_LABEL)]
+    const currentBalance = userEthBalance?.toSignificant()
+    const currentChainIcon = NETWORK_ICON[(chainId as keyof typeof NETWORK_ICON)]
+    const currentSymbol = chainId ? Currency.getNativeCurrencySymbol(chainId) : ''
 
     const { ENSName } = useENSName(account ?? undefined)
 
@@ -215,15 +157,30 @@ function Web3StatusInner() {
         return (
             <div
                 id="web3-status-connected"
-                className="flex items-center bg-dark-1000 text-sm text-secondary btn-round bold btn btn-blue btn-round nav-tvl-btn inline-flex items-center w-full"
-                onClick={toggleWalletModal}
+                className="flex items-center text-sm text-secondary btn-round bold btn btn-blue btn-round nav-tvl-btn inline-flex items-center cursor-pointer"
+                // onClick={toggleWalletModal}
             >
                 {hasPendingTransactions ? (
                     <div className="flex justify-between items-center">
                         <div className="pr-2">{pending?.length} Pending</div> <Loader stroke="white" />
                     </div>
                 ) : (
-                    <div >{ENSName || shortenAddress(account)}</div>
+                    <div className='flex items-center'>
+                        <WalletBalance>
+                            <div className='network_label text-xs mb-1 text-center'>{ chainLabel } Network</div>
+                            <div className='flex items-center justify-center'>
+                                <div className='mr-1'><img src={ currentChainIcon } width={22}></img></div>
+                                <div className='text-base flex items-center'> 
+                                    { currentBalance ? `${ shortenDouble( parseFloat(currentBalance as any), 2) } ` : <Loader stroke="white" /> }
+                                    { currentSymbol }
+                                </div>
+                            </div>
+                        </WalletBalance>
+
+                        <ProfileMenu />
+
+                        {/* {ENSName || shortenAddress(account)} */}
+                    </div>
                 )}
                 {!hasPendingTransactions && connector && <StatusIcon connector={connector} />}
             </div>
@@ -237,9 +194,12 @@ function Web3StatusInner() {
         )
     } else {
         return (
-            <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account} className="ml-3">
-                <p>Connect wallet</p>
-            </Web3StatusConnect>
+            <MenuButton onClick={toggleWalletModal} className="font-bold">
+                <span className='full'>
+                    { t('Connect Wallet') }
+                </span>
+                <img className='shorten' src={ metamaskImage }></img>
+            </MenuButton>
         )
     }
 }

@@ -310,3 +310,118 @@ export const ExtraSmallOnly = styled.span`
     display: block;
   `};
 `
+
+
+
+export const MenuButton = styled.button<{ disabled?: boolean }>`
+    font-size: 18px;
+    line-height: 27px;
+    font-family: Poppins;
+    text-decoration: none;
+    backdrop-filter: blur(40px);
+    padding: 0.5rem 1.3rem;
+
+    background: linear-gradient(270deg, rgba(31, 31, 50, 0.4) 0%, rgba(31, 32, 49, 0.4) 34.37%);
+    border-radius: 50px;
+
+    border: ${({theme, disabled}) => ( disabled ? 'none' : `2px solid ${ theme.brown2 }` )};
+    opacity: ${({disabled}) => ( disabled ? '0.5' : '1')};
+    cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
+    color: ${({ theme }) => (theme.white)};
+    font-weight: 500;
+    margin: 0 1rem;
+
+    a {
+        color: white;
+    }
+
+    :hover {
+        color: ${({ theme }) => (theme.brown1)};
+        
+        a {
+            color: ${({ theme }) => (theme.brown1)};
+        }
+    }
+
+    :focus {
+        outline: none;
+    }
+
+    :active {
+        text-decoration: none;
+    }
+
+    @media (max-width: 992px) {
+        margin: 0 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        margin: 0 0.25rem;
+        font-size: 23px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+`
+
+export const GradientButton = styled.button`
+    font-size: 18px;
+    line-height: 27px;
+    font-family: Poppins;
+    text-decoration: none;
+    backdrop-filter: blur(40px);
+    padding: 0.5rem 1.3rem;
+
+    background: linear-gradient(270deg, rgba(31, 31, 50, 0.4) 0%, rgba(31, 32, 49, 0.4) 49.48%, rgba(120, 88, 56, 0.4) 100%);
+    border-radius: 50px;
+
+    border: ${({theme, disabled}) => ( disabled ? 'none' : `2px solid ${ theme.brown2 }` )};
+    opacity: ${({disabled}) => ( disabled ? '0.5' : '1')};
+    cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
+    color: ${({ theme }) => (theme.white)};
+    font-weight: 500;
+    margin: 0 1rem;
+
+    :hover {
+        color: ${({ theme }) => (theme.brown1)};
+    }
+
+    :focus {
+        outline: none;
+    }
+
+    :active {
+        text-decoration: none;
+    }
+
+    @media (max-width: 992px) {
+        padding: 0.3rem 0.9rem;
+        position: relative;
+    }
+`
+
+export const PrimaryButton = styled.button`
+    background: linear-gradient(90deg, #B96A05 7.81%, #F28903 100%);
+    border-radius: 22px;
+
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 30px;
+    letter-spacing: .1rem;
+
+    padding: .8rem 2.5rem;
+
+    transition: all .1s;
+    &:hover {
+        color: #72450b;
+    }
+`
+
+export const NormalButton = styled( GradientButton as any )`
+    background: linear-gradient(270deg, rgba(31, 32, 49, 0.4) 51.56%, rgba(31, 31, 50, 0.4) 100%);
+    border-width: 1px;
+`

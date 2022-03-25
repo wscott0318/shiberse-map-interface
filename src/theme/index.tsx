@@ -5,8 +5,7 @@ import styled, {
     DefaultTheme,
     ThemeProvider as StyledComponentsThemeProvider,
     createGlobalStyle,
-    css,
-    keyframes
+    css
 } from 'styled-components'
 import { Colors } from './styled'
 
@@ -49,6 +48,7 @@ export function colors(darkMode: boolean): Colors {
         text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
         // backgrounds / greys
+        bg: '#13101B',
         bg1: darkMode ? '#202231' : '#FFFFFF',
         bg2: darkMode ? '#171a23' : '#F7F8FA',
         bg3: darkMode ? '#171a23' : '#EDEEF2',
@@ -75,6 +75,9 @@ export function colors(darkMode: boolean): Colors {
         secondary3: darkMode ? '#17000b26' : '#ebebeb',
 
         // other
+        brown1: '#FFD59D',
+        brown2: '#B96A05',
+        brown3: '#F8A93E',
         red1: '#FD4040',
         red2: '#F82D3A',
         red3: '#D60000',
@@ -84,10 +87,6 @@ export function colors(darkMode: boolean): Colors {
         blue1: '#0094ec',
 
         borderRadius: '10px'
-
-        // dont wanna forget these blue yet
-        // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
-        // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
     }
 }
 
@@ -182,19 +181,19 @@ export const TYPE = {
 
 export const FixedGlobalStyle = createGlobalStyle`
 html, input, textarea, button {
-  font-family: "DM Sans", sans-serif;
+  font-family: "Poppins", sans-serif;
   font-display: fallback;
 }
 input, textarea {
-  font-family: "DM Sans", sans-serif;
+  font-family: "Poppins", sans-serif;
   font-display: fallback;
 }
 @supports (font-variation-settings: normal) {
   html, button {
-    font-family: "DM Sans", sans-serif;
+    font-family: "Poppins", sans-serif;
   }
   input, textarea {
-    // font-family: "DM Sans", sans-serif;
+    // font-family: "Poppins", sans-serif;
   }
 }
 
@@ -205,7 +204,8 @@ body {
 }
 
  a {
-   color: ${colors(false).blue1}; 
+   color: ${colors(false).brown1};
+   font-weight: 700;
  }
 
 * {
@@ -226,24 +226,20 @@ html {
 }
 `
 
-const breatheAnimation = keyframes`
-  0% {filter: hue-rotate(0deg) brightness(1)}
-  100% {filter: hue-rotate(90deg) brightness(1.5)}
-  100% {filter: hue-rotate(360deg) brightness(1)}
-`
-
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
-  /*background-color: ${({ theme }) => theme.bg2};
-  background-color: #0D0415;*/
 }
 
 body {
-  // min-height: 100vh;
-  // background-position: 0 -30vh;
-  background-repeat: no-repeat;
-  background-size: 100% 100vh;
-  background-image: ${({ theme }) => `url('./images/background.png')`};
+    overflow-x: hidden;
+    background: ${({ theme }) => theme.bg};
+}
+
+p {
+    font-size: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 25.6px;
 }
 `

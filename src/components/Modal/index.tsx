@@ -12,7 +12,8 @@ const AnimatedDialogOverlay = animated(DialogOverlay)
 const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
     &[data-reach-dialog-overlay] {
         z-index: 10;
-        background-color: rgb(0 0 0 / 70%);
+        background-color: rgb(0 0 0 / 80%);
+        backdrop-filter: blur(20px);
         overflow: hidden;
         display: flex;
         align-items: center;
@@ -35,7 +36,7 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
     &[data-reach-dialog-content] {
         margin: 0 0 2rem 0;
         //background-color: ${({ theme }) => theme.bg1};
-        background-color: #30333e;
+        background-color: rgba(32, 31, 49, 0.9);
         box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadow1)};
         padding: 0px;
         width: 50vw;
@@ -44,7 +45,7 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
 
         align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')};
 
-        max-width: 420px;
+        max-width: 600px;
         ${({ maxHeight }) =>
             maxHeight &&
             css`
@@ -56,7 +57,7 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
                 min-height: ${minHeight}vh;
             `}
     display: flex;
-        border-radius: 10px;
+        border-radius: 20px;
         ${({ theme }) => theme.mediaWidth.upToMedium`
       width: 65vw;
       margin: 0;
@@ -91,7 +92,7 @@ export default function Modal({
     maxHeight = 90,
     initialFocusRef,
     children,
-    padding = 5
+    padding = 3
 }: ModalProps) {
     const fadeTransition = useTransition(isOpen, null, {
         config: { duration: 200 },

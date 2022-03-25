@@ -569,3 +569,7 @@ export function formatMillion(number: number): any {
     const x =  (Number(number)/Number('1.0e+'+(unit-r))).toFixed(2)
     return x + units[Math.floor(unit / 3)]
 }
+
+export function shortenDouble( number: number, downCount: number ) {
+    return number.toFixed( downCount )
+}

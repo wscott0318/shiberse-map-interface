@@ -14,6 +14,7 @@ export interface Colors {
     text5: Color
 
     // backgrounds / greys
+    bg: Color
     bg1: Color
     bg2: Color
     bg3: Color
@@ -38,6 +39,9 @@ export interface Colors {
     secondary3: Color
 
     // other
+    brown1: Color
+    brown2: Color
+    brown3: Color
     red1: Color
     red2: Color
     red3: Color

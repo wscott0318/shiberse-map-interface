@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { range, zoomRange } from 'constants/map'
-import { setSelectedLandInfo, updateMapCenterPos, updateMapZoomLevel } from './actions'
+import { setSelectedLandInfo, updateLandData, updateMapCenterPos, updateMapZoomLevel } from './actions'
 
 export interface MapState {
     readonly selectedLandInfo: {
@@ -14,6 +14,7 @@ export interface MapState {
         y: number,
     }
     readonly mapZoomLevel: number
+    readonly landData: object[]
 }
 
 const initialState: MapState = {
@@ -28,6 +29,7 @@ const initialState: MapState = {
         y: range.y / 2,
     },
     mapZoomLevel: 10,
+    landData: [],
 }
 
 export default createReducer<MapState>(initialState, builder =>
@@ -45,5 +47,8 @@ export default createReducer<MapState>(initialState, builder =>
                 state.mapZoomLevel = zoomRange.max
             if( state.mapZoomLevel < zoomRange.min )
                 state.mapZoomLevel = zoomRange.min
+        })
+        .addCase( updateLandData, (state, { payload: { newLand } }) => {
+            state.landData = newLand
         })
 )

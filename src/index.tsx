@@ -1,9 +1,9 @@
 import './tailwind.css'
 import './responsive.css'
-import '@fontsource/dm-sans/index.css'
+import '@fontsource/poppins/index.css'
+import '@fontsource/passion-one/index.css'
 import 'react-tabs/style/react-tabs.css'
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
-// import { KashiProvider } from 'kashi'
 import React, { StrictMode } from 'react'
 import { isMobile } from 'react-device-detect'
 import ReactDOM from 'react-dom'
@@ -73,11 +73,10 @@ ReactDOM.render(
                         <Updaters />
                         <ThemeProvider>
                             <ThemedGlobalStyle />
-                            {/*<KashiProvider>*/}
-                                <Router hashType="slash" basename="/">
-                                    <App />
-                                </Router>
-                            {/*</KashiProvider>*/}
+
+                            <Router hashType="slash" basename="/">
+                                <App />
+                            </Router>
                         </ThemeProvider>
                     </Provider>
                 </Blocklist>

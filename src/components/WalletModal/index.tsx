@@ -13,7 +13,6 @@ import { SUPPORTED_WALLETS } from '../../constants'
 import usePrevious from '../../hooks/usePrevious'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
-import { ExternalLink } from '../../theme'
 import AccountDetails from '../AccountDetails'
 import Modal from '../Modal'
 import Option from './Option'
@@ -21,8 +20,8 @@ import PendingView from './PendingView'
 
 const CloseIcon = styled.div`
     position: absolute;
-    right: 1rem;
-    top: 14px;
+    right: .5rem;
+    top: 0;
     &:hover {
         cursor: pointer;
         opacity: 0.6;
@@ -59,6 +58,10 @@ const ContentWrapper = styled.div`
     border-bottom-right-radius: 20px;
 
     ${({ theme }) => theme.mediaWidth.upToMedium`padding: 1rem`};
+
+    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+        padding: 0rem;
+    `};
 `
 
 const UpperSection = styled.div`
@@ -94,18 +97,56 @@ const Blurb = styled.div`
 `
 
 const OptionGrid = styled.div`
-    display: grid;
-    grid-gap: 10px;
-    ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-template-columns: 1fr;
-    grid-gap: 10px;
-  `};
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `
 
 const HoverText = styled.div`
     :hover {
         cursor: pointer;
     }
+`
+
+const ConnectWalletWrapper = styled.div`
+    padding: 1rem;
+    text-align: center;
+
+    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+        padding: 0;
+    `};
+`
+
+const HeaderText = styled.div`
+    padding: 1rem 0;
+
+    :hover {
+        cursor: pointer;
+    }
+
+    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+        font-size: 1.5rem !important;
+        line-height: 1.7rem !important;
+        margin-top: 1rem;
+    `};
+
+    ${({ theme }) => theme.mediaWidth.upToExtra2Small`
+        font-size: 1.3rem !important;
+        line-height: 1.5rem !important;
+        margin-top: 1rem;
+    `};
+`
+
+const HeaderDescription = styled.div`
+    padding: 1rem 0;
+
+    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+        padding: 0;
+    `};
+
+    ${({ theme }) => theme.mediaWidth.upToExtra2Small`
+        font-size: 0.9rem !important;
+    `};
 `
 
 const WALLET_VIEWS = {
@@ -328,40 +369,39 @@ export default function WalletModal({
                 <CloseIcon onClick={toggleWalletModal}>
                     <CloseColor />
                 </CloseIcon>
-                {walletView !== WALLET_VIEWS.ACCOUNT ? (
-                    <HeaderRow color="white">
-                        <HoverText
-                            onClick={() => {
-                                setPendingError(false)
-                                setWalletView(WALLET_VIEWS.ACCOUNT)
-                            }}
-                        >
-                            Back
-                        </HoverText>
-                    </HeaderRow>
-                ) : (
-                    <HeaderRow>
-                        <HoverText>Connect to a wallet</HoverText>
-                    </HeaderRow>
-                )}
-                <ContentWrapper>
-                    {walletView === WALLET_VIEWS.PENDING ? (
-                        <PendingView
-                            connector={pendingWallet}
-                            error={pendingError}
-                            setPendingError={setPendingError}
-                            tryActivation={tryActivation}
-                        />
+
+                <ConnectWalletWrapper>
+                    {walletView !== WALLET_VIEWS.ACCOUNT ? (
+                        <HeaderRow color="white">
+                            <HoverText
+                                onClick={() => {
+                                    setPendingError(false)
+                                    setWalletView(WALLET_VIEWS.ACCOUNT)
+                                }}
+                            >
+                                Back
+                            </HoverText>
+                        </HeaderRow>
                     ) : (
-                        <OptionGrid>{getOptions()}</OptionGrid>
+                        <>
+                            <HeaderText className='text-center text-3xl'>Connect your wallet</HeaderText>
+                            <HeaderDescription className='text-center text-base'>In case you don’t have, you will need to set up a Metamask wallet.</HeaderDescription>
+                        </>
                     )}
-                    {walletView !== WALLET_VIEWS.PENDING && (
-                        <Blurb>
-                            <span>New to Ethereum? &nbsp;</span>{' '}
-                            <a href="https://ethereum.org/wallets/">Learn more about wallets</a>
-                        </Blurb>
-                    )}
-                </ContentWrapper>
+                    <ContentWrapper>
+                        {walletView === WALLET_VIEWS.PENDING ? (
+                            <PendingView
+                                connector={pendingWallet}
+                                error={pendingError}
+                                setPendingError={setPendingError}
+                                tryActivation={tryActivation}
+                            />
+                        ) : (
+                            <OptionGrid>{getOptions()}</OptionGrid>
+                        )}
+                    </ContentWrapper>
+
+                </ConnectWalletWrapper>
             </UpperSection>
         )
     }

@@ -5,3 +5,5 @@ export const setSelectedLandInfo = createAction<{ newLandInfo: object }>('map/se
 export const updateMapCenterPos = createAction<{ newPos: object }>('map/updateMapCenterPos')
 
 export const updateMapZoomLevel = createAction<{ newLevel: number }>('map/updateMapZoomLevel') 
+
+export const updateLandData = createAction<{ newLand: object[] }>('map/updateLandData')

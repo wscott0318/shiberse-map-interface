@@ -1,102 +1,99 @@
 import React from 'react'
-import Brightness from '../../assets/images/brightness.svg'
-import { Link, NavLink } from 'react-router-dom'
+import styled from 'styled-components'
+import footerDog from '../../assets/images/home/footer/character.png'
+import discordIcon from '../../assets/images/home/footer/discord.svg'
+import instagramIcon from '../../assets/images/home/footer/instagram.svg'
+import mailIcon from '../../assets/images/home/footer/mail.svg'
+import twitterIcon from '../../assets/images/home/footer/twitter.svg'
+import blurCircle from '../../assets/images/home/guide/blur1.svg'
+
+const FooterWrapper = styled.div`
+    padding: 0;
+
+    @media (max-width: 768px) {
+        flex-wrap: wrap-reverse;
+    }
+`
+
+const PictureWrapper = styled.div`
+    width: 50%;
+
+    @media (max-width: 576px) {
+        width: 80%;
+    }
+`
+
+const ContactWrapper = styled.div`
+    width: 50%;
+
+    @media (max-width: 768px) {
+        width: 70%;
+        text-align: center;
+    }
+
+    @media (max-width: 576px) {
+        width: 100%;
+    }
+`
+
+const ContactInnerWrapper = styled.div`
+    width: 55%;
+
+    @media (max-width: 1200px) {
+        width: 80%;
+    }
+
+    @media (max-width: 992px) {
+        width: 90%;
+    }
+`
+
+const Icons = styled.div`
+    padding: 1.5rem 0;
+
+    a {
+        width: 50px;
+    }
+`
+
+const BlurCircle = styled.img`
+    transform: translate3d(-50%, -50%, 0);
+    left: 50%;
+    top: 0;
+    width: 100%;
+    background: rgba(242, 137, 3, 0.5);
+    filter: blur(444px);
+    border-radius: 444px;
+
+    @media (max-width: 992px) {
+        width: 70%;
+    }
+`
 
 export default function Footer(props: any) {
     return (
-        <div className="footer-section absolute bottom-0 w-full">
-            <div className="flex flex-row flex-nowrap justify-between w-screen my-auto p-1">
-                <div className="space-x-2 mx-auto">
-                    {/* <div className="inline-block  absolute left-5">
-                <img src={Brightness} className="px-2 metric-semibold text-xsf font-medium	"/>
-                
-            </div> */}
-                    <div className="inline-block">
-                        <a
-                            href="https://www.shibatoken.com/"
-                            target="blank"
-                            className="px-2 metric-semibold text-xsf font-medium	"
-                            style={{ color: '#d5d5d5' }}
-                        >
-                            Website
-                        </a>
-                    </div>
-                    <div className="inline-block">
-                        <a
-                            href="https://t.me/ShibaInu_Dogecoinkiller"
-                            target="blank"
-                            className="px-2 metric-semibold text-xsf font-medium	"
-                            style={{ color: '#d5d5d5' }}
-                        >
-                            Telegram
-                        </a>
-                    </div>
-                    <div className="inline-block">
-                        <a
-                            href="https://discord.com/invite/shibatoken"
-                            target="blank"
-                            className="px-2 metric-semibold text-xsf font-medium	"
-                            style={{ color: '#d5d5d5' }}
-                        >
-                            Discord
-                        </a>
-                    </div>
-                    <div className="inline-block">
-                        <a
-                            href="https://analytics.shibaswap.com"
-                            target="blank"
-                            className="px-2 metric-semibold text-xsf font-medium	"
-                            style={{ color: '#d5d5d5' }}
-                        >
-                            Bonefolio
-                        </a>
-                    </div>
-                    <div className="inline-block">
-                        <a
-                            href="https://twitter.com/ShibaSwapDEX"
-                            target="blank"
-                            className="px-2 metric-semibold text-xsf font-medium	"
-                            style={{ color: '#d5d5d5' }}
-                        >
-                            Twitter
-                        </a>
-                    </div>
-                    <div className="inline-block">
-                        <a
-                            href="https://blog.shibaswap.com"
-                            target="blank"
-                            className="px-2 metric-semibold text-xsf font-medium	"
-                            style={{ color: '#d5d5d5' }}
-                        >
-                            Medium
-                        </a>
-                    </div>
-                    {/* <div className="inline-block">
-                    <a href="https://etherscan.io/token/0x95aD61b0a150d79219dCF64E1E6Cc01f0B64C4cE#balances" target="blank" className="px-2 metric-semibold text-xsf font-medium	" style={{ color: '#d5d5d5' }}>
-                        Etherscan
-                </a>
-                </div> */}
-                    <div className="inline-block">
-                        <a
-                            href="mailto:shibaswap@shibatoken.com"
-                            target="blank"
-                            className="px-2 metric-semibold text-xsf font-medium	"
-                            style={{ color: '#d5d5d5' }}
-                        >
-                            Contact Us
-                        </a>
-                    </div>
-                    <div className="inline-block absolute right-5">
-                        <NavLink
-                            className="px-2 text-xsf font-medium font-semibold"
-                            style={{ lineHeight: '0rem', color: '#fea31c' }}
-                            to=""
-                        >
-                            FAQ
-                        </NavLink>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <FooterWrapper className='container flex justify-center'>
+            <PictureWrapper className='flex flex-col justify-end'>
+                <img src={ footerDog }/>
+            </PictureWrapper>
+
+            <ContactWrapper className='flex justify-center items-center'>
+                <ContactInnerWrapper className='flex flex-col relative'>
+                    <BlurCircle src={ blurCircle } className='absolute'/>
+                    
+                    <p className='text-6xl mt-2 mb-2 font-passion-one'>SOCIAL</p>
+                    <Icons className='flex justify-between items-center'>
+                        <a href='#javascript;'><img src={ discordIcon }></img></a>
+                        <a href='#javascript;'><img src={ twitterIcon }></img></a>
+                        <a href='#javascript;'><img src={ instagramIcon }></img></a>
+                        <a href='#javascript;'><img src={ mailIcon }></img></a>
+                    </Icons>
+                    <p className='text-base mt-2 mb-2'>
+                        Builtin Apps are powered by <a>ShibaSwap</a>
+                    </p>
+                    <p className='text-base mt-2 mb-2'>Visit it clicking here!</p>
+                </ContactInnerWrapper>
+            </ContactWrapper>
+        </FooterWrapper>   
     )
 }

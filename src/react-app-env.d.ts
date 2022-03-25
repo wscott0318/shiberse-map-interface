@@ -25,3 +25,10 @@ declare module 'multihashes' {
     declare function decode(buff: Uint8Array): { code: number; name: string; length: number; digest: Uint8Array }
     declare function toB58String(hash: Uint8Array): string
 }
+
+declare module '*.mp4' {
+    const src: string;
+    export default src;
+}
+
+declare module 'react-faq-component';

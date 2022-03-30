@@ -1105,3 +1105,7 @@ export const mainNetworkChainId = ChainId.RINKEBY
 
 /* For product network : Main net */
 // export const mainNetworkChainId = ChainId.MAINNET
+
+export const alchemyApi = {
+    
+}

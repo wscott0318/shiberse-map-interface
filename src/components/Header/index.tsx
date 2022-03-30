@@ -78,7 +78,7 @@ export default function Header(): JSX.Element {
                     </div>
 
                     <div className="flex items-center">
-                        <MenuButton disabled={false} className='font-bold'>
+                        {/* <MenuButton disabled={false} className='font-bold'>
                             <NavLink exact strict to="/map" className={''}>
                                 <span className='full'>
                                     { 'Enter the Lands Map' }
@@ -87,7 +87,7 @@ export default function Header(): JSX.Element {
                                     { 'M' }
                                 </span>
                             </NavLink>
-                        </MenuButton>
+                        </MenuButton> */}
 
                         <Web3Status />
                     </div>

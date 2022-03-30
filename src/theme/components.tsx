@@ -383,7 +383,7 @@ export const GradientButton = styled.button`
     background: linear-gradient(270deg, rgba(31, 31, 50, 0.4) 0%, rgba(31, 32, 49, 0.4) 49.48%, rgba(120, 88, 56, 0.4) 100%);
     border-radius: 50px;
 
-    border: ${({theme, disabled}) => ( disabled ? 'none' : `2px solid ${ theme.brown2 }` )};
+    border: ${({theme, disabled}) => ( `2px solid ${ theme.brown2 }` )};
     opacity: ${({disabled}) => ( disabled ? '0.5' : '1')};
     cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
     color: ${({ theme }) => (theme.white)};
@@ -400,6 +400,11 @@ export const GradientButton = styled.button`
 
     :active {
         text-decoration: none;
+    }
+
+    :disabled {
+        cursor: not-allowed;
+        color: white;
     }
 
     @media (max-width: 992px) {

@@ -125,9 +125,9 @@ export const GuideSection = ({ image, title, content, blurPosition, textSize, ha
                     }}>
                 </div>
                 
-                {
+                {/* {
                     hasLandsMapButton ? <NormalButton className='m-0 mt-6'><NavLink exact strict to="/map">Enter the Lands Map</NavLink></NormalButton> : null
-                }
+                } */}
             </DescWrapper>
         </GuidSectionWrapper>
     )

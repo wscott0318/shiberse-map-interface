@@ -131,6 +131,8 @@ const ArtWrapper = styled.div`
 export const ShiboshiSelectModal = (props: any) => {
     console.error(props.myNFTs)
 
+    const selectedNFTs = props.myNFTs.filter((nft: any) => nft.selected === true)
+
     return (
         <Modal isOpen={ props.isOpen } onDismiss={ props.onDismiss } minHeight={false} maxHeight={80}>
             <UpperSection>
@@ -168,7 +170,9 @@ export const ShiboshiSelectModal = (props: any) => {
                         </div>
                     </ContentWrapper>
 
-                    <NormalButton className='px-10'>LOCK</NormalButton>
+                    <NormalButton className='px-10' disabled={ selectedNFTs.length === 0 }>
+                        LOCK{ selectedNFTs.length > 0 ? `(${ selectedNFTs.length })` : '' }
+                    </NormalButton>
                 </ConnectWalletWrapper>
             </UpperSection>
         </Modal>

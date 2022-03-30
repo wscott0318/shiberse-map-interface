@@ -24,6 +24,10 @@ const LogoText = styled.div`
     @media( max-width: 992px ) {
         margin-left: 1rem;
     }
+
+    @media( max-width: 480px ) {
+        margin-left: 5px !important;
+    }
 `
 
 const SubLogoText = styled.span`
@@ -77,10 +81,10 @@ export default function Header(): JSX.Element {
                         <MenuButton disabled={false} className='font-bold'>
                             <NavLink exact strict to="/map" className={''}>
                                 <span className='full'>
-                                    { t('Enter the Lands Map') }
+                                    { 'Enter the Lands Map' }
                                 </span>
                                 <span className='shorten'>
-                                    { t('M') }
+                                    { 'M' }
                                 </span>
                             </NavLink>
                         </MenuButton>

@@ -366,6 +366,10 @@ export const MenuButton = styled.button<{ disabled?: boolean }>`
         justify-content: center;
         align-items: center;
     }
+
+    @media (max-width: 480px) {
+        padding-right: 0;
+    }
 `
 
 export const GradientButton = styled.button`
@@ -418,6 +422,12 @@ export const PrimaryButton = styled.button`
     transition: all .1s;
     &:hover {
         color: #72450b;
+    }
+
+    :disabled {
+        background: linear-gradient(90deg,#6a4618 7.81%,#935b14 100%);
+        color: #b9b9b9;
+        cursor: not-allowed;
     }
 `
 

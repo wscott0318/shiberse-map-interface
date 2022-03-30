@@ -9,7 +9,7 @@ export default function Home() {
     return (
         <div>
             <Helmet>
-                <title>HOME | ShiBerse</title>
+                <title>HOME | SHIBERSE</title>
                 <meta name="description" content="" />
             </Helmet>
 

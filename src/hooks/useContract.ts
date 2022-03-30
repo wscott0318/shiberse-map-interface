@@ -30,7 +30,7 @@ import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.
 import { abi as UNI_FACTORY_ABI } from '@uniswap/v2-core/build/UniswapV2Factory.json'
 
 import { useMemo } from 'react'
-import { BORING_HELPER_ADDRESS, MERKLE_DISTRIBUTOR_ADDRESS, SUSHI } from '../constants'
+import { BORING_HELPER_ADDRESS, mainNetworkChainId, MERKLE_DISTRIBUTOR_ADDRESS, shiberseContractAddresses, SUSHI } from '../constants'
 import {
     ARGENT_WALLET_DETECTOR_ABI,
     ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS
@@ -80,6 +80,12 @@ import SHIBASWAP_LEASH_TOKEN_ABI from '../constants/abis/shibaswap_erc20.json' /
 import SHIBASWAP_BONE_TOKEN_ABI from '../constants/abis/shibaswap_erc20.json' //TODO GOLIVE
 
 import SHIBASWAP_ERC20 from '../constants/abis/shibaswap_erc20.json' //TODO GOLIVE
+
+import SHIBERSE_STAKE_LEASH_ABI from '../constants/abis/shiberse_stakeleash.json'
+import SHIBERSE_STAKE_SHIBOSHI_ABI from '../constants/abis/shiberse_stakeshiboshi.json'
+
+import SHIBERSE_LEASH_TOKEN_ABI from '../constants/abis/shiberse_leashToken.json'
+import SHIBERSE_SHIBOSHI_TOKEN_ABI from '../constants/abis/shiberse_shiboshi.json'
 
 // returns null on errors
 export function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
@@ -389,7 +395,51 @@ export function useShibaSwapBuryTokenContract(tokenType?: string, withSignerIfPo
         
     } 
 
-    
     return useContract(chainId && buryAddress, buryAbi, withSignerIfPossible)
 }
 
+export function useShiberseTokenContract( tokenType?: string, withSignerIfPossible?: boolean ): Contract | null {
+    let tokenAddress : string
+    let tokenAbi : any
+
+    switch( tokenType ) {
+        case 'LEASH':
+            tokenAddress = shiberseContractAddresses[mainNetworkChainId]['LEASH_TOKEN']
+            tokenAbi = SHIBERSE_LEASH_TOKEN_ABI
+            break;
+        case 'SHIBOSHI':
+            tokenAddress = shiberseContractAddresses[mainNetworkChainId]['SHIBOSHI_TOKEN']
+            tokenAbi = SHIBERSE_SHIBOSHI_TOKEN_ABI
+            break;
+        default:
+            tokenAddress = shiberseContractAddresses[mainNetworkChainId]['LEASH_TOKEN']
+            tokenAbi = SHIBERSE_LEASH_TOKEN_ABI
+            break;
+    }
+
+    return useContract(tokenAddress, tokenAbi, withSignerIfPossible)
+}
+
+export function useShiberseStakeContract( tokenType?: string, withSignerIfPossible?: boolean ): Contract | null{
+    const { chainId } = useActiveWeb3React()
+
+    let stakeAddress : string
+    let stakeAbi : any
+
+    switch( tokenType ) {
+        case 'LEASH':
+            stakeAddress = shiberseContractAddresses[mainNetworkChainId]['STAKE_LEASH']
+            stakeAbi = SHIBERSE_STAKE_LEASH_ABI
+            break;
+        case 'SHIBOSHI':
+            stakeAddress = shiberseContractAddresses[mainNetworkChainId]['STAKE_SHIBOSHI']
+            stakeAbi = SHIBERSE_STAKE_SHIBOSHI_ABI
+            break;
+        default:
+            stakeAddress = shiberseContractAddresses[mainNetworkChainId]['STAKE_LEASH']
+            stakeAbi = SHIBERSE_STAKE_LEASH_ABI
+            break;
+    }
+
+    return useContract( chainId && stakeAddress, stakeAbi, withSignerIfPossible )
+}

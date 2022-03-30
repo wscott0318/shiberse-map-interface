@@ -19,6 +19,7 @@ const BlurCircle = styled.img<{ position?: string }>`
     background: rgba(242, 137, 3, 0.5);
     filter: blur(444px);
     border-radius: 444px;
+    z-index: -1;
 
     @media (max-width: 992px) {
         width: 70%;

@@ -1,6 +1,6 @@
 {
-  "name": "@shibaswap/interface",
-  "description": "ShibaSwap Interface",
+  "name": "@shiberse/interface",
+  "description": "Shiberse Interface",
   "homepage": "./",
   "private": true,
   "lint-staged": {
@@ -177,6 +177,7 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "@alch/alchemy-web3": "^1.3.0",
     "@feathersjs/client": "^4.5.13",
     "@feathersjs/feathers": "^4.5.12",
     "@feathersjs/socketio-client": "^4.5.13",

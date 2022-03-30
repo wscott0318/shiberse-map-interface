@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import footerDog from '../../assets/images/home/footer/character.png'
 import discordIcon from '../../assets/images/home/footer/discord.svg'
-import instagramIcon from '../../assets/images/home/footer/instagram.svg'
+import telegramIcon from '../../assets/images/home/footer/telegram.svg'
 import mailIcon from '../../assets/images/home/footer/mail.svg'
 import twitterIcon from '../../assets/images/home/footer/twitter.svg'
 import blurCircle from '../../assets/images/home/guide/blur1.svg'
@@ -64,6 +64,7 @@ const BlurCircle = styled.img`
     background: rgba(242, 137, 3, 0.5);
     filter: blur(444px);
     border-radius: 444px;
+    z-index: -1;
 
     @media (max-width: 992px) {
         width: 70%;
@@ -83,13 +84,13 @@ export default function Footer(props: any) {
                     
                     <p className='text-6xl mt-2 mb-2 font-passion-one'>SOCIAL</p>
                     <Icons className='flex justify-between items-center'>
-                        <a href='#javascript;'><img src={ discordIcon }></img></a>
-                        <a href='#javascript;'><img src={ twitterIcon }></img></a>
-                        <a href='#javascript;'><img src={ instagramIcon }></img></a>
-                        <a href='#javascript;'><img src={ mailIcon }></img></a>
+                        <a href='https://discord.com/invite/shibatoken' target="blank"><img src={ discordIcon }></img></a>
+                        <a href='https://twitter.com/shibtoken' target="blank"><img src={ twitterIcon }></img></a>
+                        <a href='https://t.me/ShibaInu_Dogecoinkiller' target="blank"><img src={ telegramIcon }></img></a>
+                        <a href='https://linktr.ee/OfficialShib' target="blank"><img src={ mailIcon }></img></a>
                     </Icons>
                     <p className='text-base mt-2 mb-2'>
-                        Builtin Apps are powered by <a>ShibaSwap</a>
+                        Builtin Apps are powered by <a href='https://blog.shibaswap.com/' target="blank">ShibaSwap</a>
                     </p>
                     <p className='text-base mt-2 mb-2'>Visit it clicking here!</p>
                 </ContactInnerWrapper>

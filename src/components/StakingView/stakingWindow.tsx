@@ -1,8 +1,9 @@
-import RangeInput from 'components/RangeInput'
-import React, { useState } from 'react'
+import { useWindowSize } from 'hooks/useWindowSize'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-import { PrimaryButton } from 'theme'
+import StakeLeash from './stakeLeash'
+import StakeShiboshi from './stakeShiboshi'
 
 const Wrapper = styled.div`
     width: 630px;
@@ -71,7 +72,7 @@ const StakeContent = styled.div`
     padding: 35px;
 
     @media ( min-width: 992px ) {
-        max-height: calc(100vh - 280px);
+        max-height: calc(100vh - 145px);
         overflow: auto;
     }
 
@@ -80,90 +81,59 @@ const StakeContent = styled.div`
     }
 `
 
-const ProgressCaption = styled.div`
-    font-weight: 600;
-    font-size: 16px;
-    margin-top: 20px;
-    margin-bottom: 10px;
-
-    span {
-        color: ${({theme}) => theme.brown1};
+const ReadMore = styled.a`
+    :hover {
+        cursor: pointer;
+        color: #f9af4c;
     }
-`
-
-const Parameters = styled.span`
-    background: #201F31;
-    border-radius: 100px;
-    font-size: 18px;
-    padding: 10px 20px;
-    border: 1px solid #BE6D06;
 `
 
 export const StakingWindow = () => {
     const { t } = useTranslation()
-    const [ lockAmount, setLockAmount ] = useState(5)
-    const [ lockPeriod, setLockPeriod ] = useState(68)
     const [ tokenType, setTokenType ] = useState('leash')
+    const [ showReadMore, setShowReadMore ] = useState(false)
+    const [ collapsed, setCollapsed ] = useState(false)
+    
+    const { width, height } = useWindowSize()
+
+    useEffect(() => {
+        if( width && width >= 992 && height && height && height < 781 ) {
+            setShowReadMore(true)
+            setCollapsed(true)
+        } else {
+            setShowReadMore(false)
+            setCollapsed(false)
+        }
+    }, [ width, height ])
 
     return (
         <Wrapper>
             <StakeContent>
                 <StakeHeader className='w-full relative flex justify-around items-center'>
-                    <div className={`text-center px-2 ${ tokenType === 'leash' ? 'active' : '' }`} onClick={() => setTokenType( 'leash' )}> { t('Leash Locker') } </div>
-                    <div className={`text-center px-2 ${ tokenType === 'shiboshis' ? 'active' : '' }`} onClick={() => setTokenType( 'shiboshis' )}> { t('SHIBOSHIS LOCKER') } </div>
-                    <div className='text-center px-2'> <a target='_blank' rel="noreferrer" href='https://shibaswap.com/#/swap?outputCurrency=0x27C70Cd1946795B66be9d954418546998b546634&inputCurrency=ETH'>{ t('BUY LEASH') }</a> </div>
+                    <div className={`text-center px-2 ${ tokenType === 'leash' ? 'active' : '' }`} onClick={() => setTokenType( 'leash' )}> { 'Leash Locker' } </div>
+                    <div className={`text-center px-2 ${ tokenType === 'shiboshi' ? 'active' : '' }`} onClick={() => setTokenType( 'shiboshi' )}> { 'SHIBOSHIS LOCKER' } </div>
+                    <div className='text-center px-2'> <a target='_blank' rel="noreferrer" href='https://shibaswap.com/#/swap?outputCurrency=0x27C70Cd1946795B66be9d954418546998b546634&inputCurrency=ETH'>{ 'BUY LEASH' }</a> </div>
                 </StakeHeader>
 
                 <p>
+                    { collapsed ? ( 'When using the LEASH LOCKER feature, you will be... ' ) :
+                        (<>When using the LEASH LOCKER feature, you will be converting your <b>$LEASH</b> to <b>yLEASH</b>. This mechanic will provide you the ability to gain early access to purchase lands.
+                        <br/>
+                        Please, select the amount to lock and the locking period.</>)
+                    }
+
+                    { showReadMore ? <ReadMore onClick={ () => setCollapsed(prev => !prev) }> { collapsed ? 'more' : 'less'} </ReadMore> : null }                    
+                </p>
+                
+                {/* <p>
                     When using the LEASH LOCKER feature, you will be converting your <b>$LEASH</b> to <b>yLEASH</b>. This mechanic will provide you the ability to gain early access to purchase lands.
                     <br/>
                     Please, select the amount to lock and the locking period.
-                </p>
+                </p> */}
 
-                <div className='w-10/12 rangeBar'>
-                    <ProgressCaption>
-                        { t('Amount to lock') }:
-                        <span> { t(`${ lockAmount } ${ tokenType }`) } </span>
-                    </ProgressCaption>
-
-                    <RangeInput 
-                        min={ 0.2 }
-                        max={ 5 }
-                        value={ [ lockAmount ] }
-                        setValue={ setLockAmount }
-                        step={ 0.1 }
-                    />
-                </div>
-
-                <div className='w-10/12 rangeBar'>
-                    <ProgressCaption>
-                        { t('Locking period') }:
-                        <span> { t(`${ lockPeriod } days`) } </span>
-                    </ProgressCaption>
-
-                    <RangeInput 
-                        min={ 45 }
-                        max={ 90 }
-                        value={ [ lockPeriod ] }
-                        setValue={ setLockPeriod }
-                    />
-                </div>
-
-                <p className='mt-5 mb-3'>
-                    { t(`These parameters give you access to bid/purchase`) }:
-                </p>
-
-                <div className='mt-6 mb-6'>
-                    <Parameters>
-                        { t('7 of max. 200 lands') }
-                    </Parameters>
-                </div>
-
-                <div className='w-full flex flex-row-reverse'>
-                    <PrimaryButton className='right-0'>
-                        { t('LOCK') }
-                    </PrimaryButton>
-                </div>
+                {tokenType === 'leash'
+                    ? <StakeLeash /> 
+                    : <StakeShiboshi />}
             </StakeContent>
         </Wrapper>
     )

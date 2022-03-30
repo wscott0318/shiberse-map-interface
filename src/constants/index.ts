@@ -1080,3 +1080,28 @@ export const FARMS = [
         roiPerYear: 0
     }
 ]
+
+export const shiberseContractAddresses = {
+    [ChainId.ROPSTEN]: {
+        'LEASH_TOKEN': '0x62efD9F0e349d83b0aa6c01FC5a9a5D3A0DF0F2D',
+        'SHIBOSHI_TOKEN': '0x253A46a5C75c667f19203BCD638819478AB9bBab',
+        'BONE': '0x5CA454a716de461Ad2E0afF716c367b35901eD57',
+        'STAKE_LEASH': '0x96e799C44bC3B05bc78C3e110A2512C06D0eC3e7',
+        'STAKE_SHIBOSHI': '0x5c4943d7bb2de8034e211d7b512ab0a1d6ef581c',
+        'MOCKSALE': '0x736f9284b43c058b84a5e32ab57942db6cc5c1aa'
+    },
+    [ChainId.RINKEBY]: {
+        'LEASH_TOKEN': '0x673f2692b432EAF69B50fE9C46657e8a5dC89599',
+        'SHIBOSHI_TOKEN': '0x253A46a5C75c667f19203BCD638819478AB9bBab',
+        'BONE': '0x5CA454a716de461Ad2E0afF716c367b35901eD57',
+        'STAKE_LEASH': '0x96e799C44bC3B05bc78C3e110A2512C06D0eC3e7',
+        'STAKE_SHIBOSHI': '0x5c4943d7bb2de8034e211d7b512ab0a1d6ef581c',
+        'MOCKSALE': '0x736f9284b43c058b84a5e32ab57942db6cc5c1aa'
+    }
+}
+
+/* For development network : Ropsten */
+export const mainNetworkChainId = ChainId.RINKEBY
+
+/* For product network : Main net */
+// export const mainNetworkChainId = ChainId.MAINNET

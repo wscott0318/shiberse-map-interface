@@ -177,12 +177,12 @@ function Web3StatusInner() {
                             </div>
                         </WalletBalance>
 
-                        <ProfileMenu />
-
                         {/* {ENSName || shortenAddress(account)} */}
                     </div>
                 )}
                 {!hasPendingTransactions && connector && <StatusIcon connector={connector} />}
+                
+                <ProfileMenu />
             </div>
         )
     } else if (error) {
@@ -196,7 +196,7 @@ function Web3StatusInner() {
         return (
             <MenuButton onClick={toggleWalletModal} className="font-bold">
                 <span className='full'>
-                    { t('Connect Wallet') }
+                    { 'Connect Wallet' }
                 </span>
                 <img className='shorten' src={ metamaskImage }></img>
             </MenuButton>

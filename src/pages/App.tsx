@@ -12,6 +12,8 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import ReactGA from 'react-ga'
 import Home from './Home'
 import { RedirectPathToHomeOnly } from './Home/redirects'
+import Bury from './Bury'
+import BuryDogYard from './Bury/BuryDogYard'
 
 function App(): JSX.Element {
     const bodyRef = useRef<any>(null)
@@ -48,7 +50,7 @@ function App(): JSX.Element {
                             <Switch>
                                 <Route exact strict path="/" component={Home} />
                                 {/* <Route exact strict path="/map" component={Map} /> */}
-                                
+
                                 <Route component={RedirectPathToHomeOnly} />
                             </Switch>
                         </Web3ReactManager>

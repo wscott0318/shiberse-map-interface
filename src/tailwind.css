@@ -469,10 +469,6 @@ div[data-reach-dialog-overlay] div[data-reach-dialog-content]{
   }
 }
 @media only screen and (max-width: 500px) {
-  .header{
-    padding-left: 0 !important;
-    margin-left: -8px;
-  }
   .Dig-button{
     width: unset !important;
   }

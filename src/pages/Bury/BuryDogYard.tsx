@@ -284,6 +284,7 @@ const ClaimButton = styled.div`
 function tokenAddresses(): any {
     const { chainId } = useActiveWeb3React()
     const { tokenName } = useParams<Record<string, string | undefined>>()
+
     if (tokenName?.toLowerCase() === 'shib') {
         const { shibPrice } = usePrices()
         return {

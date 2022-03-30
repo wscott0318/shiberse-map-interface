@@ -38,12 +38,11 @@ export default function StakeShiboshi() {
     const { active } = useWeb3React()
 
     const toggleWalletModal = useWalletModalToggle()
-    const { isApproved, approve, stake, stakedBalance, fetchWalletNFT } = useShiberseStakeNFT({ tokenType })
+    const { isApproved, approve, stake, stakedBalance, fetchWalletNFT, stakeLimitInfo } = useShiberseStakeNFT({ tokenType })
 
     //Token Balance
     const shibaBalanceBigInt = useShiberseTokenBalance({ tokenType })
     const shibaBalanceValue = parseFloat(formatFromBalance(shibaBalanceBigInt?.value, shibaBalanceBigInt?.decimals))
-    const decimals = shibaBalanceBigInt?.decimals
 
     const [ showSelectModal, setShowSelectModal ] = useState(false)
     const [ lockPeriod, setLockPeriod ] = useState(1)
@@ -52,18 +51,13 @@ export default function StakeShiboshi() {
     const [ myNFTs, setMyNFTs ] = useState([])
     const [ loadingNFTs, setLoadingNFTs ] = useState(true)
 
-    const stakeShiboshiInfo = {
-        stakeMin: 1,
-        stakeMax: 10,
-        dayMin: 1,
-        dayMax: 100,
-    }
-
     const isPending = useIsTransactionPending(pendingTx ?? undefined)
 
     const handleStake = async () => {
+        const ids = getSelectedNFTs().map((nft: any) => BigNumber.from(parseInt(nft.id.tokenId)))
+
         const inputData = {
-            amount: parseBalance(lockAmount.toString(), decimals), 
+            ids: ids,
             numDaysToAdd: BigNumber.from( lockPeriod )
         }
         const tx = await stake(inputData)
@@ -96,7 +90,7 @@ export default function StakeShiboshi() {
 
     const handleSelectNFT = ( index: number ) => {
         const selected = getSelectedNFTs()
-        if( selected.length >= stakeShiboshiInfo.stakeMax ) {
+        if( selected.length >= stakeLimitInfo.AMOUNT_MAX ) {
             return;
         }
 
@@ -135,8 +129,8 @@ export default function StakeShiboshi() {
                 </ProgressCaption>
 
                 <RangeInput 
-                    min={ stakeShiboshiInfo.dayMin }
-                    max={ stakeShiboshiInfo.dayMax }
+                    min={ stakeLimitInfo.DAYS_MIN }
+                    max={ stakeLimitInfo.DAYS_MAX }
                     value={ [ lockPeriod ] }
                     setValue={ setLockPeriod }
                 />

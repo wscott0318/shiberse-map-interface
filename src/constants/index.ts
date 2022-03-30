@@ -1107,5 +1107,9 @@ export const mainNetworkChainId = ChainId.RINKEBY
 // export const mainNetworkChainId = ChainId.MAINNET
 
 export const alchemyApi = {
-    
+    'api_key': '98S0aeOjT9paE0bz4424qsAk9QndTBUi',
+    'https': 'https://eth-rinkeby.alchemyapi.io/v2/98S0aeOjT9paE0bz4424qsAk9QndTBUi',
+    'wss': 'wss://eth-rinkeby.alchemyapi.io/v2/98S0aeOjT9paE0bz4424qsAk9QndTBUi'
 }
+
+export const metadataURL = 'https://shiboshis.mypinata.cloud/ipfs/QmUEiYGcZJWZWp9LNCTL5PGhGcjGvokKfcaCoj23dbp79J/'

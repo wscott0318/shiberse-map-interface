@@ -35,13 +35,11 @@ const Parameters = styled.span`
 export default function StakeLeash() {
     const tokenType = 'leash'
 
-    const { t } = useTranslation()
-
-    const { active, account } = useWeb3React()
+    const { active } = useWeb3React()
 
     const toggleWalletModal = useWalletModalToggle()
 
-    const { allowance, approve, stake, stakedBalance } = useShiberseStakeToken({ tokenType })
+    const { allowance, approve, stake, stakedBalance, stakeLimitInfo } = useShiberseStakeToken({ tokenType })
 
     //Token Balance
     const shibaBalanceBigInt = useShiberseTokenBalance({ tokenType })
@@ -53,12 +51,12 @@ export default function StakeLeash() {
     const [requestedApproval, setRequestedApproval] = useState(false)
     const [ pendingTx, setPendingTx ] = useState<string | null>(null)
 
-    const stakeLeashInfo = {
-        stakeMin: 1,
-        stakeMax: 1000,
-        dayMin: 1,
-        dayMax: 100,
-    }
+    // const stakeLeashInfo = {
+    //     stakeMin: 1,
+    //     stakeMax: 1000,
+    //     dayMin: 1,
+    //     dayMax: 100,
+    // }
 
     const isPending = useIsTransactionPending(pendingTx ?? undefined)
 
@@ -112,8 +110,8 @@ export default function StakeLeash() {
                 </ProgressCaption>
 
                 <RangeInput 
-                    min={ stakeLeashInfo.stakeMin }
-                    max={ stakeLeashInfo.stakeMax }
+                    min={ stakeLimitInfo.AMOUNT_MIN }
+                    max={ stakeLimitInfo.AMOUNT_MAX }
                     value={ [ lockAmount ] }
                     setValue={ setLockAmount }
                     step={ 1 }
@@ -127,8 +125,8 @@ export default function StakeLeash() {
                 </ProgressCaption>
 
                 <RangeInput 
-                    min={ stakeLeashInfo.dayMin }
-                    max={ stakeLeashInfo.dayMax }
+                    min={ stakeLimitInfo.DAYS_MIN }
+                    max={ stakeLimitInfo.DAYS_MAX }
                     value={ [ lockPeriod ] }
                     setValue={ setLockPeriod }
                 />

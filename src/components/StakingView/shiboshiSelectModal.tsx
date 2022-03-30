@@ -170,7 +170,7 @@ export const ShiboshiSelectModal = (props: any) => {
                         </div>
                     </ContentWrapper>
 
-                    <NormalButton className='px-10' disabled={ selectedNFTs.length === 0 }>
+                    <NormalButton className='px-10' disabled={ selectedNFTs.length === 0 } onClick={ props.onDismiss }>
                         LOCK{ selectedNFTs.length > 0 ? `(${ selectedNFTs.length })` : '' }
                     </NormalButton>
                 </ConnectWalletWrapper>

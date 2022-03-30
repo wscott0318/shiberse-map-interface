@@ -6,6 +6,7 @@ import { useTransactionAdder } from '../state/transactions/hooks'
 import { useShiberseStakeContract, useShiberseTokenContract } from './useContract'
 import { mainNetworkChainId } from '../constants'
 import { useBlockNumber } from 'state/application/hooks'
+import { formatFromBalance } from 'utils'
 
 const { BigNumber } = ethers
 
@@ -22,6 +23,12 @@ const useShiberseStakeToken = (props:any) => {
     //allowance state variable
     const [allowance, setAllowance] = useState('0')
     const [stakedBalance, setStakedBalance] = useState('0')
+    const [stakeLimitInfo, setStakeLimitInfo] = useState({
+        AMOUNT_MAX: 1,
+        AMOUNT_MIN: 0,
+        DAYS_MAX: 1,
+        DAYS_MIN: 0,
+    })
 
     //Fetch Sushi Allowance
     const fetchAllowance = useCallback(async () => {
@@ -91,7 +98,29 @@ const useShiberseStakeToken = (props:any) => {
             fetchStakedBalance()
     }, [ account, chainId, fetchStakedBalance ])
 
-    return {allowance, approve, stake, stakedBalance}
+    const fetchStakeLimitInfo = useCallback(async () => {
+        const decimals = await tokenContract?.decimals()
+
+        const amount_max = await stakeContract?.AMOUNT_MAX()
+        const amount_min = await stakeContract?.AMOUNT_MIN()
+
+        const days_max = await stakeContract?.DAYS_MAX()
+        const days_min = await stakeContract?.DAYS_MIN()
+
+        setStakeLimitInfo({
+            AMOUNT_MAX: Number(formatFromBalance(amount_max, decimals)),
+            AMOUNT_MIN: Number(formatFromBalance(amount_min, decimals)),
+            DAYS_MAX: Number(formatFromBalance(days_max, 0)),
+            DAYS_MIN: Number(formatFromBalance(days_min, 0)),
+        })
+    }, [account, chainId, stakeContract, tokenContract])
+
+    useEffect(() => {
+        if( account && chainId === mainNetworkChainId )
+            fetchStakeLimitInfo()
+    })
+
+    return {allowance, approve, stake, stakedBalance, stakeLimitInfo}
 
 }
 

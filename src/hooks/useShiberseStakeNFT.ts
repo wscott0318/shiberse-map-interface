@@ -4,9 +4,10 @@ import { Fraction } from '../entities'
 import { useActiveWeb3React } from '.'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { useShiberseStakeContract, useShiberseTokenContract } from './useContract'
-import { mainNetworkChainId } from '../constants'
+import { alchemyApi, mainNetworkChainId, metadataURL } from '../constants'
 import { useBlockNumber } from 'state/application/hooks'
 import { createAlchemyWeb3 } from "@alch/alchemy-web3";
+import { formatFromBalance } from 'utils'
 
 const { BigNumber } = ethers
 
@@ -23,6 +24,12 @@ const useShiberseStakeNFT = (props:any) => {
     //allowance state variable
     const [isApproved, setIsApproved] = useState(false)
     const [stakedBalance, setStakedBalance] = useState('0')
+    const [stakeLimitInfo, setStakeLimitInfo] = useState({
+        AMOUNT_MAX: 1,
+        AMOUNT_MIN: 0,
+        DAYS_MAX: 1,
+        DAYS_MIN: 0,
+    })
 
     //Fetch Sushi Allowance
     const fetchAllowance = useCallback(async () => {
@@ -93,40 +100,42 @@ const useShiberseStakeNFT = (props:any) => {
     }, [ account, chainId, fetchStakedBalance ])
 
     const web3 = createAlchemyWeb3(
-        "https://eth-ropsten.alchemyapi.io/v2/98S0aeOjT9paE0bz4424qsAk9QndTBUi",
+        alchemyApi.https
     );
 
-    const getNftMetadata = async (contractaddress: any, tokenid: any) => {
-        return await web3.alchemy.getNftMetadata({
-            contractAddress: contractaddress,
-            tokenId: tokenid
-        });
-    }
-
     const fetchWalletNFT = useCallback(async () => {
-        // const fetchNFTData = await fetch(
-        //     `https://api.opensea.io/api/v1/assets?owner=${ account }&asset_contract_address=${ tokenContract?.address }&order_direction=desc&offset=0`,
-        //     {
-        //         headers: {
-        //             'X-API-KEY': '8ca8a415ac814e25ba4e81fbc0659f30'
-        //         }
-        //     }
-        // )
-
-        // const response = await fetchNFTData.json()
-
         if( account && chainId === mainNetworkChainId ) {
             const fetchNFTData = await web3.alchemy.getNfts({ owner : account! });
 
             const contractNFTs = fetchNFTData.ownedNfts.filter((item: any) => item.contract.address === tokenContract?.address.toLowerCase())
-    
+
             return contractNFTs
         }
 
         return []
     }, [account, chainId, tokenContract])
 
-    return {isApproved, approve, stake, stakedBalance, fetchWalletNFT}
+    const fetchStakeLimitInfo = useCallback(async () => {
+        const amount_max = await stakeContract?.AMOUNT_MAX()
+        const amount_min = await stakeContract?.AMOUNT_MIN()
+
+        const days_max = await stakeContract?.DAYS_MAX()
+        const days_min = await stakeContract?.DAYS_MIN()
+
+        setStakeLimitInfo({
+            AMOUNT_MAX: Number(formatFromBalance(amount_max, 0)),
+            AMOUNT_MIN: Number(formatFromBalance(amount_min, 0)),
+            DAYS_MAX: Number(formatFromBalance(days_max, 0)),
+            DAYS_MIN: Number(formatFromBalance(days_min, 0)),
+        })
+    }, [account, chainId, stakeContract, tokenContract])
+
+    useEffect(() => {
+        if( account && chainId === mainNetworkChainId )
+            fetchStakeLimitInfo()
+    })
+
+    return {isApproved, approve, stake, stakedBalance, fetchWalletNFT, stakeLimitInfo}
 }
 
 export default useShiberseStakeNFT

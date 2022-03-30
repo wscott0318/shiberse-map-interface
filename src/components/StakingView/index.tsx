@@ -55,8 +55,6 @@ const BackImage = styled.img`
 `
 
 export const StakingView = () => {
-    const { t } = useTranslation()
-
     return (
         <StakingWrapper>
             <BackImage src={bgImage}></BackImage>

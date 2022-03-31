@@ -6,7 +6,7 @@ import styled, { ThemeContext } from 'styled-components'
 import Circle from '../../assets/images/blue-loader.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { ExternalLink } from '../../theme'
-import { CloseIcon, CustomLightSpinner, CustomWoof } from '../../theme/components'
+import { CloseIcon, CustomLightSpinner } from '../../theme/components'
 import { getExplorerLink } from '../../utils'
 import { ButtonPrimary } from '../ButtonLegacy'
 import { AutoColumn, ColumnCenter } from '../Column'
@@ -79,7 +79,6 @@ function TransactionSubmittedContent({
                     <CloseIcon onClick={onDismiss} />
                 </RowBetween>
                 <ConfirmedIcon>
-                    <CustomWoof src={Woof} />
                 </ConfirmedIcon>
                 <AutoColumn gap="12px" justify={'center'}>
                     <Text fontWeight={500} fontSize={20}>

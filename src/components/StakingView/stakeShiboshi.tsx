@@ -152,7 +152,7 @@ export default function StakeShiboshi() {
                     { 'Select tokens you want to lock.' }
                 </ProgressCaption>
 
-                { selectedNFTs.length > 0 || true
+                { selectedNFTs.length > 0
                     ? (<span className="text-lg">{`${ selectedNFTs.length } Shiboshis selected`}</span>) : null }
 
                 <GradientButton 

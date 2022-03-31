@@ -3,8 +3,7 @@ import { Route, Switch, useLocation } from 'react-router-dom'
 import Header from '../components/Header'
 import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
-import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
-import Map from './Map'
+// import Map from './Map'
 
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 
@@ -12,8 +11,6 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import ReactGA from 'react-ga'
 import Home from './Home'
 import { RedirectPathToHomeOnly } from './Home/redirects'
-import Bury from './Bury'
-import BuryDogYard from './Bury/BuryDogYard'
 
 function App(): JSX.Element {
     const bodyRef = useRef<any>(null)
@@ -39,7 +36,6 @@ function App(): JSX.Element {
     return (
         <ApolloProvider client={client}>
             <Suspense fallback={null}>
-                <Route component={DarkModeQueryParamReader} />
                 <div className="overflow-x-hidden">
                     <Header />
 

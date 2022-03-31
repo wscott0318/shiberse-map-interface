@@ -104,12 +104,7 @@ module.exports = {
         extend: {
             backgroundImage: theme => ({
                 ...defaultTheme.backgroundImage,
-                'bentobox-hero': "url('/src/assets/kashi/bentobox-hero.jpg')",
-                'bentobox-logo': "url('/src/assets/kashi/bentobox-logo.png')"
             }),
-            fontFamily: {
-                sans: ['DM Sans', ...defaultTheme.fontFamily.sans]
-            },
             borderRadius: {
                 ...defaultTheme.borderRadius,
                 none: '0',

@@ -5,54 +5,6 @@ import ReactGA from 'react-ga'
 import { Link } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
 
-export const ButtonText = styled.button`
-    outline: none;
-    border: none;
-    font-size: inherit;
-    padding: 0;
-    margin: 0;
-    background: none;
-    cursor: pointer;
-
-    :hover {
-        opacity: 0.7;
-    }
-
-    :focus {
-        text-decoration: underline;
-    }
-`
-
-export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColor: string }>(({ warning, theme }) => ({
-    backgroundColor: warning ? theme.red1 : theme.primary1
-}))`
-    padding: 1rem 2rem 1rem 2rem;
-    border-radius: 3rem;
-    cursor: pointer;
-    user-select: none;
-    font-size: 1rem;
-    border: none;
-    outline: none;
-    background-color: ${({ backgroundColor }) => backgroundColor};
-    color: ${({ theme }) => theme.white};
-    width: 100%;
-
-    :hover,
-    :focus {
-        background-color: ${({ backgroundColor }) => darken(0.05, backgroundColor)};
-    }
-
-    :active {
-        background-color: ${({ backgroundColor }) => darken(0.1, backgroundColor)};
-    }
-
-    :disabled {
-        background-color: ${({ theme }) => theme.bg1};
-        color: ${({ theme }) => theme.text4};
-        cursor: auto;
-    }
-`
-
 export const CloseIcon = styled(X)<{ onClick: () => void }>`
     cursor: pointer;
 `
@@ -270,48 +222,10 @@ export const Spinner = styled.img`
     height: 16px;
 `
 
-const BackArrowLink = styled(StyledInternalLink)`
-    color: ${({ theme }) => theme.text1};
-    display: inline-block;
-`
-export function BackArrow({ to }: { to: string }) {
-    return (
-        <BackArrowLink to={to}>
-            <ArrowLeft />
-        </BackArrowLink>
-    )
-}
-
 export const CustomLightSpinner = styled(Spinner)<{ size: string }>`
     height: ${({ size }) => size};
     width: ${({ size }) => size};
 `
-
-export const CustomWoof = styled.img`
-    width: 100%;
-    height: auto;
-`
-
-export const HideSmall = styled.span`
-    ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
-  `};
-`
-
-export const HideExtraSmall = styled.span`
-    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: none;
-  `};
-`
-
-export const ExtraSmallOnly = styled.span`
-    display: none;
-    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: block;
-  `};
-`
-
-
 
 export const MenuButton = styled.button<{ disabled?: boolean }>`
     font-size: 18px;

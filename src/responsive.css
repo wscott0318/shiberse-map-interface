@@ -1111,38 +1111,6 @@
   align-self: stretch!important;
 }
 
-.metric-bold {
-  font-family: 'Kanit';
-}
-
-.metric-semibold {
-  font-family: 'Kanit';
-}
-
-.metric-regular {
-  font-family: 'Kanit';
-}
-
-.bury-container {
-  width: 75%;
-  box-shadow: 0 0 9px 4px rgba(0, 0, 0, 0.43);
-  border-radius: 10px;
-  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(17, 20, 27, 0.33) 31%, rgba(17, 20, 27, 0.5) 100%);
-
-  @media (min-width:992px) {
-    width: 70% !important;
-  }
-  @media (min-width:1200px) {
-    width: 60% !important;
-  }
-}
-
-.alert-container {
-  box-shadow: 0 0 9px 4px rgba(0, 0, 0, 0.43);
-  border-radius: 10px;
-  background-color: #171a24;
-}
-
 .full {
   display: block;
 }

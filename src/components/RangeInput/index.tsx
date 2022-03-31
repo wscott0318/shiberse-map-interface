@@ -2,15 +2,22 @@ import React from 'react'
 import styled from 'styled-components'
 import { Range, getTrackBackground } from "react-range";
 
+const Wrapper = styled.div`
+    &.disable {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+`
+
 const MinMaxWrapper = styled.div`
     color: ${({theme}) => theme.brown3};
     font-weight: 400;
     font-size: 12px;
 `
 
-export const RangeInput = ( { min, max, value, setValue, step = 1 }: any ) => {
+export const RangeInput = ( { min, max, value, setValue, step = 1, disable = false }: any ) => {
     return (
-        <div>
+        <Wrapper className={ disable ? 'disable' : '' }>
             <MinMaxWrapper className='flex justify-between items-center'>
                 <span>{`Min. ${min}`}</span>
                 <span>{`Max. ${max}`}</span>
@@ -67,7 +74,7 @@ export const RangeInput = ( { min, max, value, setValue, step = 1 }: any ) => {
                     </div>
                 )}
                 />
-        </div>
+        </Wrapper>
     )
 }
 

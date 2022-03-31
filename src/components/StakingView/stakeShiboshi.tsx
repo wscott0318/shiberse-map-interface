@@ -38,7 +38,7 @@ export default function StakeShiboshi() {
     const { active } = useWeb3React()
 
     const toggleWalletModal = useWalletModalToggle()
-    const { isApproved, approve, stake, stakedBalance, fetchWalletNFT, stakeLimitInfo } = useShiberseStakeNFT({ tokenType })
+    const { isApproved, approve, stake, stakedBalance, lockDays, fetchWalletNFT, stakeLimitInfo } = useShiberseStakeNFT({ tokenType })
 
     //Token Balance
     const shibaBalanceBigInt = useShiberseTokenBalance({ tokenType })
@@ -49,12 +49,15 @@ export default function StakeShiboshi() {
     const [requestedApproval, setRequestedApproval] = useState(false)
     const [ pendingTx, setPendingTx ] = useState<string | null>(null)
     const [ myNFTs, setMyNFTs ] = useState([])
+    const [ selectedNFTs, setSelectedNFTs ] = useState([])
     const [ loadingNFTs, setLoadingNFTs ] = useState(true)
 
     const isPending = useIsTransactionPending(pendingTx ?? undefined)
 
     const handleStake = async () => {
-        const ids = getSelectedNFTs().map((nft: any) => BigNumber.from(parseInt(nft.id.tokenId)))
+        setSelectedNFTs([])
+
+        const ids = selectedNFTs.map((nftId: any) => BigNumber.from(parseInt(nftId)))
 
         const inputData = {
             ids: ids,
@@ -76,29 +79,41 @@ export default function StakeShiboshi() {
         }
     }, [approve, setRequestedApproval])
 
-    useEffect(() => {
-        const setWalletNFT = async () => {
-            const result = await fetchWalletNFT()
-            setMyNFTs(result as any)
-            setLoadingNFTs( false )
-        }
+    const setWalletNFT = async () => {
+        setLoadingNFTs( true )
+        const result = await fetchWalletNFT()
+        setMyNFTs(result as any)
+        setLoadingNFTs( false )
+    }
 
-        setWalletNFT()
-    }, [fetchWalletNFT])
-
-    const getSelectedNFTs = () => myNFTs.filter((nft: any) => nft.selected === true)
-
-    const handleSelectNFT = ( index: number ) => {
-        const selected = getSelectedNFTs()
-        if( selected.length >= stakeLimitInfo.AMOUNT_MAX ) {
+    const handleSelectNFT = ( id: number ) => {
+        const selected = [ ...selectedNFTs ] as any
+        if( selected.length > (stakeLimitInfo.AMOUNT_MAX - Number(stakedBalance)) ) {
             return;
         }
 
-        const newNFTData = [ ...myNFTs ] as any
-        newNFTData[index].selected = newNFTData[index].selected ? !newNFTData[index].selected : true
+        const index = selected.indexOf(id)
+        if( index === -1 )
+            selected.push( id )
+        else
+            selected.splice( index, 1 )
 
-        setMyNFTs( newNFTData )
+        setSelectedNFTs( selected )
     }
+
+    const handleClickSelectToken = () => {
+        setWalletNFT()
+        setShowSelectModal(prev => !prev)
+    }
+
+    const checkBelowZero = ( value: any ) => value <= 0 ? 0 : value
+
+    useEffect(() => {
+        if( lockPeriod < checkBelowZero(stakeLimitInfo.DAYS_MIN - lockDays) )
+            setLockPeriod( checkBelowZero(stakeLimitInfo.DAYS_MIN - lockDays) )
+        if( lockPeriod > checkBelowZero(stakeLimitInfo.DAYS_MAX - lockDays) )
+            setLockPeriod( checkBelowZero(stakeLimitInfo.DAYS_MAX - lockDays) )
+    }, [ lockPeriod, stakeLimitInfo ])
 
     return (
         <>
@@ -109,7 +124,7 @@ export default function StakeShiboshi() {
                 </ProgressCaption>
 
                 <ProgressCaption>
-                    { 'Staked Balance' }:
+                    { 'Locked Shiboshi' }:
                     <span> { `${ stakedBalance } ${ tokenType }` } </span>
                 </ProgressCaption>
             </div>
@@ -119,20 +134,32 @@ export default function StakeShiboshi() {
                     { 'Select tokens you want to lock.' }
                 </ProgressCaption>
 
-                <GradientButton onClick={() => setShowSelectModal(prev => !prev)}>Select Tokens</GradientButton>
+                { selectedNFTs.length > 0
+                    ? (<span className="text-lg">{`${ selectedNFTs.length } Shiboshis selected`}</span>) : null }
+
+                <GradientButton 
+                    onClick={ handleClickSelectToken }
+                    disabled={ checkBelowZero(stakeLimitInfo.AMOUNT_MAX - Number(stakedBalance)) === 0 }
+                >
+                    { selectedNFTs.length > 0 ? 'EDIT' : 'SELECT TOKENS'}
+                </GradientButton>
             </div>
 
             <div className='w-10/12 rangeBar'>
-                <ProgressCaption>
-                    { 'Locking period' }:
-                    <span> { `${ lockPeriod } days` } </span>
-                </ProgressCaption>
+                { checkBelowZero(stakeLimitInfo.DAYS_MAX - lockDays) === 0
+                    ? ( <ProgressCaption> Max Days Locked </ProgressCaption> )
+                    : ( <ProgressCaption>
+                            { 'Locking period' }:
+                            <span> { `${ lockPeriod } days` } </span>
+                        </ProgressCaption> )
+                }
 
                 <RangeInput 
-                    min={ stakeLimitInfo.DAYS_MIN }
-                    max={ stakeLimitInfo.DAYS_MAX }
+                    min={ checkBelowZero(stakeLimitInfo.DAYS_MIN - lockDays) }
+                    max={ checkBelowZero(stakeLimitInfo.DAYS_MAX - lockDays) }
                     value={ [ lockPeriod ] }
                     setValue={ setLockPeriod }
+                    disable={ checkBelowZero(stakeLimitInfo.DAYS_MAX - lockDays) === 0 }
                 />
             </div>
 
@@ -175,21 +202,21 @@ export default function StakeShiboshi() {
                         disabled={
                             isPending ||
                             !shibaBalanceValue ||
-                            Number(getSelectedNFTs().length) === 0 || 
+                            Number(selectedNFTs.length) === 0 || 
                             Number(lockPeriod) === 0 ||
-                            Number(getSelectedNFTs().length) > Number(shibaBalanceValue)
+                            Number(selectedNFTs.length) > Number(shibaBalanceValue)
                         }
                     >
                         { !isPending ? 'LOCK' : <Dots>LOCKING</Dots> }
                     </PrimaryButton>
                 )}
-                
             </div>
 
             <ShiboshiSelectModal 
                 isOpen={ showSelectModal } 
                 onDismiss={() => setShowSelectModal(prev => !prev)} 
                 myNFTs={ myNFTs } 
+                selectedNFTs={ selectedNFTs }
                 loadingNFTs={ loadingNFTs }
                 handleSelectNFT={ handleSelectNFT }
                 />

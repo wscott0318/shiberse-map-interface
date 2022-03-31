@@ -23,6 +23,7 @@ const useShiberseStakeToken = (props:any) => {
     //allowance state variable
     const [allowance, setAllowance] = useState('0')
     const [stakedBalance, setStakedBalance] = useState('0')
+    const [lockDays, setLockDays] = useState(0)
     const [stakeLimitInfo, setStakeLimitInfo] = useState({
         AMOUNT_MAX: 1,
         AMOUNT_MIN: 0,
@@ -79,12 +80,15 @@ const useShiberseStakeToken = (props:any) => {
         [addTransaction, stakeContract]
     )
 
-    const fetchStakedBalance = useCallback(async () => {
+    const fetchLockInfo = useCallback(async () => {
         try {
-            const balance = await stakeContract?.lockInfoOf(account)
-            if(balance){
-                const formatted = Fraction.from(BigNumber.from(balance.amount), BigNumber.from(10).pow(18)).toString()
+            const lockInfo = await stakeContract?.lockInfoOf(account)
+            if(lockInfo){
+                const formatted = Fraction.from(BigNumber.from(lockInfo.amount), BigNumber.from(10).pow(18)).toString()
                 setStakedBalance(formatted)
+
+                const numDays = Number( formatFromBalance( lockInfo.numDays, 0 ) )
+                setLockDays( numDays )
             } else {
                 setStakedBalance('0')
             }
@@ -95,8 +99,8 @@ const useShiberseStakeToken = (props:any) => {
 
     useEffect(() => {
         if( account && chainId === mainNetworkChainId )
-            fetchStakedBalance()
-    }, [ account, chainId, fetchStakedBalance ])
+            fetchLockInfo()
+    }, [ account, chainId, fetchLockInfo ])
 
     const fetchStakeLimitInfo = useCallback(async () => {
         const decimals = await tokenContract?.decimals()
@@ -120,7 +124,7 @@ const useShiberseStakeToken = (props:any) => {
             fetchStakeLimitInfo()
     })
 
-    return {allowance, approve, stake, stakedBalance, stakeLimitInfo}
+    return {allowance, approve, stake, stakedBalance, lockDays, stakeLimitInfo}
 
 }
 

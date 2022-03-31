@@ -88,11 +88,12 @@ const ContentWrapper = styled.div`
     max-height: 40vh;
     overflow: auto;
 
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
+    border-radius: 20px;
 
     padding: 0rem 1rem;
     margin: 2rem 0;
+
+    background: #2f2e44;
 
     ${({ theme }) => theme.mediaWidth.upToMedium`padding: 1rem`};
 
@@ -129,9 +130,8 @@ const ArtWrapper = styled.div`
 `
 
 export const ShiboshiSelectModal = (props: any) => {
-    console.error(props.myNFTs)
 
-    const selectedNFTs = props.myNFTs.filter((nft: any) => nft.selected === true)
+    const isSelected = ( tokenId: any ) => (props.selectedNFTs.indexOf( tokenId ) !== -1)
 
     return (
         <Modal isOpen={ props.isOpen } onDismiss={ props.onDismiss } minHeight={false} maxHeight={80}>
@@ -147,31 +147,25 @@ export const ShiboshiSelectModal = (props: any) => {
                     </>
 
                     <ContentWrapper className='relative'>
-                        <div className='flex flex-wrap justify-center items-center'>
+                        <div className='flex flex-wrap justify-center items-center py-5'>
                             { 
                                 props.loadingNFTs ?
                                     ( <> <p className='text-lg'>Loading </p> <Loader stroke="white" /> </> )
                                 : props.myNFTs.length === 0 ? 
                                     ( <p className='text-lg font-bold'>You have no SHIBOSHI Token</p> )
-                                : null 
+                                : ( props.myNFTs.map(( nft: any, key: number ) => (
+                                        <ArtWrapper key={`myNFT${key}`} onClick={() => props.handleSelectNFT( nft.id.tokenId )} className={`${ isSelected(nft.id.tokenId) ? 'active' : '' }`}>
+                                            <div className='image'>
+                                                <img src={ nft.metaInfo.image } alt='pic'/>
+                                            </div>
+                                        </ArtWrapper>
+                                    )) ) 
                             }
-
-                            { props.myNFTs.map(( nft: any, key: number ) => (
-                                <ArtWrapper key={`myNFT${key}`} onClick={() => props.handleSelectNFT( key )} className={`${ nft.selected ? 'active' : '' }`}>
-                                    <div className='image'>
-                                        <img src={defaultNFT} alt='pic'/>
-                                    </div>
-
-                                    <div className='name'>
-                                        #name{key}
-                                    </div>
-                                </ArtWrapper>
-                            )) }
                         </div>
                     </ContentWrapper>
 
-                    <NormalButton className='px-10' disabled={ selectedNFTs.length === 0 } onClick={ props.onDismiss }>
-                        LOCK{ selectedNFTs.length > 0 ? `(${ selectedNFTs.length })` : '' }
+                    <NormalButton className='px-10' disabled={ props.selectedNFTs.length === 0 } onClick={ props.onDismiss }>
+                        LOCK{ props.selectedNFTs.length > 0 ? ` ${ props.selectedNFTs.length }` : '' }
                     </NormalButton>
                 </ConnectWalletWrapper>
             </UpperSection>

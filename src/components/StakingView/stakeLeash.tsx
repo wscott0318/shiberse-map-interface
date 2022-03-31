@@ -39,26 +39,31 @@ export default function StakeLeash() {
 
     const toggleWalletModal = useWalletModalToggle()
 
-    const { allowance, approve, stake, stakedBalance, stakeLimitInfo } = useShiberseStakeToken({ tokenType })
+    const { allowance, approve, stake, stakedBalance, lockDays, stakeLimitInfo } = useShiberseStakeToken({ tokenType })
 
     //Token Balance
     const shibaBalanceBigInt = useShiberseTokenBalance({ tokenType })
     const shibaBalanceValue = parseFloat(formatFromBalance(shibaBalanceBigInt?.value, shibaBalanceBigInt?.decimals))
     const decimals = shibaBalanceBigInt?.decimals
 
-    const [ lockAmount, setLockAmount ] = useState(1)
-    const [ lockPeriod, setLockPeriod ] = useState(1)
+    const [ lockAmount, setLockAmount ] = useState(0)
+    const [ lockPeriod, setLockPeriod ] = useState(0)
     const [requestedApproval, setRequestedApproval] = useState(false)
     const [ pendingTx, setPendingTx ] = useState<string | null>(null)
 
-    // const stakeLeashInfo = {
-    //     stakeMin: 1,
-    //     stakeMax: 1000,
-    //     dayMin: 1,
-    //     dayMax: 100,
-    // }
-
     const isPending = useIsTransactionPending(pendingTx ?? undefined)
+
+    useEffect(() => {
+        if( lockAmount < checkBelowZero(stakeLimitInfo.AMOUNT_MIN - Number(stakedBalance)) )
+            setLockAmount( checkBelowZero(stakeLimitInfo.AMOUNT_MIN - Number(stakedBalance)) )
+        if( lockAmount > checkBelowZero(stakeLimitInfo.AMOUNT_MAX - Number(stakedBalance)) )
+            setLockAmount( checkBelowZero(stakeLimitInfo.AMOUNT_MAX - Number(stakedBalance)) )
+
+        if( lockPeriod < checkBelowZero(stakeLimitInfo.DAYS_MIN - lockDays) )
+            setLockPeriod( checkBelowZero(stakeLimitInfo.DAYS_MIN - lockDays) )
+        if( lockPeriod > checkBelowZero(stakeLimitInfo.DAYS_MAX - lockDays) )
+            setLockPeriod( checkBelowZero(stakeLimitInfo.DAYS_MAX - lockDays) )
+    }, [ lockAmount, lockPeriod, stakeLimitInfo ])
 
     const handleStake = async () => {
         const inputData = {
@@ -89,6 +94,8 @@ export default function StakeLeash() {
         handleStake()
     }
 
+    const checkBelowZero = ( value: any ) => value <= 0 ? 0 : value
+
     return (
         <>
             <div className="flex justify-around flex-wrap">
@@ -98,37 +105,45 @@ export default function StakeLeash() {
                 </ProgressCaption>
 
                 <ProgressCaption>
-                    { 'Staked Balance' }:
+                    { 'Locked Leash' }:
                     <span> { `${ stakedBalance } ${ tokenType }` } </span>
                 </ProgressCaption>
             </div>
 
             <div className='w-10/12 rangeBar'>
-                <ProgressCaption>
-                    { 'Amount to lock' }:
-                    <span> { `${ lockAmount } ${ tokenType }` } </span>
-                </ProgressCaption>
+                { checkBelowZero(stakeLimitInfo.AMOUNT_MAX - Number(stakedBalance)) === 0
+                    ? ( <ProgressCaption> Max Leash Locked </ProgressCaption> )
+                    : ( <ProgressCaption>
+                            { 'Amount to lock' }:
+                            <span> { `${ lockAmount } ${ tokenType }` } </span>
+                        </ProgressCaption> )
+                }
 
                 <RangeInput 
-                    min={ stakeLimitInfo.AMOUNT_MIN }
-                    max={ stakeLimitInfo.AMOUNT_MAX }
+                    min={ checkBelowZero(stakeLimitInfo.AMOUNT_MIN - Number(stakedBalance)) }
+                    max={ checkBelowZero(stakeLimitInfo.AMOUNT_MAX - Number(stakedBalance)) }
                     value={ [ lockAmount ] }
                     setValue={ setLockAmount }
-                    step={ 1 }
+                    step={ 0.1 }
+                    disable={ checkBelowZero(stakeLimitInfo.AMOUNT_MAX - Number(stakedBalance)) === 0 }
                 />
             </div>
 
             <div className='w-10/12 rangeBar'>
-                <ProgressCaption>
-                    { 'Locking period' }:
-                    <span> { `${ lockPeriod } days` } </span>
-                </ProgressCaption>
+                { checkBelowZero(stakeLimitInfo.DAYS_MAX - lockDays) === 0
+                    ? ( <ProgressCaption> Max Days Locked </ProgressCaption> )
+                    : ( <ProgressCaption>
+                            { 'Locking period' }:
+                            <span> { `${ lockPeriod } days` } </span>
+                        </ProgressCaption> )
+                }
 
                 <RangeInput 
-                    min={ stakeLimitInfo.DAYS_MIN }
-                    max={ stakeLimitInfo.DAYS_MAX }
+                    min={ checkBelowZero(stakeLimitInfo.DAYS_MIN - lockDays) }
+                    max={ checkBelowZero(stakeLimitInfo.DAYS_MAX - lockDays) }
                     value={ [ lockPeriod ] }
                     setValue={ setLockPeriod }
+                    disable={ checkBelowZero(stakeLimitInfo.DAYS_MAX - lockDays) === 0 }
                 />
             </div>
 

@@ -405,6 +405,7 @@ export const GradientButton = styled.button`
     :disabled {
         cursor: not-allowed;
         color: white;
+        opacity: 0.5;
     }
 
     @media (max-width: 992px) {

@@ -24,6 +24,7 @@ const useShiberseStakeNFT = (props:any) => {
     //allowance state variable
     const [isApproved, setIsApproved] = useState(false)
     const [stakedBalance, setStakedBalance] = useState('0')
+    const [lockDays, setLockDays] = useState(0)
     const [stakeLimitInfo, setStakeLimitInfo] = useState({
         AMOUNT_MAX: 1,
         AMOUNT_MIN: 0,
@@ -36,7 +37,6 @@ const useShiberseStakeNFT = (props:any) => {
         if (account) {
             try {
                 const approved = await tokenContract?.isApprovedForAll(account, stakeContract?.address)
-                // const formatted = Fraction.from(BigNumber.from(allowance), BigNumber.from(10).pow(18)).toString()
                 setIsApproved(approved)
             } catch {
                 setIsApproved(false)
@@ -80,12 +80,15 @@ const useShiberseStakeNFT = (props:any) => {
         [addTransaction, stakeContract]
     )
 
-    const fetchStakedBalance = useCallback(async () => {
+    const fetchLockInfo = useCallback(async () => {
         try {
-            const balance = await stakeContract?.lockInfoOf(account)
-            if(balance){
-                const formatted = balance.ids.length
+            const lockInfo = await stakeContract?.lockInfoOf(account)
+            if(lockInfo){
+                const formatted = lockInfo.ids.length
                 setStakedBalance(formatted.toString())
+
+                const numDays = Number( formatFromBalance( lockInfo.numDays, 0 ) )
+                setLockDays( numDays )
             } else {
                 setStakedBalance('0')
             }
@@ -96,8 +99,8 @@ const useShiberseStakeNFT = (props:any) => {
 
     useEffect(() => {
         if( account && chainId === mainNetworkChainId )
-            fetchStakedBalance()
-    }, [ account, chainId, fetchStakedBalance ])
+            fetchLockInfo()
+    }, [ account, chainId, fetchLockInfo ])
 
     const web3 = createAlchemyWeb3(
         alchemyApi.https
@@ -109,7 +112,17 @@ const useShiberseStakeNFT = (props:any) => {
 
             const contractNFTs = fetchNFTData.ownedNfts.filter((item: any) => item.contract.address === tokenContract?.address.toLowerCase())
 
-            return contractNFTs
+            const resultArray = [] as any
+
+            for( let i = 0; i < contractNFTs.length; i++ ) {
+                const newValue = { ...contractNFTs[i] } as any
+                const tokenId = parseInt( contractNFTs[i].id.tokenId )
+                newValue.metaInfo = await fetch( metadataURL + tokenId )
+                newValue.metaInfo = await newValue.metaInfo.json()
+                resultArray.push(newValue)
+            }
+
+            return resultArray
         }
 
         return []
@@ -135,7 +148,7 @@ const useShiberseStakeNFT = (props:any) => {
             fetchStakeLimitInfo()
     })
 
-    return {isApproved, approve, stake, stakedBalance, fetchWalletNFT, stakeLimitInfo}
+    return {isApproved, approve, stake, stakedBalance, fetchWalletNFT, lockDays, stakeLimitInfo}
 }
 
 export default useShiberseStakeNFT

@@ -124,16 +124,14 @@ export const StakingWindow = () => {
 
                     { showReadMore ? <ReadMore onClick={ () => setCollapsed(prev => !prev) }> { collapsed ? 'more' : 'less'} </ReadMore> : null }                    
                 </p>
-                
-                {/* <p>
-                    When using the LEASH LOCKER feature, you will be converting your <b>$LEASH</b> to <b>yLEASH</b>. This mechanic will provide you the ability to gain early access to purchase lands.
-                    <br/>
-                    Please, select the amount to lock and the locking period.
-                </p> */}
 
-                {tokenType === 'leash'
-                    ? <StakeLeash /> 
-                    : <StakeShiboshi />}
+                <div style={{ display: tokenType === 'leash' ? 'block' : 'none' }}>
+                    <StakeLeash />
+                </div>
+
+                <div style={{ display: tokenType === 'shiboshi' ? 'block' : 'none' }}>
+                    <StakeShiboshi />
+                </div>
             </StakeContent>
         </Wrapper>
     )

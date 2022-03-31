@@ -19,16 +19,22 @@ const ProfileButtonWrapper = styled.div`
 const ProfileMenuDiv = styled.div`
     position: absolute;
     right: 0;
-    top: 63px;
+    top: 60px;
     width: 182px;
     padding: .5rem 1rem;
     background: #201F31;
     border-radius: 0px 0px 8px 8px;
     transition: all .1s;
     opacity: 0;
+    display: none;
 
     &.active {
+        display: block;
         opacity: 1;
+    }
+
+    @media( max-width: 974px ) {
+        top: 52px;
     }
 `
 
@@ -79,7 +85,7 @@ export default function ProfileMenu() {
             <ProfileButton id='profileMenuBtn' onClick={ () => setShow(prev => !prev) }>W</ProfileButton>
 
             <ProfileMenuDiv className={`profileMenu ${ show ? 'active' : '' }`}>
-                <ProfileMenuButton>PROFILE</ProfileMenuButton>
+                {/* <ProfileMenuButton>PROFILE</ProfileMenuButton> */}
                 <ProfileMenuButton 
                     onClick={() => {
                         deactivate()

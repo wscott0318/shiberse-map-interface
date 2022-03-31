@@ -9,7 +9,7 @@
                 box-sizing: border-box;
                 border-radius: 24px;
 
-                padding: 1.5rem 2rem;
+                padding: 1.5rem 2rem !important;
             }
 
             .row-content {
@@ -24,7 +24,7 @@
                 margin-top: 10px;
 
                 .row-content-text {
-                    padding: 1.5rem 2rem;
+                    padding: 1.5rem 2rem !important;
                 }
             }
         }
@@ -37,7 +37,7 @@
             .faq-row {
                 .row-title {
                     border-radius: 12px;
-                    padding: .5rem 1rem;
+                    padding: .5rem 1rem !important;
                 }
     
                 .row-content {
@@ -45,7 +45,7 @@
                     border-radius: 12px;
     
                     .row-content-text {
-                        padding: .5rem 1rem;
+                        padding: .5rem 1rem !important;
                     }
                 }
             }

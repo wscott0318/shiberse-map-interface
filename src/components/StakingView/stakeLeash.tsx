@@ -22,6 +22,10 @@ const ProgressCaption = styled.div`
         color: ${({theme}) => theme.brown1};
         text-transform: uppercase;
     }
+
+    @media( max-width: 576px ) {
+        margin: 5px 0;
+    }
 `
 
 const Parameters = styled.span`
@@ -96,6 +100,20 @@ export default function StakeLeash() {
 
     const checkBelowZero = ( value: any ) => value <= 0 ? 0 : value
 
+    const calcLandCount = () => {
+        const score = Number(stakedBalance) * lockDays + lockAmount * lockPeriod
+
+        const breakPoints = [ 9, 31, 61, 101, 131, 181, 221, 301, 371, 420, 451 ]
+        const landCounts = [ 1, 5, 10, 20, 50, 80, 100, 140, 180, 200 ]
+
+        for( let i = 0; i < breakPoints.length - 1; i++ ) {
+            if( score < breakPoints[i + 1] )
+                return landCounts[i]
+        }
+
+        return 0
+    }
+
     return (
         <>
             <div className="flex justify-around flex-wrap">
@@ -147,13 +165,13 @@ export default function StakeLeash() {
                 />
             </div>
 
-            <p className='mt-5 mb-3'>
+            <p className='mt-2 mb-3'>
                 { `These parameters give you access to bid/purchase` }:
             </p>
 
             <div className='mt-6 mb-6'>
                 <Parameters>
-                    { '7 of max. 200 lands' }
+                    { `${calcLandCount()} land${calcLandCount() > 1 ? 's' : ''} of 200 max` }
                 </Parameters>
             </div>
 

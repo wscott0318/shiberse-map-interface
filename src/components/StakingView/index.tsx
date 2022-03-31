@@ -67,7 +67,7 @@ export const StakingView = () => {
                 <StakingWindow />
 
                 <DiscordBtnWrapper href='https://discord.com/invite/shibatoken' target={'_blank'}>
-                    <GradientButton className='flex justify-center items-center'>
+                    <GradientButton className='flex justify-center items-center ml-0'>
                         { 'Join our Discord' }
                         <img src={discordIcon} width={25} className='ml-2'></img>
                     </GradientButton>

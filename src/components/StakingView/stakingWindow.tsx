@@ -1,6 +1,5 @@
 import { useWindowSize } from 'hooks/useWindowSize'
 import React, { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import StakeLeash from './stakeLeash'
 import StakeShiboshi from './stakeShiboshi'
@@ -66,6 +65,10 @@ const StakeHeader = styled.div`
             }
         }
     }
+
+    @media( max-width: 576px ) {
+        margin: 1rem 0;
+    }
 `
 
 const StakeContent = styled.div`
@@ -89,7 +92,6 @@ const ReadMore = styled.a`
 `
 
 export const StakingWindow = () => {
-    const { t } = useTranslation()
     const [ tokenType, setTokenType ] = useState('leash')
     const [ showReadMore, setShowReadMore ] = useState(false)
     const [ collapsed, setCollapsed ] = useState(false)
@@ -97,7 +99,7 @@ export const StakingWindow = () => {
     const { width, height } = useWindowSize()
 
     useEffect(() => {
-        if( width && width >= 992 && height && height && height < 781 ) {
+        if( width && width >= 992 && height && height && height < 811 ) {
             setShowReadMore(true)
             setCollapsed(true)
         } else {

@@ -22,6 +22,10 @@ const ProgressCaption = styled.div`
         color: ${({theme}) => theme.brown1};
         text-transform: uppercase;
     }
+
+    @media( max-width: 576px ) {
+        margin: 5px 0;
+    }
 `
 
 const Parameters = styled.span`
@@ -115,6 +119,20 @@ export default function StakeShiboshi() {
             setLockPeriod( checkBelowZero(stakeLimitInfo.DAYS_MAX - lockDays) )
     }, [ lockPeriod, stakeLimitInfo ])
 
+    const calcLandCount = () => {
+        const score = Number(stakedBalance) * lockDays + selectedNFTs.length * lockPeriod
+
+        const breakPoints = [ 45, 90, 151, 251, 351, 481, 601, 701, 801, 851, 901 ]
+        const landCounts = [ 1, 5, 10, 20, 50, 80, 100, 140, 180, 200 ]
+
+        for( let i = 0; i < breakPoints.length - 1; i++ ) {
+            if( score < breakPoints[i + 1] )
+                return landCounts[i]
+        }
+
+        return 0
+    }
+
     return (
         <>
             <div className="flex justify-around flex-wrap">
@@ -134,7 +152,7 @@ export default function StakeShiboshi() {
                     { 'Select tokens you want to lock.' }
                 </ProgressCaption>
 
-                { selectedNFTs.length > 0
+                { selectedNFTs.length > 0 || true
                     ? (<span className="text-lg">{`${ selectedNFTs.length } Shiboshis selected`}</span>) : null }
 
                 <GradientButton 
@@ -163,13 +181,13 @@ export default function StakeShiboshi() {
                 />
             </div>
 
-            <p className='mt-5 mb-3'>
+            <p className='mt-2 mb-3'>
                 { `These parameters give you access to bid/purchase` }:
             </p>
 
             <div className='mt-6 mb-6'>
                 <Parameters>
-                    { '7 of max. 200 lands' }
+                    { `${calcLandCount()} land${calcLandCount() > 1 ? 's' : ''} of 200 max` }
                 </Parameters>
             </div>
 

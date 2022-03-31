@@ -101,7 +101,7 @@ export default function StakeLeash() {
     const checkBelowZero = ( value: any ) => value <= 0 ? 0 : value
 
     const calcLandCount = () => {
-        const score = Number(stakedBalance) * lockDays + lockAmount * lockPeriod
+        const score = (Number(stakedBalance) + Number(lockAmount)) * (Number(lockDays) + Number(lockPeriod))
 
         const breakPoints = [ 9, 31, 61, 101, 131, 181, 221, 301, 371, 420, 451 ]
         const landCounts = [ 1, 5, 10, 20, 50, 80, 100, 140, 180, 200 ]
@@ -133,7 +133,7 @@ export default function StakeLeash() {
                     ? ( <ProgressCaption> Max Leash Locked </ProgressCaption> )
                     : ( <ProgressCaption>
                             { 'Amount to lock' }:
-                            <span> { `${ lockAmount } ${ tokenType }` } </span>
+                            <span> { `${ Number(lockAmount).toFixed(1) } ${ tokenType }` } </span>
                         </ProgressCaption> )
                 }
 
@@ -197,9 +197,7 @@ export default function StakeLeash() {
                         onClick={ lockToken }
                         disabled={
                             isPending ||
-                            !shibaBalanceValue ||
-                            Number(lockAmount) === 0 || 
-                            Number(lockPeriod) === 0 ||
+                            (Number(lockAmount) === 0 && Number(lockPeriod) === 0) ||
                             Number(lockAmount) > Number(shibaBalanceValue)
                         }
                     >

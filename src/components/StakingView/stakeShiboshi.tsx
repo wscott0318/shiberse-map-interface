@@ -120,7 +120,7 @@ export default function StakeShiboshi() {
     }, [ lockPeriod, stakeLimitInfo ])
 
     const calcLandCount = () => {
-        const score = Number(stakedBalance) * lockDays + selectedNFTs.length * lockPeriod
+        const score = (Number(stakedBalance) + Number(selectedNFTs.length)) * (Number(lockDays) + Number(lockPeriod))
 
         const breakPoints = [ 45, 90, 151, 251, 351, 481, 601, 701, 801, 851, 901 ]
         const landCounts = [ 1, 5, 10, 20, 50, 80, 100, 140, 180, 200 ]
@@ -219,9 +219,7 @@ export default function StakeShiboshi() {
                         }}
                         disabled={
                             isPending ||
-                            !shibaBalanceValue ||
-                            Number(selectedNFTs.length) === 0 || 
-                            Number(lockPeriod) === 0 ||
+                            (Number(selectedNFTs.length) === 0 && Number(lockPeriod) === 0) ||
                             Number(selectedNFTs.length) > Number(shibaBalanceValue)
                         }
                     >

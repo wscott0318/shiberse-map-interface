@@ -27,6 +27,9 @@ input:focus {
 .p-1{
   margin: -8px 0px -2px !important;
 }
+.p-3 {
+  padding: 0.75rem !important;
+}
 .modal_content p{
   line-height: 25px;
 }

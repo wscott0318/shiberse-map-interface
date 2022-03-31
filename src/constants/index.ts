@@ -359,15 +359,16 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
         href: null,
         color: '#E8831D'
     },
-    // WALLET_CONNECT: {
-    //     connector: walletconnect,
-    //     name: 'WalletConnect',
-    //     iconName: 'walletConnectIcon.svg',
-    //     description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
-    //     href: null,
-    //     color: '#4196FC',
-    //     mobile: true
-    // },
+    WALLET_CONNECT: {
+        connector: walletconnect,
+        name: 'WalletConnect',
+        iconName: 'walletConnectIcon.svg',
+        description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
+        href: null,
+        color: '#4196FC',
+        mobile: true,
+        mobileOnly: true
+    },
     // LATTICE: {
     //     connector: lattice,
     //     name: 'Lattice',
@@ -1094,8 +1095,8 @@ export const shiberseContractAddresses = {
         'LEASH_TOKEN': '0x673f2692b432EAF69B50fE9C46657e8a5dC89599',
         'SHIBOSHI_TOKEN': '0x253A46a5C75c667f19203BCD638819478AB9bBab',
         'BONE': '0x5CA454a716de461Ad2E0afF716c367b35901eD57',
-        'STAKE_LEASH': '0x96e799C44bC3B05bc78C3e110A2512C06D0eC3e7',
-        'STAKE_SHIBOSHI': '0x5c4943d7bb2de8034e211d7b512ab0a1d6ef581c',
+        'STAKE_LEASH': '0x25a3C1BaF69F219bC33b8D48Ec5acA70d8aCC181',
+        'STAKE_SHIBOSHI': '0x48a672cBE00eBf54669230c1CFF9c97ef703b989',
         'MOCKSALE': '0x736f9284b43c058b84a5e32ab57942db6cc5c1aa'
     }
 }

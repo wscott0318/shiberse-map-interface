@@ -99,7 +99,7 @@ export const StakingWindow = () => {
     const { width, height } = useWindowSize()
 
     useEffect(() => {
-        if( width && width >= 992 && height && height && height < 811 ) {
+        if( width && width >= 992 && height && height && height < 830 ) {
             setShowReadMore(true)
             setCollapsed(true)
         } else {
@@ -111,7 +111,7 @@ export const StakingWindow = () => {
     return (
         <Wrapper>
             <StakeContent>
-                <StakeHeader className='w-full relative flex justify-around items-center'>
+                <StakeHeader className='w-full relative flex justify-between items-center'>
                     <div className={`text-center px-2 ${ tokenType === 'leash' ? 'active' : '' }`} onClick={() => setTokenType( 'leash' )}> { 'Leash Locker' } </div>
                     <div className={`text-center px-2 ${ tokenType === 'shiboshi' ? 'active' : '' }`} onClick={() => setTokenType( 'shiboshi' )}> { 'SHIBOSHIS LOCKER' } </div>
                     <div className='text-center px-2'> <a target='_blank' rel="noreferrer" href='https://shibaswap.com/#/swap?outputCurrency=0x27C70Cd1946795B66be9d954418546998b546634&inputCurrency=ETH'>{ 'BUY LEASH' }</a> </div>

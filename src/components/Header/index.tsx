@@ -48,7 +48,7 @@ export default function Header(): JSX.Element {
     const { t } = useTranslation()
 
     const handleScroll = () => {
-        if( window.scrollY <= lastScroll ) {
+        if( window.scrollY <= lastScroll || window.scrollY <= 0 ) {
             setActive('active')
         } else {
             setActive('')

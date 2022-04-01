@@ -100,6 +100,7 @@ const OptionGrid = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
 `
 
 const HoverText = styled.div`

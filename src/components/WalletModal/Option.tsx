@@ -18,11 +18,11 @@ const OptionCard = styled(InfoCard as any)`
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    margin: 1.5rem 0;
+    margin: 1.5rem 0.5rem;
     padding: 1rem 2rem;
 
     ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-        margin: .5rem 0;
+        margin: .5rem 0.25rem;
     `};
 `
 

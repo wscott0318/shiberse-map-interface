@@ -9,7 +9,7 @@ export default function Home() {
     return (
         <div>
             <Helmet>
-                <title>HOME | SHIBERSE</title>
+                <title>SHIB - The Metaverse</title>
                 <meta name="description" content="" />
             </Helmet>
 

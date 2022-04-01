@@ -59,8 +59,8 @@ export default function StakeLeash() {
     const shibaBalanceValue = parseFloat(formatFromBalance(shibaBalanceBigInt?.value, shibaBalanceBigInt?.decimals))
     const decimals = shibaBalanceBigInt?.decimals
 
-    const [ lockAmount, setLockAmount ] = useState(0)
-    const [ lockPeriod, setLockPeriod ] = useState(0)
+    const [ lockAmount, setLockAmount ] = useState(stakeLimitInfo.AMOUNT_MIN)
+    const [ lockPeriod, setLockPeriod ] = useState(stakeLimitInfo.DAYS_MIN)
     const [requestedApproval, setRequestedApproval] = useState(false)
     const [ pendingTx, setPendingTx ] = useState<string | null>(null)
 
@@ -205,12 +205,11 @@ export default function StakeLeash() {
                         className='right-0' 
                         onClick={ lockToken }
                         disabled={
-                            isPending ||
                             (Number(lockAmount) === 0 && Number(lockPeriod) === 0) ||
                             Number(lockAmount) > Number(shibaBalanceValue)
                         }
                     >
-                        { !isPending ? 'LOCK' : <Dots>LOCKING</Dots> }
+                        LOCK
                     </PrimaryButton>
                 )}
                 

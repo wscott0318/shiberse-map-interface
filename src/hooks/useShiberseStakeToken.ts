@@ -25,10 +25,10 @@ const useShiberseStakeToken = (props:any) => {
     const [stakedBalance, setStakedBalance] = useState('0')
     const [lockDays, setLockDays] = useState(0)
     const [stakeLimitInfo, setStakeLimitInfo] = useState({
-        AMOUNT_MAX: 1,
-        AMOUNT_MIN: 0,
-        DAYS_MAX: 1,
-        DAYS_MIN: 0,
+        AMOUNT_MAX: 5.0,
+        AMOUNT_MIN: 0.2,
+        DAYS_MAX: 90,
+        DAYS_MIN: 45,
     })
 
     //Fetch Sushi Allowance

@@ -92,7 +92,7 @@ export default function StakeShiboshi() {
     const shibaBalanceValue = parseFloat(formatFromBalance(shibaBalanceBigInt?.value, shibaBalanceBigInt?.decimals))
 
     const [ showSelectModal, setShowSelectModal ] = useState(false)
-    const [ lockPeriod, setLockPeriod ] = useState(1)
+    const [ lockPeriod, setLockPeriod ] = useState(stakeLimitInfo.DAYS_MIN)
     const [requestedApproval, setRequestedApproval] = useState(false)
     const [ pendingTx, setPendingTx ] = useState<string | null>(null)
     const [ myNFTs, setMyNFTs ] = useState([])
@@ -258,12 +258,11 @@ export default function StakeShiboshi() {
                             handleStake()
                         }}
                         disabled={
-                            isPending ||
                             (Number(selectedNFTs.length) === 0 && Number(lockPeriod) === 0) ||
                             Number(selectedNFTs.length) > Number(shibaBalanceValue)
                         }
                     >
-                        { !isPending ? 'LOCK' : <Dots>LOCKING</Dots> }
+                        LOCK
                     </PrimaryButton>
                 )}
             </div>

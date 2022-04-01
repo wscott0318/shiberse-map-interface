@@ -54,7 +54,7 @@ div[data-reach-dialog-overlay] div[data-reach-dialog-content]{
   position: fixed;
   top: -63px;
 
-  background: #201f31bf;
+  background: #201f317a;
   backdrop-filter: blur(10px);
 
   transition: all .5s;

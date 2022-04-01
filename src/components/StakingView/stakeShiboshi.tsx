@@ -226,18 +226,22 @@ export default function StakeShiboshi() {
             </div>
 
             <ProgressCaption>
-                { isMaxLands() ? 'This wallet has access to max. lands, wait for the Bid Event to start!' : '' }
+                { isMaxLands() ? 'This wallet has access to max lands, wait for the Bid Event to start!' : '' }
             </ProgressCaption>
 
-            <p className='mt-2 mb-3'>
-                { `These parameters give you access to bid/purchase` }:
-            </p>
+            { !isMaxLands() ? (
+                <>
+                    <p className='mt-2 mb-3'>
+                        { `These parameters give you access to bid/purchase` }:
+                    </p>
 
-            <div className='mt-6 mb-6'>
-                <Parameters>
-                    { `${calcLandCount()} land${calcLandCount() > 1 ? 's' : ''} of 200 max` }
-                </Parameters>
-            </div>
+                    <div className='mt-6 mb-6'>
+                        <Parameters>
+                            { `${calcLandCount()} land${calcLandCount() > 1 ? 's' : ''} of 200 max` }
+                        </Parameters>
+                    </div>
+                </>
+            ): null }
 
             <div className='w-full flex flex-row-reverse'>
                 {!isApproved ? (

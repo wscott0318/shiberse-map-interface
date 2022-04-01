@@ -43,7 +43,7 @@ export const RangeInput = ( { min, max, value, setValue, step = 1, disable = fal
                         <div
                             ref={props.ref}
                             style={{
-                            height: "10px",
+                            height: "13px",
                             width: "100%",
                             borderRadius: "32px",
                             border: '1px solid #B96A05',
@@ -65,7 +65,7 @@ export const RangeInput = ( { min, max, value, setValue, step = 1, disable = fal
                         {...props}
                         style={{
                             ...props.style,
-                            height: "22px",
+                            height: "25px",
                             width: "13px",
                             backgroundColor: "#B96A05",
                             outline: "unset"

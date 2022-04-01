@@ -1,7 +1,6 @@
 import React from "react"
 import styled from 'styled-components'
 import Faq from "react-faq-component";
-import thumbnail from '../../assets/images/home/faq.png'
 import blurCircle from '../../assets/images/home/guide/blur1.svg'
 import './faq.scss'
 
@@ -27,50 +26,10 @@ const SectionWrapper = styled.div`
 `
 
 const FaqWrapper = styled.div`
-    width: 55%;
+    width: 90%;
 
     @media (max-width: 992px) {
         width: 100%;
-    }
-`
-
-const PictureWrapper = styled.div`
-    width: 33%;
-
-    @media (max-width: 1200px) {
-        width: 45%;
-    }
-
-    @media (max-width: 992px) {
-        width: 80%;
-        left: 10%;
-        margin-top: 3rem;
-    }
-
-    @media (max-width: 576px) {
-        width: 90%;
-        left: 5%;
-        margin-top: 1rem;
-    }
-`
-
-const SplitterWrapper = styled.div`
-    position: relative;
-    width: 12%;
-    text-align: center;
-
-    .splitter {
-        width: 1px;
-        height: 400px;
-        background : #785838;
-    }
-
-    @media (max-width: 1200px) {
-        width: 10%;
-    }
-
-    @media (max-width: 992px) {
-        display: none !important;
     }
 `
 
@@ -105,14 +64,6 @@ export const FaqComponent = ({ data, styles, config }: any) => {
                         config={ config }
                     />
                 </FaqWrapper>
-
-                <SplitterWrapper className='flex justify-center items-center relative'>
-                    <div className='splitter' />
-                </SplitterWrapper>
-
-                <PictureWrapper className='relative flex items-center justify-center'>
-                    <img src={thumbnail}></img>
-                </PictureWrapper>
             </SectionWrapper>
         </Wrapper>
     )

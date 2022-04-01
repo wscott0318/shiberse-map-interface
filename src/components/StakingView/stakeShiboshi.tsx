@@ -36,6 +36,36 @@ const Parameters = styled.span`
     border: 1px solid #BE6D06;
 `
 
+const SelectorButton = styled.button`
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19.2px;
+    color: white;
+    font-style: normal;
+    text-decoration-line: underline;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    margin-top: 1rem;
+
+    :hover {
+        cursor: pointer;
+        color: #F8A93E;
+    }
+
+    :disabled {
+        cursor: not-allowed;
+        color: white;
+        opacity: 0.5;
+    }
+`
+
+const SelectedInfo = styled.p`
+    color: #F8A93E;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 25px;
+`
+
 export default function StakeShiboshi() {
     const tokenType = 'shiboshi'
 
@@ -148,19 +178,16 @@ export default function StakeShiboshi() {
             </div>
 
             <div className='w-10/12 rangeBar'>
-                <ProgressCaption>
-                    { 'Select tokens you want to lock.' }
-                </ProgressCaption>
-
-                { selectedNFTs.length > 0
-                    ? (<span className="text-lg">{`${ selectedNFTs.length } Shiboshis selected`}</span>) : null }
-
-                <GradientButton 
+                <SelectorButton
                     onClick={ handleClickSelectToken }
                     disabled={ checkBelowZero(stakeLimitInfo.AMOUNT_MAX - Number(stakedBalance)) === 0 }
                 >
-                    { selectedNFTs.length > 0 ? 'EDIT' : 'SELECT TOKENS'}
-                </GradientButton>
+                    Click here to open the Shiboshis selector
+                </SelectorButton>
+
+                <SelectedInfo>
+                    Shiboshis selected: { selectedNFTs.length }
+                </SelectedInfo>
             </div>
 
             <div className='w-10/12 rangeBar'>
@@ -168,7 +195,7 @@ export default function StakeShiboshi() {
                     ? ( <ProgressCaption> Max Days Locked </ProgressCaption> )
                     : ( <ProgressCaption>
                             { 'Locking period' }:
-                            <span> { `${ lockPeriod } days` } </span>
+                            <span> { `${ lockPeriod } day${ Number(lockPeriod) > 1 ? 's' : '' }` } </span>
                         </ProgressCaption> )
                 }
 

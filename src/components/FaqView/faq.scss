@@ -10,6 +10,10 @@
                 border-radius: 24px;
 
                 padding: 1.5rem 2rem !important;
+
+                .row-title-text {
+                    padding-right: 0;
+                }
             }
 
             .row-content {
@@ -25,6 +29,32 @@
 
                 .row-content-text {
                     padding: 1.5rem 2rem !important;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 992px) {
+    .faq-row-wrapper {
+        .faq-body {
+            .faq-row {
+                .row-title {
+                    border-radius: 18px;
+                    padding: 1rem 1.5rem !important;
+
+                    .row-title-text {
+                        font-size: 17px;
+                    }
+                }
+    
+                .row-content {
+                    margin-top: 8px;
+                    border-radius: 18px;
+    
+                    .row-content-text {
+                        padding: 1rem 1.5rem !important;
+                    }
                 }
             }
         }

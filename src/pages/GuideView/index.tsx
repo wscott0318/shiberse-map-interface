@@ -1,14 +1,15 @@
 import React from 'react'
 import styled from 'styled-components'
 import blurCircle from '../../assets/images/home/guide/blur1.svg';
-import image1 from '../../assets/images/home/guide/1.png';
-import image2 from '../../assets/images/home/guide/2.png';
-import image3 from '../../assets/images/home/guide/3.png';
+import image1 from '../../assets/images/home/guide/1.svg';
+import image2 from '../../assets/images/home/guide/2.svg';
+import image3 from '../../assets/images/home/guide/3.svg';
 import { NormalButton } from 'theme';
 import { NavLink } from 'components'
 
 const GuideWrapper = styled.div`
-    padding: 5% 0;
+    padding: 8% 0;
+    padding-bottom: 0%;
 `
 
 const BlurCircle = styled.img<{ position?: string }>`
@@ -105,6 +106,22 @@ const SectionTitle = styled.p<{textSize?: string}>`
     margin-bottom: 1rem;
 `
 
+const Title = styled.div`
+    font-size: 64px !important;
+    font-family: 'Passion One';
+    padding: 0 10%;
+    padding-left: 46%;
+    line-height: 60px;
+
+    @media( max-width: 992px ) {
+        padding: 4% 10%;
+    }
+
+    @media( max-width: 576px ) {
+        padding: 4% 1rem;
+    }
+`
+
 export const GuideSection = ({ image, title, content, blurPosition, textSize, hasLandsMapButton = false }: any) => {
     return (
         <GuidSectionWrapper className='flex justify-between items-start relative'>
@@ -120,6 +137,7 @@ export const GuideSection = ({ image, title, content, blurPosition, textSize, ha
                 </SectionTitle>
 
                 <div 
+                    className='text-justify'
                     dangerouslySetInnerHTML={{
                         __html: content
                     }}>
@@ -137,20 +155,22 @@ export const GuideView = () => {
     const contents = [{
         image: image1,
         title: '1. BID EVENT (72 HOURS)',
-        content: `<p>This event is designed to provide an amazing opportunity to one of the most anticipated releases of the year for Shiba Inu Ecosystem. This exclusive event engages with those gaining early access while also being able to bid for their preferred set of lands, with a maximum of up to 200 lands. This is a unique chance to reserve the first batch of lands with priority over the rest of users, in order to mint them when the timer finalizes.<br/><br/>Bids can only last and serve the user for 72 hours, in which you will be able to gain a competitive edge by bidding, and outbidding this fun auction opportunity, and in order to gather lands successfully!<br/><br/>SHIB Metaverse has some high-profile areas that you don’t want to miss! If you want to collect a parcel into some of them we encourage you to lock your $LEASH, or your Shiboshis as soon as the event starts and by joining the interactive map!<br/><br/>As a reminder all land purchases are accomplished with ETH.</p>`
+        content: `<p>The BID event is designed to provide an amazing early access opportunity to one of Shiba Inu’s most anticipated releases, SHIB : The Metaverse.<br/><br/>This exclusive first event will allow participants to endure a thrilling three days (72 hours) race of bidding for their preferred plots of land. This is a unique, and exclusive chance to reserve the very first batch of lands with priority over the rest of users!<br/><br/>Bids will only last and serve each user for 72 hours, in which many will be able to gain a competitive edge by bidding, and outbidding in this fun auction-style opportunity!<br/><br/>SHIB Metaverse has some incredible high-profile areas that you don’t want to miss! We encourage you to lock your $LEASH, or your Shiboshis as soon as the event starts and in order to join the interactive map!<br/><br/>As a reminder all land purchases are accomplished with ETH, and you will not be able to participate on this event unless you have locked $LEASH or your Shiboshis.</p>`
     }, {
         image: image2,
         title: '2. HOLDERS SALE (7 DAYS)',
-        content: `<p>To acknowledge our amazing holders of $LEASH and SHIBOSHIS, who did not get to participate, or were not able to mint lands during the initial bidding event, don’t worry, we are bringing another opportunity to get lands!<br/><br/>$LEASH and SHIBOSHI holders will be able to purchase lands, without a bidding mechanic and normal purchase, during an additional 7 days right after the initial bidding event comes to an end.<br/><br/>Users will still be required to use the locking system provided in the initial bidding system to gain access to yLEASH as well as yShiboshi, which allows the lands map to unlock while providing a clear view of available parcels.<br/><br/>Holders will be able to reserve their selected lands and mint them as soon as the timer ends.</p>`
+        content: `<p>To continue the excitement, we are happy to bring another great opportunity for our amazing holders of $LEASH and SHIBOSHIS, who did not get to participate, and/or were not able to mint lands during the initial bidding event. We labelled this stage as the HOLDERS EVENT.<br/><br/>During this stage, $LEASH and SHIBOSHI holders will be able to purchase lands, without a bidding mechanic and at the fixed price for each Tier of lands. The event will last 7 days, and will become available right after the initial bidding event comes to an end.<br/><br/>Users will still be required to use the locking system provided in the initial bidding system to gain access to the interactive-map. Users will be able to purchase their selected lands, and mint them as soon as the timer ends.<br/><br/>All land purchases are accomplished with ETH</p>`
     }, {
         image: image3,
-        title: '3. PUBLIC SALE',
-        content: `<p>At the end of both the BID EVENT and HOLDER EVENT, the public sale for lands will begin. This means anyone and all users will be able to purchase the remaining lands without restrictions, locking time, or any determined factor..<br/><br/>You will not need to hold any of the Shiba ecosystem tokens to be able to acquire a parcel / land plot. As soon the early events end, users can mint their desired lands at a fixed price directly via the interactive map.</p>`,
+        title: '3. PUBLIC SALE (OPEN FOR ALL)',
+        content: `<p>At the end of both the BID EVENT and HOLDER EVENT, the final stage of the first phase for lands will begin, by welcoming the Public Sale. This is the last chance, and final stage in order for users to get in the action while securing their plots of land.<br/><br/>During this final stage, users will be able to purchase the remaining lands without any restrictions, locking time, or any determined factor. You do not need to use the LEASH or SHIBOSHI Locker, and will not need to hold any of the Shiba ecosystem tokens to be able to acquire a land plot.<br/><br/>Users can mint their desired lands at the fixed price, and directly via the interactive map broadcasting available plots remaining.</p>`,
         hasLandsMapButton: true,
     }]
 
     return (
         <GuideWrapper className='container relative'>
+            <Title>SALES EVENT</Title>
+
             {
                 contents.map((item, index) => (
                     <GuideSection 

@@ -31,26 +31,6 @@ const SectionWrapper = styled.div`
     }
 `
 
-const PictureWrapper = styled.div`
-    width: 37%;
-
-    @media (max-width: 1200px) {
-        width: 40%;
-    }
-
-    @media (max-width: 992px) {
-        width: 80%;
-        left: 10%;
-        margin-top: 3rem;
-    }
-
-    @media (max-width: 576px) {
-        width: 90%;
-        left: 5%;
-        margin-top: 1rem;
-    }
-`
-
 const SplitterWrapper = styled.div`
     position: relative;
     width: 12%;
@@ -72,15 +52,11 @@ const SplitterWrapper = styled.div`
 `
 
 const DescWrapper = styled.div`
-    width: 50%;
+    width: 100%;
 
     @media (max-width: 992px) {
         width: 100%;
     }
-`
-
-const SectionImage = styled.img`
-    width: 100%;
 `
 
 const SectionTitle = styled.p`
@@ -97,7 +73,7 @@ const SplitterLine = styled.img`
     max-width: unset;
 `
 
-export const ShiberseSection = ({ image, title, content }: any) => {
+export const ShiberseSection = ({ title, content }: any) => {
     return (
         <SectionWrapper className='flex justify-between items-start relative'>
             <BlurCircle src={ blurCircle } className='absolute'/>
@@ -108,6 +84,7 @@ export const ShiberseSection = ({ image, title, content }: any) => {
                 </SectionTitle>
 
                 <div 
+                    className="text-justify"
                     dangerouslySetInnerHTML={{
                         __html: content
                     }}>
@@ -118,11 +95,6 @@ export const ShiberseSection = ({ image, title, content }: any) => {
                 <div className='splitter' />
                 <SplitterLine src={ splitterline } />
             </SplitterWrapper>
-
-            <PictureWrapper className='relative flex items-center'>
-                <SectionImage src={image}></SectionImage>
-            </PictureWrapper>
-
         </SectionWrapper>
     )
 }

@@ -117,11 +117,9 @@ export const StakingWindow = () => {
                     <div className='text-center px-2'> <a target='_blank' rel="noreferrer" href='https://shibaswap.com/#/swap?outputCurrency=0x27C70Cd1946795B66be9d954418546998b546634&inputCurrency=ETH'>{ 'BUY LEASH' }</a> </div>
                 </StakeHeader>
 
-                <p>
-                    { collapsed ? ( 'When using the LEASH LOCKER feature, you will be... ' ) :
-                        (<>When using the LEASH LOCKER feature, you will be converting your <b>$LEASH</b> to <b>yLEASH</b>. This mechanic will provide you the ability to gain early access to purchase lands.
-                        <br/>
-                        Please, select the amount to lock and the locking period.</>)
+                <p style={{ lineHeight: '19.2px' }} className='text-justify'>
+                    { collapsed ? ( 'Welcome to the LEASH LOCKER feature! ... ' ) :
+                        (<>Welcome to the LEASH LOCKER feature! Use the scroll bar in order to set and lock your $LEASH, and gain access to the map. This easy-to-use tool allows early entry for you to bid, and purchase plots of land, during the first two stages of this first phase release: BID Event, and HOLDER Event.</>)
                     }
 
                     { showReadMore ? <ReadMore onClick={ () => setCollapsed(prev => !prev) }> { collapsed ? 'more' : 'less'} </ReadMore> : null }                    

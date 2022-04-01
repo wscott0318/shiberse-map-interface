@@ -152,7 +152,7 @@ export default function StakeLeash() {
                     ? ( <ProgressCaption> Max Days Locked </ProgressCaption> )
                     : ( <ProgressCaption>
                             { 'Locking period' }:
-                            <span> { `${ lockPeriod } days` } </span>
+                            <span> { `${ lockPeriod } day${ Number(lockPeriod) > 1 ? 's' : '' }` } </span>
                         </ProgressCaption> )
                 }
 

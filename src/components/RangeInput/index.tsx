@@ -19,8 +19,8 @@ export const RangeInput = ( { min, max, value, setValue, step = 1, disable = fal
     return (
         <Wrapper className={ disable ? 'disable' : '' }>
             <MinMaxWrapper className='flex justify-between items-center'>
-                <span>{`Min. ${ step === 0.1 ? min.toFixed(1) : min }`}</span>
-                <span>{`Max. ${ step === 0.1 ? max.toFixed(1) : max }`}</span>
+                <div>Min. <span className='font-bold'>{` ${ step === 0.1 ? min.toFixed(1) : min }`}</span></div>
+                <div>Max. <span className='font-bold'>{`${ step === 0.1 ? max.toFixed(1) : max }`}</span></div>
             </MinMaxWrapper>
 
             <Range

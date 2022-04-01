@@ -29,7 +29,7 @@ const ProgressCaption = styled.div`
 `
 
 const Parameters = styled.span`
-    background: #201F31;
+    background: #201f3185;
     border-radius: 100px;
     font-size: 18px;
     padding: 10px 20px;
@@ -64,7 +64,20 @@ const SelectedInfo = styled.p`
     font-weight: 400;
     font-size: 15px;
     line-height: 25px;
+
+    @media( max-width: 396px ) {
+        text-align: center;
+    }
 `
+
+const BalanceInfoWrapper = styled.div`
+    width: 100%;
+    justify-content: space-between;
+
+    @media (max-width: 992px) {
+        width: 100%;
+    }
+` 
 
 export default function StakeShiboshi() {
     const tokenType = 'shiboshi'
@@ -165,7 +178,7 @@ export default function StakeShiboshi() {
 
     return (
         <>
-            <div className="flex justify-around flex-wrap">
+            <BalanceInfoWrapper className="flex flex-wrap">
                 <ProgressCaption>
                     { 'Current Balance' }:
                     <span> { `${ shibaBalanceValue } ${ tokenType }` } </span>
@@ -175,7 +188,7 @@ export default function StakeShiboshi() {
                     { 'Locked Shiboshi' }:
                     <span> { `${ stakedBalance } ${ tokenType }` } </span>
                 </ProgressCaption>
-            </div>
+            </BalanceInfoWrapper>
 
             <div className='w-10/12 rangeBar'>
                 <SelectorButton

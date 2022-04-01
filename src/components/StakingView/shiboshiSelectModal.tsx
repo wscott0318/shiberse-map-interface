@@ -152,7 +152,7 @@ export const ShiboshiSelectModal = (props: any) => {
                                 props.loadingNFTs ?
                                     ( <> <p className='text-lg'>Loading </p> <Loader stroke="white" /> </> )
                                 : props.myNFTs.length === 0 ? 
-                                    ( <p className='text-lg font-bold'>You have no SHIBOSHI Token</p> )
+                                    ( <p className='text-lg font-bold'>Oops! We can’t find your Shiboshis</p> )
                                 : ( props.myNFTs.map(( nft: any, key: number ) => (
                                         <ArtWrapper key={`myNFT${key}`} onClick={() => props.handleSelectNFT( nft.id.tokenId )} className={`${ isSelected(nft.id.tokenId) ? 'active' : '' }`}>
                                             <div className='image'>

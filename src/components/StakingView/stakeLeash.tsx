@@ -29,12 +29,21 @@ const ProgressCaption = styled.div`
 `
 
 const Parameters = styled.span`
-    background: #201F31;
+    background: #201f3185;
     border-radius: 100px;
     font-size: 18px;
     padding: 10px 20px;
     border: 1px solid #BE6D06;
 `
+
+const BalanceInfoWrapper = styled.div`
+    width: 83.3333%;
+    justify-content: space-between;
+
+    @media (max-width: 992px) {
+        width: 100%;
+    }
+` 
 
 export default function StakeLeash() {
     const tokenType = 'leash'
@@ -116,7 +125,7 @@ export default function StakeLeash() {
 
     return (
         <>
-            <div className="flex justify-around flex-wrap">
+            <BalanceInfoWrapper className="flex flex-wrap">
                 <ProgressCaption>
                     { 'Current Balance' }:
                     <span> { `${ shibaBalanceValue } ${ tokenType }` } </span>
@@ -126,7 +135,7 @@ export default function StakeLeash() {
                     { 'Locked Leash' }:
                     <span> { `${ stakedBalance } ${ tokenType }` } </span>
                 </ProgressCaption>
-            </div>
+            </BalanceInfoWrapper>
 
             <div className='w-10/12 rangeBar'>
                 { checkBelowZero(stakeLimitInfo.AMOUNT_MAX - Number(stakedBalance)) === 0

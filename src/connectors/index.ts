@@ -12,7 +12,7 @@ import { NetworkConnector } from './NetworkConnector'
 const RPC = {
     [ChainId.MAINNET]: 'https://eth-mainnet.alchemyapi.io/v2/WA2AXzOrXOj664de25fmJr7dSzsQXx42',
     [ChainId.ROPSTEN]: 'https://eth-ropsten.alchemyapi.io/v2/cidKix2Xr-snU3f6f6Zjq_rYdalKKHmW',
-    [ChainId.RINKEBY]: 'https://eth-rinkeby.alchemyapi.io/v2/XVLwDlhGP6ApBXFz_lfv0aZ6VmurWhYD',
+    [ChainId.RINKEBY]: 'https://eth-rinkeby.alchemyapi.io/v2/2bsCK-9_nnvL-mWAuXGF1DoDx5KhtyGU',
     [ChainId.GÖRLI]: 'https://eth-goerli.alchemyapi.io/v2/Dkk5d02QjttYEoGmhZnJG37rKt8Yl3Im',
     [ChainId.KOVAN]: 'https://eth-kovan.alchemyapi.io/v2/fRJBkIBRRgoyjPZZfZIO3mUcNgraMh5e',
     [ChainId.FANTOM]: 'https://rpcapi.fantom.network',
@@ -70,7 +70,8 @@ export const walletconnect = new WalletConnectConnector({
     rpc: {
         [ChainId.MAINNET]: RPC[ChainId.MAINNET],
         [ChainId.KOVAN] : RPC[ChainId.KOVAN],
-        [ChainId.ROPSTEN] : RPC[ChainId.ROPSTEN]
+        [ChainId.ROPSTEN] : RPC[ChainId.ROPSTEN],
+        [ChainId.RINKEBY] : RPC[ChainId.RINKEBY]
     },
     bridge: 'https://bridge.walletconnect.org',
     qrcode: true,

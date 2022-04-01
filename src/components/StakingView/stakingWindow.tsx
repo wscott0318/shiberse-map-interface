@@ -118,8 +118,10 @@ export const StakingWindow = () => {
                 </StakeHeader>
 
                 <p style={{ lineHeight: '19.2px' }} className='text-justify'>
-                    { collapsed ? ( 'Welcome to the LEASH LOCKER feature! ... ' ) :
-                        (<>Welcome to the LEASH LOCKER feature! Use the scroll bar in order to set and lock your $LEASH, and gain access to the map. This easy-to-use tool allows early entry for you to bid, and purchase plots of land, during the first two stages of this first phase release: BID Event, and HOLDER Event.</>)
+                    { collapsed ? ( tokenType === 'leash' ? 'Welcome to the LEASH LOCKER feature! ... ' : 'Welcome to the SHIBOSHI LOCKER feature! ... ' ) :
+                        ( tokenType === 'leash' 
+                            ? <>Welcome to the LEASH LOCKER feature! Use the scroll bar in order to set and lock your $LEASH, and gain access to the map. This easy-to-use tool allows early entry for you to bid, and purchase plots of land, during the first two stages of this first phase release: BID Event, and HOLDER Event.</> 
+                            : <>Welcome to the SHIBOSHI LOCKER feature! Use the scroll bar in order to set and lock your SHIBOSHI NFT, and gain access to the map. This easy-to-use tool allows early entry for you to bid, and purchase plots of land, during the first two stages of this first phase release: BID Event, and HOLDER Event.</>)
                     }
 
                     { showReadMore ? <ReadMore onClick={ () => setCollapsed(prev => !prev) }> { collapsed ? 'more' : 'less'} </ReadMore> : null }                    

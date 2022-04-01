@@ -20,7 +20,7 @@ const ProgressCaption = styled.div`
 
     span {
         color: ${({theme}) => theme.brown1};
-        text-transform: uppercase;
+        // text-transform: uppercase;
     }
 
     @media( max-width: 576px ) {
@@ -43,7 +43,7 @@ const SelectorButton = styled.button`
     color: white;
     font-style: normal;
     text-decoration-line: underline;
-    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    text-shadow: 2px 3px 4px rgba(0, 0, 0, 0.7);
     margin-top: 1rem;
 
     :hover {
@@ -104,7 +104,7 @@ export default function StakeShiboshi() {
     const handleStake = async () => {
         setSelectedNFTs([])
 
-        const ids = selectedNFTs.map((nftId: any) => BigNumber.from(parseInt(nftId)))
+        const ids = selectedNFTs.map((nftId: any) => BigNumber.from(nftId))
 
         const inputData = {
             ids: ids,
@@ -181,12 +181,12 @@ export default function StakeShiboshi() {
             <BalanceInfoWrapper className="flex flex-wrap">
                 <ProgressCaption>
                     { 'Current Balance' }:
-                    <span> { `${ shibaBalanceValue } ${ tokenType }` } </span>
+                    <span> { `${ shibaBalanceValue } Shiboshis` } </span>
                 </ProgressCaption>
 
                 <ProgressCaption>
-                    { 'Locked Shiboshi' }:
-                    <span> { `${ stakedBalance } ${ tokenType }` } </span>
+                    { 'Locked Shiboshis' }:
+                    <span> { `${ stakedBalance } Shiboshis` } </span>
                 </ProgressCaption>
             </BalanceInfoWrapper>
 

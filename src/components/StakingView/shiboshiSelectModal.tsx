@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import Modal from '../Modal'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
@@ -150,11 +150,11 @@ export const ShiboshiSelectModal = (props: any) => {
                         <div className='flex flex-wrap justify-center items-center py-5'>
                             { 
                                 props.loadingNFTs ?
-                                    ( <> <p className='text-lg'>Loading </p> <Loader stroke="white" /> </> )
+                                    ( <> <p className='text-lg mr-1'>Loading </p> <Loader stroke="white" /> </> )
                                 : props.myNFTs.length === 0 ? 
                                     ( <p className='text-lg font-bold'>Oops! We can’t find your Shiboshis</p> )
                                 : ( props.myNFTs.map(( nft: any, key: number ) => (
-                                        <ArtWrapper key={`myNFT${key}`} onClick={() => props.handleSelectNFT( nft.id.tokenId )} className={`${ isSelected(nft.id.tokenId) ? 'active' : '' }`}>
+                                        <ArtWrapper key={`myNFT${key}`} onClick={() => props.handleSelectNFT( parseInt(nft.id.tokenId) )} className={`${ isSelected( parseInt(nft.id.tokenId) ) ? 'active' : '' }`}>
                                             <div className='image'>
                                                 <img src={ nft.metaInfo.image } alt='pic'/>
                                             </div>

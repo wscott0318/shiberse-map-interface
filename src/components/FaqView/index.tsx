@@ -14,7 +14,7 @@ const data = {
             content: `<p>There’s a total of 100,595 lands that will be unlocked over time. During the first introductory phase 36,431 lands will be revealed and just 32,124 will be available for purchase.</p>`,
         },
         {
-            title: "What’s the goal of Lockers?",
+            title: "What is the goal of the Locker Feature?",
             content: `<p>Lockers were constructed to promote early access to the entire map, while also serving as the anti-dump safety mechanic to reward our holders with confidence during the first phase and event process. Read more by <a href="https://blog.shibaswap.com/shib-the-metaverse/" target='#blank'>clicking here</a>.</p>`,
         },
         {

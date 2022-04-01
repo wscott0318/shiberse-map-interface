@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import blurCircle from '../../assets/images/home/guide/blur1.svg';
-import image1 from '../../assets/images/home/guide/1.svg';
-import image2 from '../../assets/images/home/guide/2.svg';
-import image3 from '../../assets/images/home/guide/3.svg';
+import image1 from '../../assets/images/home/guide/1.png';
+import image2 from '../../assets/images/home/guide/2.png';
+import image3 from '../../assets/images/home/guide/3.png';
 import { NormalButton } from 'theme';
 import { NavLink } from 'components'
 
@@ -44,7 +44,7 @@ const PictureWrapper = styled.div`
     width: 40%;
 
     img {
-        width: 80%;
+        width: 90%;
     }
 
     &:after {
@@ -158,8 +158,8 @@ export const GuideView = () => {
         content: `<p>The BID event is designed to provide an amazing early access opportunity to one of Shiba Inu’s most anticipated releases, SHIB : The Metaverse.<br/><br/>This exclusive first event will allow participants to endure a thrilling three days (72 hours) race of bidding for their preferred plots of land. This is a unique, and exclusive chance to reserve the very first batch of lands with priority over the rest of users!<br/><br/>Bids will only last and serve each user for 72 hours, in which many will be able to gain a competitive edge by bidding, and outbidding in this fun auction-style opportunity!<br/><br/>SHIB Metaverse has some incredible high-profile areas that you don’t want to miss! We encourage you to lock your $LEASH, or your Shiboshis as soon as the event starts and in order to join the interactive map!<br/><br/>As a reminder all land purchases are accomplished with ETH, and you will not be able to participate on this event unless you have locked $LEASH or your Shiboshis.</p>`
     }, {
         image: image2,
-        title: '2. HOLDERS SALE (7 DAYS)',
-        content: `<p>To continue the excitement, we are happy to bring another great opportunity for our amazing holders of $LEASH and SHIBOSHIS, who did not get to participate, and/or were not able to mint lands during the initial bidding event. We labelled this stage as the HOLDERS EVENT.<br/><br/>During this stage, $LEASH and SHIBOSHI holders will be able to purchase lands, without a bidding mechanic and at the fixed price for each Tier of lands. The event will last 7 days, and will become available right after the initial bidding event comes to an end.<br/><br/>Users will still be required to use the locking system provided in the initial bidding system to gain access to the interactive-map. Users will be able to purchase their selected lands, and mint them as soon as the timer ends.<br/><br/>All land purchases are accomplished with ETH</p>`
+        title: '2. HOLDERS EVENT (7 DAYS)',
+        content: `<p>To continue the excitement, we are happy to bring another great opportunity for our amazing holders of $LEASH and SHIBOSHIS, who did not get to participate, and/or were not able to mint lands during the initial bidding event. We labelled this stage as the HOLDERS EVENT.<br/><br/>During this stage, $LEASH and SHIBOSHI holders will be able to purchase lands, without a bidding mechanic and at the fixed price for each Tier of lands. The event will last 7 days, and will become available right after the initial bidding event comes to an end.<br/><br/>Users will still be required to use the locking system provided in the initial bidding system to gain access to the interactive-map. Users will be able to purchase their selected lands, and mint them as soon as the timer ends.<br/><br/>All land purchases are accomplished with ETH.</p>`
     }, {
         image: image3,
         title: '3. PUBLIC SALE (OPEN FOR ALL)',

@@ -92,7 +92,7 @@ export default function Footer(props: any) {
                     <p className='text-base mt-2 mb-2'>
                         Builtin Apps are powered by <a href='https://blog.shibaswap.com/' target="blank">ShibaSwap</a>
                     </p>
-                    <p className='text-base mt-2 mb-2'>Visit it clicking here!</p>
+                    <p className='text-base mt-2 mb-2'>Visit it clicking <a href='https://shibaswap.com' target="blank">here</a>!</p>
                 </ContactInnerWrapper>
             </ContactWrapper>
         </FooterWrapper>   

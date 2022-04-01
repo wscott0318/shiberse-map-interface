@@ -2,6 +2,7 @@ import { useActiveWeb3React } from 'hooks'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { GradientButton } from 'theme'
+import menuIcon from '../../assets/images/menu.svg'
 
 const ProfileButton = styled( GradientButton as any )`
     width: 40px;
@@ -61,6 +62,11 @@ const ProfileMenuButton = styled.div`
     }
 `
 
+const MenuIcon = styled.img`
+    width: 24px;
+    pointer-events: none;
+`
+
 export default function ProfileMenu() {
     const { deactivate } = useActiveWeb3React()
 
@@ -82,7 +88,9 @@ export default function ProfileMenu() {
 
     return (
         <ProfileButtonWrapper>
-            <ProfileButton id='profileMenuBtn' onClick={ () => setShow(prev => !prev) }>W</ProfileButton>
+            <ProfileButton id='profileMenuBtn' onClick={ () => setShow(prev => !prev) }>
+                <MenuIcon src={ menuIcon } />
+            </ProfileButton>
 
             <ProfileMenuDiv className={`profileMenu ${ show ? 'active' : '' }`}>
                 {/* <ProfileMenuButton>PROFILE</ProfileMenuButton> */}

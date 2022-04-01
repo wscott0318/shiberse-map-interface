@@ -31,7 +31,7 @@ const Wrapper = styled.div`
         width: 95%;
         margin-left: 2.5%;
 
-        transform: unset;
+        transform: unset !important;
         left: unset;
         top: unset;
 
@@ -75,8 +75,8 @@ const StakeContent = styled.div`
     padding: 35px;
 
     @media ( min-width: 992px ) {
-        max-height: calc(100vh - 145px);
-        overflow: auto;
+        // max-height: calc(100vh - 145px);
+        // overflow: auto;
     }
 
     @media( max-width: 768px ) {
@@ -93,23 +93,22 @@ const ReadMore = styled.a`
 
 export const StakingWindow = () => {
     const [ tokenType, setTokenType ] = useState('leash')
-    const [ showReadMore, setShowReadMore ] = useState(false)
-    const [ collapsed, setCollapsed ] = useState(false)
     
     const { width, height } = useWindowSize()
+    const [ scaleRate, setScaleRate ] = useState(1)
 
     useEffect(() => {
-        if( width && width >= 992 && height && height && height < 830 ) {
-            setShowReadMore(true)
-            setCollapsed(true)
+        const minHeight = 810
+
+        if( width && width >= 992 && height && height && height < minHeight ) {
+            setScaleRate( (height - 145) / (minHeight - 145)  )
         } else {
-            setShowReadMore(false)
-            setCollapsed(false)
+            setScaleRate(1)
         }
     }, [ width, height ])
 
     return (
-        <Wrapper>
+        <Wrapper style={{ transform: `translate3d(-50%, -50%, 0) scale(${ scaleRate })` }}>
             <StakeContent>
                 <StakeHeader className='w-full relative flex justify-between items-center'>
                     <div className={`text-center px-2 ${ tokenType === 'leash' ? 'active' : '' }`} onClick={() => setTokenType( 'leash' )}> { 'Leash Locker' } </div>
@@ -118,13 +117,11 @@ export const StakingWindow = () => {
                 </StakeHeader>
 
                 <p style={{ lineHeight: '19.2px' }} className='text-justify'>
-                    { collapsed ? ( tokenType === 'leash' ? 'Welcome to the LEASH LOCKER feature! ... ' : 'Welcome to the SHIBOSHI LOCKER feature! ... ' ) :
-                        ( tokenType === 'leash' 
-                            ? <>Welcome to the LEASH LOCKER feature! Use the scroll bar in order to set and lock your $LEASH, and gain access to the map. This easy-to-use tool allows early entry for you to bid, and purchase plots of land, during the first two stages of this first phase release: BID Event, and HOLDER Event.</> 
-                            : <>Welcome to the SHIBOSHI LOCKER feature! Use the scroll bar in order to set and lock your SHIBOSHI NFT, and gain access to the map. This easy-to-use tool allows early entry for you to bid, and purchase plots of land, during the first two stages of this first phase release: BID Event, and HOLDER Event.</>)
+                    { tokenType === 'leash' 
+                        ? <>Welcome to the LEASH LOCKER feature! Use the scroll bar in order to set and lock your $LEASH, and gain access to the map. This easy-to-use tool allows early entry for you to bid, and purchase plots of land, during the first two stages of this first phase release: BID Event, and HOLDER Event.</> 
+                        : <>Welcome to the SHIBOSHI LOCKER feature! Use the scroll bar in order to set and lock your SHIBOSHI NFT, and gain access to the map. This easy-to-use tool allows early entry for you to bid, and purchase plots of land, during the first two stages of this first phase release: BID Event, and HOLDER Event.</>
                     }
 
-                    { showReadMore ? <ReadMore onClick={ () => setCollapsed(prev => !prev) }> { collapsed ? 'more' : 'less'} </ReadMore> : null }                    
                 </p>
 
                 <div style={{ display: tokenType === 'leash' ? 'block' : 'none' }}>

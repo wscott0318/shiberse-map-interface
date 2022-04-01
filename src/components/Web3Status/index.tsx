@@ -31,6 +31,7 @@ const IconWrapper = styled.div<{ size?: number }>`
     ${({ theme }) => theme.flexColumnNoWrap};
     align-items: center;
     justify-content: center;
+    margin-left: .5rem;
     & > * {
         height: ${({ size }) => (size ? size + 'px' : '32px')};
         width: ${({ size }) => (size ? size + 'px' : '32px')};
@@ -75,8 +76,8 @@ const Text = styled.p`
 const NetworkIcon = styled(Activity)`
     margin-left: 0.25rem;
     margin-right: 0.5rem;
-    width: 16px;
-    height: 16px;
+    width: 25px;
+    height: 25px;
 `
 
 const WalletBalance = styled.div`
@@ -95,31 +96,31 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
         // return <Identicon />
     } else if (connector === walletconnect) {
         return (
-            <IconWrapper size={16}>
+            <IconWrapper size={25}>
                 <img src={WalletConnectIcon} alt={'Wallet Connect'} />
             </IconWrapper>
         )
     } else if (connector === lattice) {
         return (
-            <IconWrapper size={16}>
+            <IconWrapper size={25}>
                 <img src={LatticeIcon} alt={'Lattice'} />
             </IconWrapper>
         )
     } else if (connector === walletlink) {
         return (
-            <IconWrapper size={16}>
+            <IconWrapper size={25}>
                 <img src={CoinbaseWalletIcon} alt={'Coinbase Wallet'} />
             </IconWrapper>
         )
     } else if (connector === fortmatic) {
         return (
-            <IconWrapper size={16}>
+            <IconWrapper size={25}>
                 <img src={FortmaticIcon} alt={'Fortmatic'} />
             </IconWrapper>
         )
     } else if (connector === portis) {
         return (
-            <IconWrapper size={16}>
+            <IconWrapper size={25}>
                 <img src={PortisIcon} alt={'Portis'} />
             </IconWrapper>
         )

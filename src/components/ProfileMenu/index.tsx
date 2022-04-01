@@ -10,7 +10,7 @@ const ProfileButton = styled( GradientButton as any )`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0;
+    padding: 0 !important;
     font-size: 23px;
 `
 

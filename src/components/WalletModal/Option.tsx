@@ -14,12 +14,16 @@ const InfoCard = styled.button<{ active?: boolean }>`
 `
 
 const OptionCard = styled(InfoCard as any)`
+    width: 130px;
+    height: 130px;
+
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     margin: 1.5rem 0.5rem;
-    padding: 1rem 2rem;
+    margin-bottom: 0;
+    padding: .5rem;
 
     ${({ theme }) => theme.mediaWidth.upToExtraSmall`
         margin: .5rem 0.25rem;
@@ -29,7 +33,6 @@ const OptionCard = styled(InfoCard as any)`
 const OptionCardLeft = styled.div`
     ${({ theme }) => theme.flexColumnNoWrap};
     justify-content: center;
-    height: 100%;
     align-items: center;
 `
 
@@ -68,7 +71,7 @@ const HeaderText = styled.div`
     color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary1 : ({ theme }) => theme.text1)};
     font-size: 1rem;
     font-weight: 500;
-    margin-top: 1rem;
+    margin-top: 5px;
 `
 
 const SubHeader = styled.div`
@@ -83,8 +86,8 @@ const IconWrapper = styled.div<{ size?: number | null }>`
     justify-content: center;
     & > img,
     span {
-        height: ${({ size }) => (size ? size + 'px' : '100px')};
-        width: ${({ size }) => (size ? size + 'px' : '100px')};
+        height: ${({ size }) => (size ? size + 'px' : '60px')};
+        width: ${({ size }) => (size ? size + 'px' : '60px')};
     }
     ${({ theme }) => theme.mediaWidth.upToMedium`
     align-items: flex-end;

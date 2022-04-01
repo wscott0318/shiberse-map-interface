@@ -176,6 +176,8 @@ export default function StakeShiboshi() {
         return 0
     }
 
+    const isMaxLands = () => checkBelowZero(stakeLimitInfo.AMOUNT_MAX - Number(stakedBalance)) === 0 && checkBelowZero(stakeLimitInfo.DAYS_MAX - lockDays) === 0
+
     return (
         <>
             <BalanceInfoWrapper className="flex flex-wrap">
@@ -205,7 +207,9 @@ export default function StakeShiboshi() {
 
             <div className='w-10/12 rangeBar'>
                 { checkBelowZero(stakeLimitInfo.DAYS_MAX - lockDays) === 0
-                    ? ( <ProgressCaption> Max Days Locked </ProgressCaption> )
+                    ? ( <ProgressCaption> 
+                            { isMaxLands() ? '' : 'This wallet has maxed out on days to lock, but you can still lock more SHIBOSHI to get more land!' } 
+                        </ProgressCaption> )
                     : ( <ProgressCaption>
                             { 'Locking period' }:
                             <span> { `${ lockPeriod } day${ Number(lockPeriod) > 1 ? 's' : '' }` } </span>
@@ -220,6 +224,10 @@ export default function StakeShiboshi() {
                     disable={ checkBelowZero(stakeLimitInfo.DAYS_MAX - lockDays) === 0 }
                 />
             </div>
+
+            <ProgressCaption>
+                { isMaxLands() ? 'This wallet has access to max. lands, wait for the Bid Event to start!' : '' }
+            </ProgressCaption>
 
             <p className='mt-2 mb-3'>
                 { `These parameters give you access to bid/purchase` }:

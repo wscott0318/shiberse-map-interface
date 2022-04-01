@@ -5,7 +5,7 @@ import { AppDispatch, AppState } from '../../state'
 import { setSelectedLandInfo, updateLandData, updateMapCenterPos, updateMapZoomLevel } from '../../state/map/actions'
 import Map from './MapView'
 import LandDetail from '../../components/Map/LandDetail';
-import { getLandData } from 'state/map/hooks'
+// import { getLandData } from 'state/map/hooks'
 // import { socket } from 'feathers'
 
 export const MapScene = () => {
@@ -24,9 +24,9 @@ export const MapScene = () => {
 	const setLandData = (newLand: any): any => dispatch( updateLandData({ newLand }) )
 
 	const fetchLandData = useCallback(async () => {
-		const mapData = await getLandData()
+		// const mapData = await getLandData()
 		
-		setLandData( mapData?.data )
+		// setLandData( mapData?.data )
 	}, [dispatch])
 
 	// useEffect(() => {
@@ -50,7 +50,7 @@ export const MapScene = () => {
 	return (
 		<div className='w-screen h-full'>
 			<div className='flex justify-between overflow-hidden h-full'>
-				<MapFilter />
+				{/* <MapFilter /> */}
 				<div className='w-full fixed top-0 left-0 h-full' id="mapContainer">
 					<Map 
 						mapCenterPos={ mapCenterPos } 

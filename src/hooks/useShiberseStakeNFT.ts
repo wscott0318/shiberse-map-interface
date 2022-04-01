@@ -70,7 +70,7 @@ const useShiberseStakeNFT = (props:any) => {
             if (input?.ids && input?.numDaysToAdd) {
                 try {
                     const tx = await stakeContract?.lock(input?.ids, input?.numDaysToAdd)
-                    addTransaction(tx, { summary: `Staked ${ tokenType } Token!` })
+                    addTransaction(tx, { summary: `Locked ${ tokenType } Token!` })
                     return tx;
                 } catch (e) {
                     return e

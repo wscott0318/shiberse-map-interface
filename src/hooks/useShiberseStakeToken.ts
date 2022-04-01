@@ -70,7 +70,7 @@ const useShiberseStakeToken = (props:any) => {
             if (input?.amount && input?.numDaysToAdd) {
                 try {
                     const tx = await stakeContract?.lock(input?.amount, input?.numDaysToAdd)
-                    addTransaction(tx, { summary: `Staked ${ tokenType } Token!` })
+                    addTransaction(tx, { summary: `Locked ${ tokenType } Token!` })
                     return tx;
                 } catch (e) {
                     return e

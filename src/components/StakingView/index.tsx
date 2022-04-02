@@ -60,7 +60,7 @@ export const StakingView = () => {
             <BackImage src={bgImage}></BackImage>
 
             <BackVideo autoPlay loop muted>
-                <source src={bgVideo} type="video/mp4"/>
+                <source src='https://shiboshis.mypinata.cloud/ipfs/Qmd4Xw3tFcABkeHd7EkTztGPM8Enf9kVixATzxw9KS1peb' type="video/mp4"/>
             </BackVideo>
 
             <div className='container relative h-full'>

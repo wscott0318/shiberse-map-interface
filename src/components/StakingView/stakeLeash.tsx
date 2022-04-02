@@ -130,7 +130,7 @@ export default function StakeLeash() {
             <BalanceInfoWrapper className="flex flex-wrap">
                 <ProgressCaption>
                     { 'Current Balance' }:
-                    <span> { `${ shibaBalanceValue } ${ tokenType }` } </span>
+                    <span> { `${ Number(shibaBalanceValue).toFixed(1) } ${ tokenType }` } </span>
                 </ProgressCaption>
 
                 <ProgressCaption>

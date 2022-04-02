@@ -98,10 +98,11 @@ export const StakingWindow = () => {
     const [ scaleRate, setScaleRate ] = useState(1)
 
     useEffect(() => {
-        const minHeight = 810
+        const minHeight = 850
+        const offset = 200
 
         if( width && width >= 992 && height && height && height < minHeight ) {
-            setScaleRate( (height - 145) / (minHeight - 145)  )
+            setScaleRate( (height - offset) / (minHeight - offset)  )
         } else {
             setScaleRate(1)
         }

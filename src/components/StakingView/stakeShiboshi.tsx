@@ -135,7 +135,7 @@ export default function StakeShiboshi() {
 
     const handleSelectNFT = ( id: number ) => {
         const selected = [ ...selectedNFTs ] as any
-        if( selected.length > (stakeLimitInfo.AMOUNT_MAX - Number(stakedBalance)) ) {
+        if( selected.length >= (stakeLimitInfo.AMOUNT_MAX - Number(stakedBalance)) ) {
             return;
         }
 
@@ -262,6 +262,9 @@ export default function StakeShiboshi() {
                 ) : (
                     <PrimaryButton 
                         className='right-0' 
+                        style={{
+                            display: ((Number(selectedNFTs.length) === 0 && Number(lockPeriod) === 0) || Number(selectedNFTs.length) > Number(shibaBalanceValue)) ? 'none' : 'block'
+                        }}
                         onClick={() => {
                             if( !active ) {
                                 toggleWalletModal()

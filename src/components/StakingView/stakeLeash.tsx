@@ -107,7 +107,7 @@ export default function StakeLeash() {
         handleStake()
     }
 
-    const checkBelowZero = ( value: any ) => value <= 0 ? 0 : value
+    const checkBelowZero = ( value: any ) => value <= 0 ? 0 : parseFloat(Number(value).toFixed(1))
 
     const calcLandCount = () => {
         const score = (Number(stakedBalance) + Number(lockAmount)) * (Number(lockDays) + Number(lockPeriod))
@@ -221,6 +221,10 @@ export default function StakeLeash() {
                 ) : (
                     <PrimaryButton 
                         className='right-0' 
+                        style={{
+                            display: ((Number(lockAmount) === 0 && Number(lockPeriod) === 0) ||
+                                Number(lockAmount) > Number(shibaBalanceValue)) ? 'none' : 'block'
+                        }}
                         onClick={ lockToken }
                         disabled={
                             (Number(lockAmount) === 0 && Number(lockPeriod) === 0) ||

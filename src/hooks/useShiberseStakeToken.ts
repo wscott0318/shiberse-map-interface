@@ -85,7 +85,8 @@ const useShiberseStakeToken = (props:any) => {
             const lockInfo = await stakeContract?.lockInfoOf(account)
             if(lockInfo){
                 const formatted = Fraction.from(BigNumber.from(lockInfo.amount), BigNumber.from(10).pow(18)).toString()
-                setStakedBalance(formatted)
+                const result = Number(formatted).toFixed(1)
+                setStakedBalance( result )
 
                 const numDays = Number( formatFromBalance( lockInfo.numDays, 0 ) )
                 setLockDays( numDays )

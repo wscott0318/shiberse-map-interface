@@ -29,7 +29,7 @@ export const RangeInput = ( { min, max, value, setValue, step = 1, disable = fal
                 step={step}
                 min={min}
                 max={max}
-                onChange={(value) => setValue(value)}
+                onChange={(val) => setValue(val[0])}
                 renderTrack={({ props, children }) => (
                     <div
                         onMouseDown={props.onMouseDown}

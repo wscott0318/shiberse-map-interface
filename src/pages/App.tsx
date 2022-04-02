@@ -3,7 +3,8 @@ import { Route, Switch, useLocation } from 'react-router-dom'
 import Header from '../components/Header'
 import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
-// import Map from './Map'
+import Map from './Map'
+import { RedirectIfLockedToken } from './Map/redirects'
 
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 
@@ -45,7 +46,7 @@ function App(): JSX.Element {
                         <Web3ReactManager>
                             <Switch>
                                 <Route exact strict path="/" component={Home} />
-                                {/* <Route exact strict path="/map" component={Map} /> */}
+                                <Route exact strict path="/map" component={RedirectIfLockedToken} />
 
                                 <Route component={RedirectPathToHomeOnly} />
                             </Switch>

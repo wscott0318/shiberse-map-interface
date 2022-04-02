@@ -50,7 +50,7 @@ export const MapScene = () => {
 	return (
 		<div className='w-screen h-full'>
 			<div className='flex justify-between overflow-hidden h-full'>
-				{/* <MapFilter /> */}
+				<MapFilter />
 				<div className='w-full fixed top-0 left-0 h-full' id="mapContainer">
 					<Map 
 						mapCenterPos={ mapCenterPos } 

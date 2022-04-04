@@ -1109,8 +1109,8 @@ export const shiberseContractAddresses = {
     }
 }
 
-/* For development network : Ropsten */
-export const mainNetworkChainId = ChainId.MAINNET
+/* For development network : Rinkby */
+export const mainNetworkChainId = ChainId.RINKEBY
 
 /* For product network : Main net */
 // export const mainNetworkChainId = ChainId.MAINNET

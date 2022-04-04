@@ -21,9 +21,6 @@ const useStyles = makeStyles(theme => ({
         width: '100%',
         marginBottom: theme.spacing(2)
     },
-    // table: {
-    //   minWidth: 750,
-    // },
     avatar: {
         marginLeft: theme.spacing(2),
         marginRight: theme.spacing(2)
@@ -38,7 +35,13 @@ const useStyles = makeStyles(theme => ({
         position: 'absolute',
         top: 20,
         width: 1
-    }
+    },
+    columnLabel: {
+        fontWeight: 600,
+        fontSize: '16px',
+        lineHeight: '24px',
+        color: '#FFD59D',
+    },
 }))
 
 function descendingComparator(a, b, orderBy) {
@@ -100,16 +103,8 @@ export default function SortableTable({
         setPage(0)
     }
 
-    // const emptyRows =
-    //   rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-
     return (
         <div className={classes.root}>
-            {title && (
-                <Typography variant="h6" component="h2" gutterBottom>
-                    {title}
-                </Typography>
-            )}
             <TableContainer>
                 <Table className={classes.table} aria-label={`${title} table`}>
                     <SortableTableHead
@@ -122,21 +117,17 @@ export default function SortableTable({
                     />
                     <TableBody>
                         {stableSort(rows, getComparator(order, orderBy))
-                            // .filter((row) => {
-                            //   return !TOKEN_DENY.includes(row.id);
-                            // })
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row, index) => {
-                                // console.log(row)
                                 return (
-                                    <TableRow key={row.choiceText}>
+                                    <TableRow key={ 'tablerowkey' + index}>
                                         {columns.map((column, i) => {
                                             return (
                                                 <TableCell
                                                     key={i}
                                                     {...(i === 0 ? { component: 'th', scope: 'row' } : {})}
                                                     align={column.align || 'left'}
-                                                    // variant="body"
+                                                    className='borderNone tableRowCell'
                                                 >
                                                     {typeof column.render === 'function'
                                                         ? column.render(row, index)
@@ -147,22 +138,18 @@ export default function SortableTable({
                                     </TableRow>
                                 )
                             })}
-                        {/* {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )} */}
                     </TableBody>
                 </Table>
             </TableContainer>
             <TablePagination
-                rowsPerPageOptions={[5, 10, 25, , { label: 'All', value: -1 }]}
+                rowsPerPageOptions={[5, 10, 25, , { label: 'All', value: 100000 }]}
                 component="div"
                 count={rows.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
+                className='tablePagination'
             />
         </div>
     )

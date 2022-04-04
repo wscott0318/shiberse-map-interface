@@ -78,3 +78,37 @@ div[data-reach-dialog-overlay] div[data-reach-dialog-content]{
 ::-webkit-scrollbar-thumb:hover {
   background-color: #F8A93E;
 }
+
+.borderNone {
+  border: none !important;
+}
+
+.tableHeaderCell {
+  
+}
+
+.tableHeaderCell svg {
+  color: #FFD59D !important;
+}
+
+.tableRowCell {
+
+}
+
+.tablePagination {
+  color: white !important;
+  font-family: 'Poppins' !important;
+}
+
+.tablePagination svg {
+  color: white !important;
+}
+
+.tablePagination button:disabled svg {
+  color: rgba(255, 255, 255, 0.363) !important;
+}
+
+.tablePagination svg:hover {
+  color: #FFD59D !important;
+}
+

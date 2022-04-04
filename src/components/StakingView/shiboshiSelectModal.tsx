@@ -74,6 +74,7 @@ const HeaderText = styled.div`
 
 const HeaderDescription = styled.div`
     padding: 1rem 0;
+    color: rgb(255, 255, 255, 0.5);
 
     ${({ theme }) => theme.mediaWidth.upToExtraSmall`
         padding: 0;

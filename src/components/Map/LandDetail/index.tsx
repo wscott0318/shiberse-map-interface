@@ -13,7 +13,6 @@ const LandDetailPanel = styled.div<{ show: boolean }>`
     background: #201F31;
     border-radius: 8px;
     width: 240px;
-    height: 255px;
     transition: all 1s ease;
 
     position: absolute;
@@ -40,7 +39,7 @@ const DetailInfo = styled.div`
     justify-content: space-between;
 
     height: 75px;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 `
 
 const LandName = styled.div`
@@ -74,6 +73,15 @@ const BidBalance = styled.div`
     line-height: 18px;
 `
 
+const OpenType = styled.div`
+    font-style: italic;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 15px;
+
+    color: #FFFFFF;
+`
+
 export const LandDetail = () => {
     const selectedInfo = useSelector<AppState, AppState['map']['selectedLandInfo']>(state => state.map.selectedLandInfo)
 
@@ -86,7 +94,7 @@ export const LandDetail = () => {
     }
 
     return (
-        <LandDetailPanel show={ selectedInfo.show }>
+        <LandDetailPanel show={ selectedInfo.show || true }>
             <LandInfo className='flex'>
                 <LandImage>
                     <img src={thumbnail} alt='pic'></img>
@@ -95,17 +103,24 @@ export const LandDetail = () => {
                 <DetailInfo>
                     <LandName>Name of Land</LandName>
                     <LandType>Tier 1</LandType>
-                    <LandCoordinates className='flex items-center'>
-                        <img src={locationImg}></img>
-                        39, 58
-                    </LandCoordinates>
+                    <LandType>District:</LandType>
                 </DetailInfo>
             </LandInfo>
 
-            <LandName className='mb-1'>Current bid</LandName>
-            <BidBalance className='mb-2'>1 ETH</BidBalance>
+            <LandCoordinates className='flex items-center mb-2'>
+                <img src={locationImg}></img>
+                X: 0,0   Y: 0,0
+            </LandCoordinates>
 
-            <NormalButton className='px-10 font-bold ml-0'>Bid</NormalButton>
+            <LandType className='mb-4'>Owner:</LandType>
+
+            <LandName className='mb-1'>Current price</LandName>
+            <BidBalance className='mb-2'>1 ETH</BidBalance>
+            <OpenType className='mb-4'>Open all</OpenType>
+
+            <div className='text-center'>
+                <NormalButton className='px-10 font-bold'>Bid</NormalButton>
+            </div>
         </LandDetailPanel>
     )
 }

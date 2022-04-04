@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react"
 import styled from 'styled-components'
 import RangeInput from 'components/RangeInput'
-import { GradientButton, PrimaryButton } from 'theme'
+import { GradientButton, ModalToggleButton, PrimaryButton } from 'theme'
 import { useWalletModalToggle } from "state/application/hooks"
 import { useWeb3React } from "@web3-react/core"
 import useShiberseStakeNFT from "hooks/useShiberseStakeNFT"
@@ -36,26 +36,8 @@ const Parameters = styled.span`
     border: 1px solid #BE6D06;
 `
 
-const SelectorButton = styled.button`
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 19.2px;
-    color: white;
-    font-style: normal;
-    text-decoration-line: underline;
-    text-shadow: 2px 3px 4px rgba(0, 0, 0, 0.7);
+const SelectorButton = styled(ModalToggleButton)`
     margin-top: 1rem;
-
-    :hover {
-        cursor: pointer;
-        color: #F8A93E;
-    }
-
-    :disabled {
-        cursor: not-allowed;
-        color: white;
-        opacity: 0.5;
-    }
 `
 
 const SelectedInfo = styled.p`

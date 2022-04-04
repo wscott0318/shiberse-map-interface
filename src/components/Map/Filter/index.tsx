@@ -4,6 +4,7 @@ import { useState } from 'react'
 import expandIcon from 'assets/images/expand.svg'
 import checkIcon from 'assets/images/map/icons/check.svg'
 import './selectbutton.scss'
+import RangeInputMinMax from 'components/RangeInputMinMax'
 
 /* styled elements */
 const FilterPanel = styled.div<{expand: boolean}>`
@@ -11,8 +12,8 @@ const FilterPanel = styled.div<{expand: boolean}>`
     border: 1px solid #785838;
     box-sizing: border-box;
     border-radius: 8px;
-    width: 204px;
-    height: ${({ expand }) => expand ? '233' : '45'}px;
+    width: 251px;
+    height: ${({ expand }) => expand ? 'auto' : '45'}px;
     transition: all .5s;
     position: absolute;
     top: 5rem;
@@ -53,18 +54,100 @@ const FilterContent = styled.div`
     display: flex;
     flex-direction: column;
     padding: 1rem 0;
+    padding-bottom: .5rem;
+    border-bottom: 0.5px solid #785838;
+`
+
+const RangeWrapper = styled.div`
+    padding: 1rem 0;
+    border-bottom: 0.5px solid #785838;
+    width: 100%;
+`
+
+const SearchByWrapper = styled.div`
+    padding: 1rem 0;
+    width: 100%;
+    border-bottom: 0.5px solid #785838;
+
+    &.borderNone {
+        border: none;
+    }
+`
+
+const SearchDesc = styled.p`
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 21px;
+    color: #785838;
+    margin-bottom: .5rem;
+`
+
+const InputDesc = styled.span`
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 21px;
+    color: rgba(32, 31, 49, 0.85);
+    margin-right: 5px;
+`
+
+const CoordinateInput = styled.input`
+    width: 61px;
+    height: 24px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 21px;
+    color: #785838;
+    padding: 0;
+    padding-left: .5rem;
+    border-color: #785838;
+    border-radius: 2px;
+`
+
+const WalletInput = styled.input`
+    width: 158px;
+    height: 25px;
+    border: 1px solid #785838;
+    border-radius: 2px;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 15px;
+    padding: .5rem .3rem;
+    color: #785838;
+
+    ::placeholder {
+        font-style: italic;
+    }
+`
+
+const GoButton = styled.button`
+    background: #ffffff;
+    border: 1px solid #181220;
+    border-radius: 2px;
+    color: #363755;
+
+    font-weight: 600;
+    font-size: 10px;
+    line-height: 15px;
+    padding: 4px 3px;
+
+    :hover {
+        color: #785838;
+        border-color: #785838;
+    }
 `
 
 export const MapFilter = () => {
     const [ expand, setExpand ] = useState(true)
+    const [ priceRangeValues, setPriceRangeValues ] = useState([ 0.2, 3 ])
 
     const filterData = [
         {
-            color: '#1C1C25',
-            text: 'Locked'
+            color: '#FFFFFF',
+            borderColor: '#E01515',
+            text: 'Shiboshis Zone'
         }, {
             color: '#A1AFBA',
-            text: 'Hubs'
+            text: 'Private Hubs'
         }, {
             color: '#DFB850',
             text: 'Diamond Woof'
@@ -77,6 +160,9 @@ export const MapFilter = () => {
         }, {
             color: '#31323E',
             text: 'Silver Fur'
+        }, {
+            color: '#05DC1B',
+            text: 'Open for Bid'
         },
     ]
 
@@ -89,7 +175,7 @@ export const MapFilter = () => {
                 </ExpandIcon>
             </FilterHeader>
 
-            <FilterContent>
+            <FilterContent className='w-full'>
                 { filterData.map((item, index) => (
                     <div className={`leftSideBar__sizeSelect__item ${ false ? 'active' : '' }`} key={`filter ${index}`}>
                         <div className="leftSideBar__sizeSelect__item__btn">
@@ -97,11 +183,57 @@ export const MapFilter = () => {
                                 <img alt="selected" src={ checkIcon }></img>
                             </button> 
                         </div>
-                        <div className='leftSideBar__sizeSelect__item__square' style={{ background: item.color }}></div>
+                        <div 
+                            className='leftSideBar__sizeSelect__item__square' 
+                            style={{ 
+                                background: item.color, 
+                                border: item.borderColor ? `2px solid ${ item.borderColor }` : 'none'
+                            }} 
+                        />
                         <p className="leftSideBar__sizeSelect__item__label">{ item.text }</p>
                     </div>
                 )) }
             </FilterContent>
+
+            <RangeWrapper>
+                <RangeInputMinMax
+                    min={ 0.1 }
+                    max={ 5 }
+                    values={ priceRangeValues }
+                    setValues={ setPriceRangeValues }
+                    step={ 0.1 }
+                />
+            </RangeWrapper>
+
+            <SearchByWrapper>
+                <SearchDesc>Search by coordinates</SearchDesc>
+
+                <div className='flex justify-between items-center'>
+                    <div className='flex items-center'>
+                        <div className='flex items-center mr-2'>
+                            <InputDesc>X</InputDesc>
+                            <CoordinateInput type='number' placeholder='0'/>
+                        </div>
+
+                        <div className='flex items-center'>
+                            <InputDesc>Y</InputDesc>
+                            <CoordinateInput type='number' placeholder='0'/>
+                        </div>
+                    </div>
+
+                    <GoButton>GO</GoButton>
+                </div>
+            </SearchByWrapper>
+
+            <SearchByWrapper className='borderNone'>
+                <SearchDesc>Search by wallet</SearchDesc>
+
+                <div className='flex justify-between items-center'>
+                    <WalletInput type='text' placeholder='Paste your wallet address'/>
+
+                    <GoButton>GO</GoButton>
+                </div>
+            </SearchByWrapper>
         </FilterPanel>
     )
 }

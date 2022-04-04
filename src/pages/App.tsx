@@ -3,7 +3,6 @@ import { Route, Switch, useLocation } from 'react-router-dom'
 import Header from '../components/Header'
 import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
-import Map from './Map'
 import { RedirectIfLockedToken } from './Map/redirects'
 
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
@@ -12,6 +11,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import ReactGA from 'react-ga'
 import Home from './Home'
 import { RedirectPathToHomeOnly } from './Home/redirects'
+import Profile from './Profile'
 
 function App(): JSX.Element {
     const bodyRef = useRef<any>(null)
@@ -47,6 +47,7 @@ function App(): JSX.Element {
                             <Switch>
                                 <Route exact strict path="/" component={Home} />
                                 <Route exact strict path="/map" component={RedirectIfLockedToken} />
+                                <Route exact strict path="/profile" component={Profile} />
 
                                 <Route component={RedirectPathToHomeOnly} />
                             </Switch>

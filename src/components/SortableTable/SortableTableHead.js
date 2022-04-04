@@ -23,16 +23,16 @@ export default function SortableTableHead({
                         key={column.key}
                         align={column.align || 'left'}
                         padding={column.disablePadding ? 'none' : 'normal'}
-                        // variant="head"
                         sortDirection={orderBy === column.key ? order : false}
+                        className='borderNone tableHeaderCell'
                     >
                         <TableSortLabel
                             active={orderBy === column.key}
                             direction={orderBy === column.key ? order : 'asc'}
                             onClick={createSortHandler(column.key)}
                         >
-                            {column.label}
-
+                            <span className={classes.columnLabel}>{column.label}</span>
+                            
                             {orderBy === column.key ? (
                                 <span className={classes.visuallyHidden}>
                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}

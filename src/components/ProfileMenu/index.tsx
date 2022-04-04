@@ -1,3 +1,4 @@
+import { NavLink } from 'components/Link'
 import { useActiveWeb3React } from 'hooks'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -52,12 +53,20 @@ const ProfileMenuButton = styled.div`
         fill: white;
     }
 
+    a {
+        color: white;
+    }
+
     &:hover {
         cursor: pointer;
         color: #FFD59D;
 
         svg {
             fill: #FFD59D;
+        }
+
+        a {
+            color: #FFD59D;
         }
     }
 `
@@ -93,7 +102,11 @@ export default function ProfileMenu() {
             </ProfileButton>
 
             <ProfileMenuDiv className={`profileMenu ${ show ? 'active' : '' }`}>
-                {/* <ProfileMenuButton>PROFILE</ProfileMenuButton> */}
+                <ProfileMenuButton>
+                    <NavLink exact strict to="/profile" className={''}>
+                        PROFILE
+                    </NavLink>
+                </ProfileMenuButton>
                 <ProfileMenuButton 
                     onClick={() => {
                         deactivate()

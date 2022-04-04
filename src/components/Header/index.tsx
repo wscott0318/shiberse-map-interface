@@ -5,6 +5,7 @@ import { NavLink } from '../Link'
 import { Disclosure } from '@headlessui/react'
 import { MenuButton } from 'theme'
 import styled from 'styled-components'
+import { useLocation } from 'react-router-dom'
 
 const LogoText = styled.div`
     letter-spacing: 0.15em;
@@ -45,7 +46,9 @@ export default function Header(): JSX.Element {
     const [active, setActive] = useState('active')
     const [lastScroll, setLastScroll] = useState(0)
 
-    const { t } = useTranslation()
+    const { pathname } = useLocation()
+
+    const isOnMapPage = () => pathname === '/map'
 
     const handleScroll = () => {
         if( window.scrollY <= lastScroll || window.scrollY <= 0 ) {
@@ -78,7 +81,7 @@ export default function Header(): JSX.Element {
                     </div>
 
                     <div className="flex items-center">
-                        {/* <MenuButton disabled={false} className='font-bold'>
+                        <MenuButton disabled={false} className={`font-bold ${ isOnMapPage() ? 'hidden' : '' }`}>
                             <NavLink exact strict to="/map" className={''}>
                                 <span className='full'>
                                     { 'Enter the Lands Map' }
@@ -87,7 +90,7 @@ export default function Header(): JSX.Element {
                                     { 'M' }
                                 </span>
                             </NavLink>
-                        </MenuButton> */}
+                        </MenuButton>
 
                         <Web3Status />
                     </div>

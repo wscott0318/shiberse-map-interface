@@ -1,0 +1,89 @@
+.leftSideBar {
+    &__sizeSelect {
+        &__item {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 7px;
+
+            &__btn {
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+                align-items: stretch;
+
+                button {
+                    width: 20px;
+                    height: 20px;
+
+                    border: 1px solid #785838;
+
+                    transition-property: all;
+                    transition-duration: .25s;
+                    transition-timing-function: ease;
+
+                    margin: 0 10px;
+                    margin-left: 0px;
+                    background: #FFFFFF;
+                    border-radius: 2px;
+                    opacity: 1;
+                    overflow: hidden;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    display: inline-flex;
+
+                    img {
+                        display: none;
+                    }
+
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            &__square {
+                width: 20px;
+                height: 20px;
+                border-radius: 2px;
+                margin-right: 5px;
+            }
+
+            &__label {
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 21px;
+                color: #201F31;
+                text-align: left;
+                margin-left: 0px;
+                transition-property: all;
+                transition-duration: .25s;
+                transition-timing-function: ease;
+            }
+
+            &:hover {
+                p {
+                    color: #785838;
+                }
+            }
+
+            &.active {
+                button {
+                    border: none;
+                    background: #03ce71;
+                    
+                    img {
+                        display: block;
+                    }
+                }
+
+                p {
+                    color: #785838;
+                }
+            }
+        }
+    }
+}

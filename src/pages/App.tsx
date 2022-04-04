@@ -46,7 +46,7 @@ function App(): JSX.Element {
                         <Web3ReactManager>
                             <Switch>
                                 <Route exact strict path="/" component={Home} />
-                                <Route exact strict path="/map" component={RedirectIfLockedToken} />
+                                {/* <Route exact strict path="/map" component={RedirectIfLockedToken} /> */}
 
                                 <Route component={RedirectPathToHomeOnly} />
                             </Switch>

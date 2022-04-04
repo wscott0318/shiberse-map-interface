@@ -1083,6 +1083,14 @@ export const FARMS = [
 ]
 
 export const shiberseContractAddresses = {
+    [ChainId.MAINNET] : {
+        'LEASH_TOKEN': '0x27C70Cd1946795B66be9d954418546998b546634',
+        'SHIBOSHI_TOKEN': '0x11450058d796B02EB53e65374be59cFf65d3FE7f',
+        'BONE': '0x9813037ee2218799597d83D4a5B6F3b6778218d9',
+        'STAKE_LEASH': '0xCdEfD353Ba028a77C1cFbbF9571E7A19df582380',
+        'STAKE_SHIBOSHI': '0xBe4E191B22368bfF26aA60Be498575C477AF5Cc3',
+        'MOCKSALE': ''
+    },
     [ChainId.ROPSTEN]: {
         'LEASH_TOKEN': '0x62efD9F0e349d83b0aa6c01FC5a9a5D3A0DF0F2D',
         'SHIBOSHI_TOKEN': '0x253A46a5C75c667f19203BCD638819478AB9bBab',
@@ -1095,22 +1103,22 @@ export const shiberseContractAddresses = {
         'LEASH_TOKEN': '0x673f2692b432EAF69B50fE9C46657e8a5dC89599',
         'SHIBOSHI_TOKEN': '0x253A46a5C75c667f19203BCD638819478AB9bBab',
         'BONE': '0x5CA454a716de461Ad2E0afF716c367b35901eD57',
-        'STAKE_LEASH': '0x25a3C1BaF69F219bC33b8D48Ec5acA70d8aCC181',
-        'STAKE_SHIBOSHI': '0x48a672cBE00eBf54669230c1CFF9c97ef703b989',
+        'STAKE_LEASH': '0x7eB5E13128e20f6c8d77f6b95Ee7CD0128f86D1D',
+        'STAKE_SHIBOSHI': '0x0F432c22FaFF300c9D62daa61fBD9f8cBe5A20d7',
         'MOCKSALE': '0x736f9284b43c058b84a5e32ab57942db6cc5c1aa'
     }
 }
 
 /* For development network : Ropsten */
-export const mainNetworkChainId = ChainId.RINKEBY
+export const mainNetworkChainId = ChainId.MAINNET
 
 /* For product network : Main net */
 // export const mainNetworkChainId = ChainId.MAINNET
 
 export const alchemyApi = {
-    'api_key': '98S0aeOjT9paE0bz4424qsAk9QndTBUi',
-    'https': 'https://eth-rinkeby.alchemyapi.io/v2/98S0aeOjT9paE0bz4424qsAk9QndTBUi',
-    'wss': 'wss://eth-rinkeby.alchemyapi.io/v2/98S0aeOjT9paE0bz4424qsAk9QndTBUi'
+    'api_key': 'WA2AXzOrXOj664de25fmJr7dSzsQXx42',
+    'https': 'https://eth-mainnet.alchemyapi.io/v2/WA2AXzOrXOj664de25fmJr7dSzsQXx42',
+    'wss': 'wss://eth-mainnet.alchemyapi.io/v2/WA2AXzOrXOj664de25fmJr7dSzsQXx42'
 }
 
 export const metadataURL = 'https://shiboshis.mypinata.cloud/ipfs/QmUEiYGcZJWZWp9LNCTL5PGhGcjGvokKfcaCoj23dbp79J/'

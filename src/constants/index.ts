@@ -1116,9 +1116,16 @@ export const mainNetworkChainId = ChainId.MAINNET
 // export const mainNetworkChainId = ChainId.MAINNET
 
 export const alchemyApi = {
-    'api_key': 'WA2AXzOrXOj664de25fmJr7dSzsQXx42',
-    'https': 'https://eth-mainnet.alchemyapi.io/v2/WA2AXzOrXOj664de25fmJr7dSzsQXx42',
-    'wss': 'wss://eth-mainnet.alchemyapi.io/v2/WA2AXzOrXOj664de25fmJr7dSzsQXx42'
+    [ChainId.MAINNET]: {
+        'api_key': 'WA2AXzOrXOj664de25fmJr7dSzsQXx42',
+        'https': 'https://eth-mainnet.alchemyapi.io/v2/WA2AXzOrXOj664de25fmJr7dSzsQXx42',
+        'wss': 'wss://eth-mainnet.alchemyapi.io/v2/WA2AXzOrXOj664de25fmJr7dSzsQXx42'
+    },
+    [ChainId.RINKEBY]: {
+        'api_key': '98S0aeOjT9paE0bz4424qsAk9QndTBUi',
+        'https': 'https://eth-rinkeby.alchemyapi.io/v2/98S0aeOjT9paE0bz4424qsAk9QndTBUi',
+        'wss': 'wss://eth-rinkeby.alchemyapi.io/v2/98S0aeOjT9paE0bz4424qsAk9QndTBUi'        
+    }
 }
 
 export const metadataURL = 'https://shiboshis.mypinata.cloud/ipfs/QmUEiYGcZJWZWp9LNCTL5PGhGcjGvokKfcaCoj23dbp79J/'

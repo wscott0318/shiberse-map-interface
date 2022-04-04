@@ -103,15 +103,31 @@ const useShiberseStakeNFT = (props:any) => {
     }, [ account, chainId, fetchLockInfo ])
 
     const web3 = createAlchemyWeb3(
-        alchemyApi.https
+        alchemyApi[ mainNetworkChainId ].https
     );
 
     const fetchWalletNFT = useCallback(async () => {
         if( account && chainId === mainNetworkChainId ) {
-            const fetchNFTData = await web3.alchemy.getNfts({ owner : account! });
+            let pageKey = null
+            let contractNFTs = [] as any
+            while(true) {
+                const nftParam = {
+                    owner : account!,
+                    contractAddresses: [ tokenContract?.address as any ]
+                } as any
 
-            const contractNFTs = fetchNFTData.ownedNfts.filter((item: any) => item.contract.address === tokenContract?.address.toLowerCase())
+                if( pageKey )
+                    nftParam.pageKey = pageKey
 
+                const response = await web3.alchemy.getNfts( nftParam ) as any
+
+                const temp = response.ownedNfts.filter((item: any) => item.contract.address === tokenContract?.address.toLowerCase())
+                contractNFTs = [ ...contractNFTs, ...temp ]
+
+                pageKey = response.pageKey
+                if( response.error || !response.pageKey )
+                    break
+            }
             const resultArray = [] as any
 
             for( let i = 0; i < contractNFTs.length; i++ ) {

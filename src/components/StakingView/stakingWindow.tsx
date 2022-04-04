@@ -37,6 +37,12 @@ const Wrapper = styled.div`
 
         margin-top: 80px;
     }
+
+    @media (min-width: 992px) and (max-height: 850px) {
+        transform: translateX(-50%);
+        margin: 70px 0;
+        top: unset;
+    }
 `
 
 const StakeHeader = styled.div`
@@ -93,23 +99,9 @@ const ReadMore = styled.a`
 
 export const StakingWindow = () => {
     const [ tokenType, setTokenType ] = useState('leash')
-    
-    const { width, height } = useWindowSize()
-    const [ scaleRate, setScaleRate ] = useState(1)
-
-    useEffect(() => {
-        const minHeight = 850
-        const offset = 200
-
-        if( width && width >= 992 && height && height && height < minHeight ) {
-            setScaleRate( (height - offset) / (minHeight - offset)  )
-        } else {
-            setScaleRate(1)
-        }
-    }, [ width, height ])
 
     return (
-        <Wrapper style={{ transform: `translate3d(-50%, -50%, 0) scale(${ scaleRate })` }}>
+        <Wrapper>
             <StakeContent>
                 <StakeHeader className='w-full relative flex justify-between items-center'>
                     <div className={`text-center px-2 ${ tokenType === 'leash' ? 'active' : '' }`} onClick={() => setTokenType( 'leash' )}> { 'Leash Locker' } </div>

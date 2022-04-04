@@ -1,11 +1,8 @@
 import React from 'react'
-
-import { useTranslation } from 'react-i18next'
 import { GradientButton } from 'theme'
 import styled from 'styled-components'
 import StakingWindow from './stakingWindow'
 import bgImage from '../../assets/images/home/bg.jpg'
-import bgVideo from '../../assets/images/home/Shiba New Version.mp4'
 import discordIcon from '../../assets/images/home/discord.svg'
 
 const StakingWrapper = styled.div`
@@ -14,6 +11,10 @@ const StakingWrapper = styled.div`
     height: 100vh;
 
     @media (max-width: 992px) {
+        height: auto;
+    }
+
+    @media (min-width: 992px) and (max-height: 850px) {
         height: auto;
     }
 `

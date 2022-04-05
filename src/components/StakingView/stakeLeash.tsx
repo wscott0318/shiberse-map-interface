@@ -235,6 +235,16 @@ export default function StakeLeash() {
                     </PrimaryButton>
                 )}
                 
+                {(allowance && Number(allowance) !== 0 && Number(lockAmount) > Number(shibaBalanceValue)) ? (
+                    <a target='_blank' rel="noreferrer" href='https://shibaswap.com/#/swap?outputCurrency=0x27C70Cd1946795B66be9d954418546998b546634&inputCurrency=ETH'>
+                        <PrimaryButton 
+                            className='right-0' 
+                            onClick={ lockToken }
+                        >
+                            { 'Buy more $Leash' }
+                        </PrimaryButton>
+                    </a>
+                ) : null}
             </div>
         </>
     )

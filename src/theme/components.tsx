@@ -331,6 +331,7 @@ export const GradientButton = styled.button`
 export const PrimaryButton = styled.button`
     background: linear-gradient(90deg, #B96A05 7.81%, #F28903 100%);
     border-radius: 22px;
+    color: white;
 
     font-weight: 700;
     font-size: 20px;

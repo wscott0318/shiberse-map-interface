@@ -6,6 +6,7 @@ import image2 from '../../assets/images/home/guide/2.png';
 import image3 from '../../assets/images/home/guide/3.png';
 import { NormalButton } from 'theme';
 import { NavLink } from 'components'
+import { useActiveWeb3React } from 'hooks';
 
 const GuideWrapper = styled.div`
     padding: 8% 0;
@@ -123,6 +124,8 @@ const Title = styled.div`
 `
 
 export const GuideSection = ({ image, title, content, blurPosition, textSize, hasLandsMapButton = false }: any) => {
+    const { account } = useActiveWeb3React()
+
     return (
         <GuidSectionWrapper className='flex justify-between items-start relative'>
             <BlurCircle src={ blurCircle } className='absolute' position={blurPosition}/>
@@ -144,7 +147,7 @@ export const GuideSection = ({ image, title, content, blurPosition, textSize, ha
                 </div>
                 
                 {
-                    hasLandsMapButton ? <NormalButton className='m-0 mt-6'><NavLink exact strict to="/map">Enter the Lands Map</NavLink></NormalButton> : null
+                    hasLandsMapButton && account ? <NormalButton className='m-0 mt-6'><NavLink exact strict to="/map">Enter the Lands Map</NavLink></NormalButton> : null
                 }
             </DescWrapper>
         </GuidSectionWrapper>

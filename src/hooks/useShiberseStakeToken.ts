@@ -46,7 +46,7 @@ const useShiberseStakeToken = (props:any) => {
 
     useEffect(() => {
         
-        if (account && tokenContract && stakeContract) {
+        if (account && tokenContract && stakeContract && chainId === mainNetworkChainId) {
             fetchAllowance()
         }
         const refreshInterval = setInterval(fetchAllowance, 10000)
@@ -123,7 +123,7 @@ const useShiberseStakeToken = (props:any) => {
     useEffect(() => {
         if( account && chainId === mainNetworkChainId )
             fetchStakeLimitInfo()
-    })
+    }, [account, chainId, fetchStakeLimitInfo])
 
     return {allowance, approve, stake, stakedBalance, lockDays, stakeLimitInfo}
 

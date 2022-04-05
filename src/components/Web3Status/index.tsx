@@ -26,6 +26,7 @@ import { useETHBalances } from 'state/wallet/hooks'
 import { NETWORK_ICON, NETWORK_LABEL } from 'constants/networks'
 import { Currency } from '@shibaswap/sdk'
 import ProfileMenu from '../ProfileMenu'
+import { mainNetworkChainId } from '../../constants'
 
 const IconWrapper = styled.div<{ size?: number }>`
     ${({ theme }) => theme.flexColumnNoWrap};
@@ -154,6 +155,8 @@ function Web3StatusInner() {
 
     const toggleWalletModal = useWalletModalToggle()
 
+    const CorrectNetwork = mainNetworkChainId === chainId
+
     if (account) {
         return (
             <div
@@ -165,7 +168,7 @@ function Web3StatusInner() {
                     <div className="flex justify-between items-center">
                         <div className="pr-2 text-white">{pending?.length} Pending</div> <Loader stroke="white" />
                     </div>
-                ) : (
+                ) : CorrectNetwork ? (
                     <div className='flex items-center'>
                         <WalletBalance>
                             <div className='network_label text-xs mb-1 text-center'>{ chainLabel } Network</div>
@@ -179,6 +182,10 @@ function Web3StatusInner() {
                         </WalletBalance>
 
                         {/* {ENSName || shortenAddress(account)} */}
+                    </div>
+                ) : (
+                    <div className="flex justify-between items-center">
+                        <div className="pr-2 text-white">Wrong Network</div>
                     </div>
                 )}
                 {!hasPendingTransactions && connector && <StatusIcon connector={connector} />}

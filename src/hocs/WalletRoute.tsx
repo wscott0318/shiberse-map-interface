@@ -20,7 +20,7 @@ export const WalletRoute = ({ component: Component, children, ...rest }: any) =>
                     ) : (
                         <Redirect
                             to={{
-                                pathname: '/connect',
+                                pathname: '/',
                                 state: { from: location }
                             }}
                         />

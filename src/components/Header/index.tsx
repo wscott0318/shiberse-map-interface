@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import Web3Status from '../Web3Status'
 import { NavLink } from '../Link'
 import { Disclosure } from '@headlessui/react'
 import { MenuButton } from 'theme'
 import styled from 'styled-components'
 import { useLocation } from 'react-router-dom'
+import { useActiveWeb3React } from 'hooks'
 
 const LogoText = styled.div`
     letter-spacing: 0.15em;
@@ -43,6 +43,7 @@ const SubLogoText = styled.span`
 `
 
 export default function Header(): JSX.Element {
+    const { account } = useActiveWeb3React()
     const [active, setActive] = useState('active')
     const [lastScroll, setLastScroll] = useState(0)
 
@@ -81,7 +82,7 @@ export default function Header(): JSX.Element {
                     </div>
 
                     <div className="flex items-center">
-                        <MenuButton disabled={false} className={`font-bold ${ isOnMapPage() ? 'hidden' : '' }`}>
+                        <MenuButton disabled={false} className={`font-bold ${ isOnMapPage() || !account ? 'hidden' : '' }`}>
                             <NavLink exact strict to="/map" className={''}>
                                 <span className='full'>
                                     { 'Enter the Lands Map' }

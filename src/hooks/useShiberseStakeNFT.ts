@@ -46,7 +46,7 @@ const useShiberseStakeNFT = (props:any) => {
 
     useEffect(() => {
         
-        if (account && tokenContract && stakeContract) {
+        if (account && tokenContract && stakeContract && chainId === mainNetworkChainId) {
             fetchAllowance()
         }
         const refreshInterval = setInterval(fetchAllowance, 10000)
@@ -162,7 +162,7 @@ const useShiberseStakeNFT = (props:any) => {
     useEffect(() => {
         if( account && chainId === mainNetworkChainId )
             fetchStakeLimitInfo()
-    })
+    }, [ account, chainId, fetchStakeLimitInfo ])
 
     return {isApproved, approve, stake, stakedBalance, fetchWalletNFT, lockDays, stakeLimitInfo}
 }

@@ -22,3 +22,9 @@ export const zoomRange = {
     min: 5,
     max: 50,
 }
+
+export const Events = {
+    'Bid': 1,
+    'Holder': 2,
+    'Public': 3,
+}

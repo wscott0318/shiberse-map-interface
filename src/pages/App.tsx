@@ -12,6 +12,7 @@ import ReactGA from 'react-ga'
 import Home from './Home'
 import { RedirectPathToHomeOnly } from './Home/redirects'
 import Profile from './Profile'
+import WalletRoute from 'hocs/WalletRoute'
 
 function App(): JSX.Element {
     const bodyRef = useRef<any>(null)
@@ -45,9 +46,10 @@ function App(): JSX.Element {
 
                         <Web3ReactManager>
                             <Switch>
+                                
                                 <Route exact strict path="/" component={Home} />
-                                <Route exact strict path="/map" component={RedirectIfLockedToken} />
-                                <Route exact strict path="/profile" component={Profile} />
+                                <WalletRoute exact strict path="/map" component={RedirectIfLockedToken} />
+                                <WalletRoute exact strict path="/profile" component={Profile} />
 
                                 <Route component={RedirectPathToHomeOnly} />
                             </Switch>

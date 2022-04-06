@@ -29,7 +29,7 @@ const initialState: MapState = {
         x: 0,
         y: 0,
     },
-    mapZoomLevel: 10,
+    mapZoomLevel: 20,
     landData: [],
     searchOptions: {
         shiboshiZone: false,

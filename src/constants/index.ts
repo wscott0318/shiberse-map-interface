@@ -1107,6 +1107,8 @@ export const shiberseContractAddresses = {
         'STAKE_SHIBOSHI': '0x0F432c22FaFF300c9D62daa61fBD9f8cBe5A20d7',
         'MOCKSALE': '0x736f9284b43c058b84a5e32ab57942db6cc5c1aa',
         'LAND_AUCTION': '0xB71352a05a4AD5F90717A456a03a8966A3ffE61E'
+        // LandRegistry    0xda1aA36f476c948B6d41dce457c152C655E6bFC8
+        // LandAuction    0xbab3d4b10d025c06c15a6ce47b92268ccd5c3abd
     }
 }
 

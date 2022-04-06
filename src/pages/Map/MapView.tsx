@@ -1,9 +1,7 @@
 import React, { Component } from "react"
 import * as PIXI from 'pixi.js'
-import {OutlineFilter} from '@pixi/filter-outline';
 import { isConsistsPointer, pauseEvent } from 'utils/mapHelper'
-import { backRectPos, DarkTileColors, roadRectPos, TileColors } from "constants/map"
-import roadTile from 'assets/images/map/tiles/road.png'
+import { backRectPos, DarkTileColors, linePos, shiboshiZonePos, TileColors } from "constants/map"
 
 type MapViewProps = {
     mapCenterPos: any,
@@ -14,6 +12,8 @@ type MapViewProps = {
     setSelectedInfo: any,
     landData: any,
     searchOptions: any,
+    clearFilter: any,
+    setClearFilter: any,
 }
 
 export default class Map extends Component<MapViewProps> {
@@ -50,23 +50,43 @@ export default class Map extends Component<MapViewProps> {
 
             document.getElementById('mapContainer')?.appendChild( this.app.view )
 
+            const getScreenPos = ( val: any ) => ({
+                x: Math.ceil((val.x - this.props.mapCenterPos.x - 0.5) * this.props.mapZoomLevel + this.app.screen.width / 2),
+                y: Math.ceil((val.y - this.props.mapCenterPos.y - 0.5) * this.props.mapZoomLevel + this.app.screen.height / 2)
+            })
+
             const drawRect = ( {graphics, startPos, endPos, fillColor, borderColor} : any ) => {
                 if( fillColor )
                     graphics.beginFill( fillColor )
 
                 if( borderColor )
-                    graphics.lineStyle(this.props.mapZoomLevel * 0.1, borderColor, 0.5)
+                    graphics.lineStyle(this.props.mapZoomLevel * 0.1, borderColor, 1)
 
-                const drawX = Math.ceil((startPos.x - this.props.mapCenterPos.x) * this.props.mapZoomLevel + this.app.screen.width / 2)
-                const drawY = Math.ceil((startPos.y - this.props.mapCenterPos.y) * this.props.mapZoomLevel + this.app.screen.height / 2)
+                const drawPos = getScreenPos( startPos )
 
-                const drawWidth = (Math.abs(endPos.x - startPos.x) + 1 - 0.1) * this.props.mapZoomLevel
-                const drawHeight = (Math.abs(endPos.y - startPos.y) + 1 - 0.1) * this.props.mapZoomLevel
+                const drawWidth = (Math.abs(endPos.x - startPos.x) + 1) * this.props.mapZoomLevel
+                const drawHeight = (Math.abs(endPos.y - startPos.y) + 1) * this.props.mapZoomLevel
 
-                graphics.drawRect( drawX, drawY, drawWidth, drawHeight )
+                graphics.drawRect( drawPos.x, drawPos.y, drawWidth, drawHeight )
 
                 if( fillColor )
                     graphics.endFill( fillColor )
+            }
+
+            const drawLine = ( { graphics, points, borderColor }: any ) => {
+                graphics.lineStyle(this.props.mapZoomLevel * 0.1, borderColor, 1)
+
+                const pointObj = {
+                    x: points[0][0],
+                    y: points[0][1]
+                }
+                graphics.moveTo( getScreenPos( pointObj ).x, getScreenPos( pointObj ).y )
+                for( let i = 1; i < points.length; i++ ) {
+                    pointObj.x = points[i][0]
+                    pointObj.y = points[i][1]
+                    graphics.lineTo( getScreenPos( pointObj ).x, getScreenPos( pointObj ).y )
+                }
+                graphics.closePath()
             }
             
             const backGraphic = new PIXI.Graphics();
@@ -94,30 +114,31 @@ export default class Map extends Component<MapViewProps> {
             this.app.stage.addChild( hubGraphic )
 
             this.app.ticker.add(() => {
-
-                // backGraphic.clear()
-                
-                // roadRectPos.forEach((item : any) => {
-                //     drawRect({ graphics: backGraphic, startPos: { x: item.start.x, y: item.start.y }, endPos: { x: item.end.x, y: item.end.y }, fillColor: 0xcdcccc })
-                // })
-
-                // backRectPos.forEach((item : any) => {
-                //     drawRect({ graphics: backGraphic, startPos: { x: item.start.x, y: item.start.y }, endPos: { x: item.end.x, y: item.end.y }, fillColor: 0xcdcccc })
-                // })
-
-                // backRectPos.forEach((item : any) => {
-                //     drawRect({ graphics: backGraphic, startPos: { x: item.start.x + 1, y: item.start.y + 1 }, endPos: { x: item.end.x - 1, y: item.end.y - 1 }, fillColor: 0x8FA8B3 })
-                // })
-
+                backGraphic.clear()
                 hubGraphic.clear()
                 
                 backRectPos.forEach((item : any) => {
-                    drawRect({ graphics: hubGraphic, startPos: { x: item.start.x + 1, y: item.start.y + 1 }, endPos: { x: item.end.x - 1, y: item.end.y - 1 }, borderColor: 0x13101B })
+                    drawRect({ graphics: hubGraphic, startPos: { x: item.start.x + 1, y: item.start.y + 1 }, endPos: { x: item.end.x - 1, y: item.end.y - 1 }, borderColor: 0x13101b })
                 })
 
+                linePos.forEach((item: any) => {
+                    drawLine({ graphics: hubGraphic, points: item, borderColor: 0x13101b })
+                })
+
+                // draw ShiboshiZone outline
+                drawLine({ graphics: hubGraphic, points: shiboshiZonePos, borderColor: 0xf31111 })
+
+                let hasFilterLand = false;
                 for( let i = 0; i < spritesArray.length; i++ ) {
-                    spritesArray[i].width = Math.ceil(this.props.mapZoomLevel * (this.mapInfo[i].tierName === 'road' ? 0.9 : 0.9))
-                    spritesArray[i].height = Math.ceil(this.props.mapZoomLevel * (this.mapInfo[i].tierName === 'road' ? 0.9 : 0.9))
+                    if( this.mapInfo[i].tierName === 'road' )
+                        drawRect({ graphics: backGraphic, startPos: { x: this.mapInfo[i].coordinates.x, y: this.mapInfo[i].coordinates.y }, endPos: { x: this.mapInfo[i].coordinates.x, y: this.mapInfo[i].coordinates.y }, fillColor: !this.isApplyFilter( this.mapInfo[i] ) ? 0x1c1c1c : 0xcdcccc })
+
+                    if( this.mapInfo[i].tierName === 'hub' )
+                        drawRect({ graphics: backGraphic, startPos: { x: this.mapInfo[i].coordinates.x, y: this.mapInfo[i].coordinates.y }, endPos: { x: this.mapInfo[i].coordinates.x, y: this.mapInfo[i].coordinates.y }, fillColor: !this.isApplyFilter( this.mapInfo[i] ) ? 0x202628 : 0x8FA8B3  })
+
+                    spritesArray[i].anchor.set(0.5)
+                    spritesArray[i].width = Math.ceil(this.props.mapZoomLevel * (0.9))
+                    spritesArray[i].height = Math.ceil(this.props.mapZoomLevel * (0.9))
                     spritesArray[i].x = Math.ceil((this.mapInfo[i].coordinates.x - this.props.mapCenterPos.x) * this.props.mapZoomLevel + this.app.screen.width / 2)
                     spritesArray[i].y = Math.ceil((this.mapInfo[i].coordinates.y - this.props.mapCenterPos.y) * this.props.mapZoomLevel + this.app.screen.height / 2)
 
@@ -128,8 +149,13 @@ export default class Map extends Component<MapViewProps> {
 
                         if( !this.isApplyFilter( this.mapInfo[i] ) )
                             spritesArray[i].tint = DarkTileColors[ this.mapInfo[i].tierName as keyof typeof DarkTileColors ]
+                        else
+                            hasFilterLand = true
                     }
                 }
+
+                if( (hasFilterLand && this.props.clearFilter) || (!hasFilterLand && !this.props.clearFilter) )
+                    this.props.setClearFilter()
             })
 
             this.app.view.addEventListener('pointerdown', this.onPointerDownHandler, false)

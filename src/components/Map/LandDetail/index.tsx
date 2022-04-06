@@ -6,6 +6,8 @@ import { setSelectedLandInfo } from 'state/map/actions'
 import thumbnail from 'assets/images/map/thumbnail.png'
 import locationImg from 'assets/images/map/location.svg'
 import { NormalButton } from 'theme';
+import useShiberseLandAuction from 'hooks/useShiberseLandAuction';
+import { EventsText } from 'constants/map';
 
 const LandDetailPanel = styled.div<{ show: boolean }>`
     display: ${({ show }) => (show ? 'block' : 'none')};
@@ -83,6 +85,8 @@ const OpenType = styled.div`
 `
 
 export const LandDetail = () => {
+    const { currentStage } = useShiberseLandAuction()
+
     const selectedInfo = useSelector<AppState, AppState['map']['selectedLandInfo']>(state => state.map.selectedLandInfo)
 
     const dispatch = useDispatch<AppDispatch>()
@@ -94,7 +98,7 @@ export const LandDetail = () => {
     }
 
     return (
-        <LandDetailPanel show={ selectedInfo.show || true }>
+        <LandDetailPanel show={ selectedInfo.show }>
             <LandInfo className='flex'>
                 <LandImage>
                     <img src={thumbnail} alt='pic'></img>
@@ -109,14 +113,14 @@ export const LandDetail = () => {
 
             <LandCoordinates className='flex items-center mb-2'>
                 <img src={locationImg}></img>
-                X: 0,0   Y: 0,0
+                X: { selectedInfo.x }   Y: { selectedInfo.y }
             </LandCoordinates>
 
             <LandType className='mb-4'>Owner:</LandType>
 
             <LandName className='mb-1'>Current price</LandName>
             <BidBalance className='mb-2'>1 ETH</BidBalance>
-            <OpenType className='mb-4'>Open all</OpenType>
+            <OpenType className='mb-4'>{ EventsText[ currentStage ] }</OpenType>
 
             <div className='text-center'>
                 <NormalButton className='px-10 font-bold'>Bid</NormalButton>

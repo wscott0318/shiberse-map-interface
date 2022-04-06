@@ -5,6 +5,9 @@ import expandIcon from 'assets/images/expand.svg'
 import checkIcon from 'assets/images/map/icons/check.svg'
 import './selectbutton.scss'
 import RangeInputMinMax from 'components/RangeInputMinMax'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, AppState } from 'state'
+import { updateSearchOptions } from 'state/map/actions'
 
 /* styled elements */
 const FilterPanel = styled.div<{expand: boolean}>`
@@ -136,35 +139,56 @@ const GoButton = styled.button`
     }
 `
 
+const filterData = [
+    {
+        color: '#FFFFFF',
+        borderColor: '#E01515',
+        text: 'Shiboshis Zone',
+        searchOption: 'shiboshiZone'
+    }, {
+        color: '#A1AFBA',
+        text: 'Private Hubs',
+        searchOption: 'privatehub'
+    }, {
+        color: '#DFB850',
+        text: 'Diamond Woof',
+        searchOption: 'diamond'
+    }, {
+        color: '#5B5E6B',
+        text: 'Platinum Paw',
+        searchOption: 'platinum'
+    }, {
+        color: '#75747D',
+        text: 'Gold Tail',
+        searchOption: 'gold'
+    }, {
+        color: '#31323E',
+        text: 'Silver Fur',
+        searchOption: 'silver'
+    }, {
+        color: '#05DC1B',
+        text: 'Open for Bid',
+        searchOption: 'openforbid'
+    },
+]
+
 export const MapFilter = () => {
     const [ expand, setExpand ] = useState(true)
     const [ priceRangeValues, setPriceRangeValues ] = useState([ 0.2, 3 ])
 
-    const filterData = [
-        {
-            color: '#FFFFFF',
-            borderColor: '#E01515',
-            text: 'Shiboshis Zone'
-        }, {
-            color: '#A1AFBA',
-            text: 'Private Hubs'
-        }, {
-            color: '#DFB850',
-            text: 'Diamond Woof'
-        }, {
-            color: '#5B5E6B',
-            text: 'Platinum Paw'
-        }, {
-            color: '#75747D',
-            text: 'Gold Tail'
-        }, {
-            color: '#31323E',
-            text: 'Silver Fur'
-        }, {
-            color: '#05DC1B',
-            text: 'Open for Bid'
-        },
-    ]
+    const searchOptions = useSelector<AppState, AppState['map']['searchOptions']>(state => state.map.searchOptions)
+
+    const dispatch = useDispatch<AppDispatch>()
+
+    const setSearchOptions = (newOptions: any): any => dispatch( updateSearchOptions( { newOptions } ) )
+
+    const setSearchOption = ( option: string ) => {
+        const newOptions = { ...searchOptions }
+
+        newOptions[ option ] = !newOptions[ option ]
+
+        setSearchOptions( newOptions )
+    }
 
     return (
         <FilterPanel expand={expand}>
@@ -177,7 +201,11 @@ export const MapFilter = () => {
 
             <FilterContent className='w-full'>
                 { filterData.map((item, index) => (
-                    <div className={`leftSideBar__sizeSelect__item ${ false ? 'active' : '' }`} key={`filter ${index}`}>
+                    <div 
+                        className={`leftSideBar__sizeSelect__item ${ searchOptions[ item.searchOption ] === true ? 'active' : '' }`} 
+                        key={`filter ${index}`} 
+                        onClick={ () => setSearchOption( item.searchOption ) 
+                        }>
                         <div className="leftSideBar__sizeSelect__item__btn">
                             <button>
                                 <img alt="selected" src={ checkIcon }></img>
@@ -211,13 +239,13 @@ export const MapFilter = () => {
                 <div className='flex justify-between items-center'>
                     <div className='flex items-center'>
                         <div className='flex items-center mr-2'>
-                            <InputDesc>X</InputDesc>
-                            <CoordinateInput type='number' placeholder='0'/>
+                            <InputDesc>Min</InputDesc>
+                            <CoordinateInput type='text' placeholder='-31, 82'/>
                         </div>
 
                         <div className='flex items-center'>
-                            <InputDesc>Y</InputDesc>
-                            <CoordinateInput type='number' placeholder='0'/>
+                            <InputDesc>Max</InputDesc>
+                            <CoordinateInput type='text' placeholder='12, 134'/>
                         </div>
                     </div>
 

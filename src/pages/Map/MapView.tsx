@@ -1,7 +1,9 @@
 import React, { Component } from "react"
 import * as PIXI from 'pixi.js'
-import { mapPosInfo } from 'utils/mapData'
-import { isConsistsPointer, pauseEvent, getMapColorByType } from 'utils/mapHelper'
+import {OutlineFilter} from '@pixi/filter-outline';
+import { isConsistsPointer, pauseEvent } from 'utils/mapHelper'
+import { backRectPos, DarkTileColors, roadRectPos, TileColors } from "constants/map"
+import roadTile from 'assets/images/map/tiles/road.png'
 
 type MapViewProps = {
     mapCenterPos: any,
@@ -10,6 +12,8 @@ type MapViewProps = {
     updateMapZoomLevel: any,
     selectedInfo: any,
     setSelectedInfo: any,
+    landData: any,
+    searchOptions: any,
 }
 
 export default class Map extends Component<MapViewProps> {
@@ -19,17 +23,56 @@ export default class Map extends Component<MapViewProps> {
     pointDownPos: any
     moveDistance: any
 
+    constructor(props: MapViewProps) {
+        super(props)
+
+        this.onPointerDownHandler = this.onPointerDownHandler.bind(this)
+        this.onPointerMoveHandler = this.onPointerMoveHandler.bind(this)
+        this.onPointerUpHandler = this.onPointerUpHandler.bind(this)
+        this.onWheelHandler = this.onWheelHandler.bind(this)
+        this.onTouchStartHandler = this.onTouchStartHandler.bind(this)
+        this.onTouchMoveHandler = this.onTouchMoveHandler.bind(this)
+        this.onTouchEndHandler = this.onTouchEndHandler.bind(this)
+        this.onKeyPressEventHandler = this.onKeyPressEventHandler.bind(this)
+    }
+
     componentDidMount() {
-        const mapInfo = JSON.parse( mapPosInfo )
+        const mapData = this.props.landData
+        
+        console.error(mapData)
+
         const spritesArray: any[] = []
-        this.mapInfo = mapInfo
+        this.mapInfo = mapData
         this.spritesArray = spritesArray
 
         const onReady = () => {
             this.app = new PIXI.Application({ resizeTo: window, backgroundAlpha: 0, width: window.innerWidth, height: window.innerHeight })
 
             document.getElementById('mapContainer')?.appendChild( this.app.view )
+
+            const drawRect = ( {graphics, startPos, endPos, fillColor, borderColor} : any ) => {
+                if( fillColor )
+                    graphics.beginFill( fillColor )
+
+                if( borderColor )
+                    graphics.lineStyle(this.props.mapZoomLevel * 0.1, borderColor, 0.5)
+
+                const drawX = Math.ceil((startPos.x - this.props.mapCenterPos.x) * this.props.mapZoomLevel + this.app.screen.width / 2)
+                const drawY = Math.ceil((startPos.y - this.props.mapCenterPos.y) * this.props.mapZoomLevel + this.app.screen.height / 2)
+
+                const drawWidth = (Math.abs(endPos.x - startPos.x) + 1 - 0.1) * this.props.mapZoomLevel
+                const drawHeight = (Math.abs(endPos.y - startPos.y) + 1 - 0.1) * this.props.mapZoomLevel
+
+                graphics.drawRect( drawX, drawY, drawWidth, drawHeight )
+
+                if( fillColor )
+                    graphics.endFill( fillColor )
+            }
             
+            const backGraphic = new PIXI.Graphics();
+            this.app.stage.addChild( backGraphic )
+
+
             const container = new PIXI.ParticleContainer(100000, {
                 scale: true,
                 position: true,
@@ -40,40 +83,135 @@ export default class Map extends Component<MapViewProps> {
             container._batchSize = 16383
             this.app.stage.addChild(container)
 
-            for (let i = 0; i < mapInfo.length; i++) 
+            for (let i = 0; i < this.mapInfo.length; i++) 
             {
                 let bunny = new PIXI.Sprite( PIXI.Texture.WHITE )
                 spritesArray.push(bunny)
                 container.addChild(bunny)
             }
 
-            this.app.ticker.add(() => {
-                for( let i = 0; i < spritesArray.length; i++ ) {
-                    spritesArray[i].width = Math.ceil(this.props.mapZoomLevel * 0.9)
-                    spritesArray[i].height = Math.ceil(this.props.mapZoomLevel * 0.9)
-                    spritesArray[i].x = Math.ceil((mapInfo[i].x - this.props.mapCenterPos.x) * this.props.mapZoomLevel + this.app.screen.width / 2)
-                    spritesArray[i].y = Math.ceil((mapInfo[i].y - this.props.mapCenterPos.y) * this.props.mapZoomLevel + this.app.screen.height / 2)
+            const hubGraphic = new PIXI.Graphics();
+            this.app.stage.addChild( hubGraphic )
 
-                    if( i === this.props.selectedInfo.index )
+            this.app.ticker.add(() => {
+
+                // backGraphic.clear()
+                
+                // roadRectPos.forEach((item : any) => {
+                //     drawRect({ graphics: backGraphic, startPos: { x: item.start.x, y: item.start.y }, endPos: { x: item.end.x, y: item.end.y }, fillColor: 0xcdcccc })
+                // })
+
+                // backRectPos.forEach((item : any) => {
+                //     drawRect({ graphics: backGraphic, startPos: { x: item.start.x, y: item.start.y }, endPos: { x: item.end.x, y: item.end.y }, fillColor: 0xcdcccc })
+                // })
+
+                // backRectPos.forEach((item : any) => {
+                //     drawRect({ graphics: backGraphic, startPos: { x: item.start.x + 1, y: item.start.y + 1 }, endPos: { x: item.end.x - 1, y: item.end.y - 1 }, fillColor: 0x8FA8B3 })
+                // })
+
+                hubGraphic.clear()
+                
+                backRectPos.forEach((item : any) => {
+                    drawRect({ graphics: hubGraphic, startPos: { x: item.start.x + 1, y: item.start.y + 1 }, endPos: { x: item.end.x - 1, y: item.end.y - 1 }, borderColor: 0x13101B })
+                })
+
+                for( let i = 0; i < spritesArray.length; i++ ) {
+                    spritesArray[i].width = Math.ceil(this.props.mapZoomLevel * (this.mapInfo[i].tierName === 'road' ? 0.9 : 0.9))
+                    spritesArray[i].height = Math.ceil(this.props.mapZoomLevel * (this.mapInfo[i].tierName === 'road' ? 0.9 : 0.9))
+                    spritesArray[i].x = Math.ceil((this.mapInfo[i].coordinates.x - this.props.mapCenterPos.x) * this.props.mapZoomLevel + this.app.screen.width / 2)
+                    spritesArray[i].y = Math.ceil((this.mapInfo[i].coordinates.y - this.props.mapCenterPos.y) * this.props.mapZoomLevel + this.app.screen.height / 2)
+
+                    if( this.mapInfo[i].coordinates.x === this.props.selectedInfo.x && this.mapInfo[i].coordinates.y === this.props.selectedInfo.y )
                         spritesArray[i].tint = 0xfd33e6
-                    else
-                        spritesArray[i].tint = getMapColorByType( mapInfo[i].type )
+                    else {
+                        spritesArray[i].tint = TileColors[ this.mapInfo[i].tierName as keyof typeof TileColors ]
+
+                        if( !this.isApplyFilter( this.mapInfo[i] ) )
+                            spritesArray[i].tint = DarkTileColors[ this.mapInfo[i].tierName as keyof typeof DarkTileColors ]
+                    }
                 }
             })
 
-            this.app.view.addEventListener('pointerdown', this.onPointerDownHandler.bind(this), false)
-            this.app.view.addEventListener('pointermove', this.onPointerMoveHandler.bind(this), false)
-            this.app.view.addEventListener('pointerout', this.onPointerUpHandler.bind(this), false)
-            window.addEventListener('pointerup', this.onPointerUpHandler.bind(this), false)
-            this.app.view.addEventListener('wheel', this.onWheelHandler.bind(this), false)
+            this.app.view.addEventListener('pointerdown', this.onPointerDownHandler, false)
+            this.app.view.addEventListener('pointermove', this.onPointerMoveHandler, false)
+            this.app.view.addEventListener('pointerout', this.onPointerUpHandler, false)
+            window.addEventListener('pointerup', this.onPointerUpHandler, false)
+            this.app.view.addEventListener('wheel', this.onWheelHandler, false)
 
-            this.app.view.addEventListener('touchstart', this.onTouchStartHandler.bind(this), false)
-            this.app.view.addEventListener('touchmove', this.onTouchMoveHandler.bind(this), false)
-            this.app.view.addEventListener('touchend', this.onTouchEndHandler.bind(this), false)
-            window.addEventListener('touchcancel', this.onTouchEndHandler.bind(this), false)
+            this.app.view.addEventListener('touchstart', this.onTouchStartHandler, false)
+            this.app.view.addEventListener('touchmove', this.onTouchMoveHandler, false)
+            this.app.view.addEventListener('touchend', this.onTouchEndHandler, false)
+            window.addEventListener('touchcancel', this.onTouchEndHandler, false)
+
+            window.addEventListener('keydown', this.onKeyPressEventHandler, false)
         }
 
         onReady();
+    }
+
+    componentWillUnmount() {
+        this.app.view.removeEventListener('pointerdown', this.onPointerDownHandler, false)
+        this.app.view.removeEventListener('pointermove', this.onPointerMoveHandler, false)
+        this.app.view.removeEventListener('pointerout', this.onPointerUpHandler, false)
+        window.removeEventListener('pointerup', this.onPointerUpHandler, false)
+        this.app.view.removeEventListener('wheel', this.onWheelHandler, false)
+
+        this.app.view.removeEventListener('touchstart', this.onTouchStartHandler, false)
+        this.app.view.removeEventListener('touchmove', this.onTouchMoveHandler, false)
+        this.app.view.removeEventListener('touchend', this.onTouchEndHandler, false)
+        window.removeEventListener('touchcancel', this.onTouchEndHandler, false)
+
+        window.removeEventListener('keydown', this.onKeyPressEventHandler, false)
+
+        this.app.destroy( true, { children: true, texture: true, baseTexture: true } )
+    }
+
+    isApplyFilter( item: any ) {
+        const searchOptions = this.props.searchOptions
+
+        if( !searchOptions )
+            return true
+
+        if( !searchOptions.shiboshiZone 
+            && !searchOptions.privatehub 
+            && !searchOptions.diamond 
+            && !searchOptions.platinum 
+            && !searchOptions.gold
+            && !searchOptions.silver )
+            return true
+
+        if( searchOptions.shiboshiZone && item.isShiboshiZone )
+            return true
+        if( searchOptions.privatehub && item.tierName === 'hub' )
+            return true
+        if( searchOptions.diamond && item.tierName === 'tier1' )
+            return true
+        if( searchOptions.platinum && item.tierName === 'tier2' )
+            return true
+        if( searchOptions.gold && item.tierName === 'tier3' )
+            return true
+        if( searchOptions.silver && item.tierName === 'tier4' )
+            return true
+        // open for bid
+        // if( searchOptions.openforbid && item.openforbid )
+        //     return true
+
+        // if( item.price >= searchOptions.minPrice && item.price <= searchOptions.maxPrice )
+        //     return true
+
+        return false
+        
+        // x, y search option
+
+        // owner search option
+    }
+
+    onKeyPressEventHandler(e: any) {
+        if( (e.ctrlKey && e.key === '-') || (e.ctrlKey && e.key === '=') ) {
+            pauseEvent(e)
+
+            this.props.updateMapZoomLevel( this.props.mapZoomLevel + (e.key === '-' ? -1 : 1) )
+        }
     }
 
     onPointerDownHandler(e: any) {
@@ -131,8 +269,8 @@ export default class Map extends Component<MapViewProps> {
             if( targetIndex !== -1 )
                 this.props.setSelectedInfo( { 
                     index: targetIndex,
-                    x: this.mapInfo[targetIndex].x + 1, 
-                    y: this.mapInfo[targetIndex].y + 1, 
+                    x: this.mapInfo[targetIndex].coordinates.x, 
+                    y: this.mapInfo[targetIndex].coordinates.y, 
                     size: 1,
                     show: true,
                 } )
@@ -204,8 +342,8 @@ export default class Map extends Component<MapViewProps> {
             if( targetIndex !== -1 )
                 this.props.setSelectedInfo( { 
                     index: targetIndex, 
-                    x: this.mapInfo[targetIndex].x + 1, 
-                    y: this.mapInfo[targetIndex].y + 1, 
+                    x: this.mapInfo[targetIndex].coordinates.x, 
+                    y: this.mapInfo[targetIndex].coordinates.y, 
                     size: 1,
                     show: true,
                 } )

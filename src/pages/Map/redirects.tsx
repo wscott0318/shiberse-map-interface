@@ -52,7 +52,7 @@ const Notification = () => {
     )
 }
 
-export const RedirectIfLockedToken = () => {
+export const RedirectIfLockedToken = (props: any) => {
 
     const { stakedBalance: leashStakedBalance } = useShiberseStakeToken({ tokenType: 'leash' })
     const { stakedBalance: shiboshiStakedBalance } = useShiberseStakeNFT({ tokenType: 'shiboshi' })

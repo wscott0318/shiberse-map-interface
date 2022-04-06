@@ -6,10 +6,14 @@ export const ang2Rad = (ang: any) => ang * Math.PI / 180
 
 // Land Map
 export const isConsistsPointer = ( land: any, landSize: any, centerPos: any, position: any, screen: any ) => {
-    const x = Math.ceil((land.x - centerPos.x) * landSize + screen.width / 2)
-    const y = Math.ceil((land.y - centerPos.y) * landSize + screen.height / 2)
+    const x = Math.ceil((land.coordinates.x - centerPos.x) * landSize + screen.width / 2)
+    const y = Math.ceil((land.coordinates.y - centerPos.y) * landSize + screen.height / 2)
 
+    // for anchor 0
     return position.x >= x && position.y >= y && position.x <= x + landSize && position.y <= y + landSize
+
+    // for anchor 0.5
+    // return position.x >= x - landSize / 2 && position.y >= y - landSize / 2 && position.x <= x + landSize / 2 && position.y <= y + landSize / 2
 }
 
 export const pauseEvent = (e: any) => {

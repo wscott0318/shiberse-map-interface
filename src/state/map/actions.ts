@@ -7,3 +7,5 @@ export const updateMapCenterPos = createAction<{ newPos: object }>('map/updateMa
 export const updateMapZoomLevel = createAction<{ newLevel: number }>('map/updateMapZoomLevel') 
 
 export const updateLandData = createAction<{ newLand: object[] }>('map/updateLandData')
+
+export const updateSearchOptions = createAction<({ newOptions: any })>('map/updateSearchOptions')

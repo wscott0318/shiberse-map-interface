@@ -1,10 +1,13 @@
 import client from '../../feathers'
-import { AppState, AppDispatch } from 'state'
-import { useDispatch, useSelector } from 'react-redux'
-import { updateLandData } from './actions'
+import algoliaIndex from '../../algolia'
 
-export function getLandData() {
-    const result = client.service('land').find()
+export function getAllLandData(page: number) {
+    // const result = client.service('land').find()
+
+    const result = algoliaIndex.search('', {
+        hitsPerPage: 1000,
+        page: page,
+    })
 
     return result
 }

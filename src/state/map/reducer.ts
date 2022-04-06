@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { range, zoomRange } from 'constants/map'
-import { setSelectedLandInfo, updateLandData, updateMapCenterPos, updateMapZoomLevel } from './actions'
+import { setSelectedLandInfo, updateLandData, updateMapCenterPos, updateMapZoomLevel, updateSearchOptions } from './actions'
 
 export interface MapState {
     readonly selectedLandInfo: {
@@ -15,6 +15,7 @@ export interface MapState {
     }
     readonly mapZoomLevel: number
     readonly landData: object[]
+    readonly searchOptions: any
 }
 
 const initialState: MapState = {
@@ -25,11 +26,34 @@ const initialState: MapState = {
         size: 1,
     },
     mapCenterPos: {
-        x: range.x / 2,
-        y: range.y / 2,
+        x: 0,
+        y: 0,
     },
     mapZoomLevel: 10,
     landData: [],
+    searchOptions: {
+        shiboshiZone: false,
+        privatehub: false,
+        diamond: false,
+        platinum: false,
+        gold: false,
+        silver: false,
+        openforbid: false,
+
+        minPrice: 0,
+        maxPrice: 100000,
+
+        minPos: {
+            x: null,
+            y: null,
+        },
+        maxPos: {
+            x: null,
+            y: null,
+        },
+
+        walletAddress: null,
+    }
 }
 
 export default createReducer<MapState>(initialState, builder =>
@@ -50,5 +74,8 @@ export default createReducer<MapState>(initialState, builder =>
         })
         .addCase( updateLandData, (state, { payload: { newLand } }) => {
             state.landData = newLand
+        })
+        .addCase( updateSearchOptions, (state, { payload: { newOptions } }) => {
+            state.searchOptions = { ...state.searchOptions, ...newOptions }
         })
 )

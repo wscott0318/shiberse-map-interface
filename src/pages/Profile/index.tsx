@@ -6,6 +6,11 @@ import BidHistoryModal from 'components/BidHistoryModal'
 import thumbnail from 'assets/images/map/thumbnail.png'
 import locationImg from 'assets/images/map/location.svg'
 import MintModal from './mintModal'
+import { useWeb3React } from '@web3-react/core'
+import { useETHBalances } from 'state/wallet/hooks'
+import { NETWORK_LABEL } from 'constants/networks'
+import { shortenDouble } from 'utils'
+import useShiberseLandAuction from 'hooks/useShiberseLandAuction'
 
 const ProfileWrapper = styled.div`
     position: relative;
@@ -152,51 +157,63 @@ export const Profile = () => {
     const [showBidHistoryModal, setShowBidHistoryModal] = useState(false)
     const [showMintModal, setShowMintModal] = useState(false)
 
+    const { account, chainId } = useWeb3React()
+
+    const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
+    const currentBalance = parseFloat(userEthBalance?.toSignificant() as any)
+    const chainLabel = NETWORK_LABEL[(chainId as keyof typeof NETWORK_LABEL)]
+
+    const { allPlacedBids, winningBids } = useShiberseLandAuction()
+
     return (
         <ProfileWrapper className='container'>
             <div className='relative mb-12'>
                 <SubTitle>wallet</SubTitle>
                 <WalletStatusWrapper className='flex flex-col'>
-                    <DescText className='mb-2'>Mainnet Network</DescText>
+                    <DescText className='mb-2'>{chainLabel} Network</DescText>
                     <div className='flex'>
                         <img src={etherIcon} width='12' className='mr-2'></img>
-                        <span className='text-base'>0.00 ETH</span>
+                        <span className='text-base'>{ shortenDouble(currentBalance, 2) } ETH</span>
                     </div>
                 </WalletStatusWrapper>
             </div>
 
-            <div className='relative'>
+            <div className='relative mb-12'>
                 <SubTitle>
                     bids placed
                     <ViewBidHistoryButton onClick={() => setShowBidHistoryModal(prev => !prev)}>View Bidding History</ViewBidHistoryButton>
                 </SubTitle>
 
-                {/* <NoneContentWrapper>
-                    <div className='text-base' style={{ color: 'rgb(255, 255, 255, 0.5)' }}>None</div>
-                </NoneContentWrapper> */}
+                { !allPlacedBids.length ? (
+                    <NoneContentWrapper>
+                        <div className='text-base' style={{ color: 'rgb(255, 255, 255, 0.5)' }}>None</div>
+                    </NoneContentWrapper>
+                ): ( 
+                    <div className='flex flex-wrap'>
+                        { allPlacedBids.map((item: any, index: number) => (
+                            <ItemWrapper key={`allbids${index}`}>
+                                <LandInfo className='flex'>
+                                    <LandImage>
+                                        <img src={thumbnail} alt='pic'></img>
+                                    </LandImage>
 
-                <div className='flex flex-wrap'>
-                    <ItemWrapper>
-                        <LandInfo className='flex'>
-                            <LandImage>
-                                <img src={thumbnail} alt='pic'></img>
-                            </LandImage>
+                                    <DetailInfo>
+                                        <LandName>Name of Land</LandName>
+                                        <LandType>Tier 1</LandType>
+                                        <LandCoordinates className='flex items-center mb-2'>
+                                            <img src={locationImg}></img>
+                                            { item[0] }, { item[1] }
+                                        </LandCoordinates>
+                                    </DetailInfo>
+                                </LandInfo>
 
-                            <DetailInfo>
-                                <LandName>Name of Land</LandName>
-                                <LandType>Tier 1</LandType>
-                                <LandCoordinates className='flex items-center mb-2'>
-                                    <img src={locationImg}></img>
-                                    Coordinates
-                                </LandCoordinates>
-                            </DetailInfo>
-                        </LandInfo>
-
-                        <LandName className='mb-1'>Current bid placed</LandName>
-                        <BidBalance className='mb-2'>1.2625 ETH</BidBalance>
-                        <OpenType className='mb-4'>Bid closing in 2 days</OpenType>
-                    </ItemWrapper>
-                </div>
+                                <LandName className='mb-1'>Current bid placed</LandName>
+                                <BidBalance className='mb-2'>1.2625 ETH</BidBalance>
+                                <OpenType className='mb-4'>Bid closing in 2 days</OpenType>
+                            </ItemWrapper>
+                        )) }
+                    </div>
+                ) }
 
                 <BidHistoryModal 
                     isOpen={showBidHistoryModal}
@@ -204,36 +221,40 @@ export const Profile = () => {
                 />
             </div>
 
-            <div className='relative'>
+            <div className='relative mb-12'>
                 <SubTitle>
                     LANDS OWNED
                     <ViewBidHistoryButton onClick={() => setShowMintModal(prev => !prev)}>Mint all at once</ViewBidHistoryButton>
                 </SubTitle>
 
-                {/* <NoneContentWrapper>
-                    <div className='text-base' style={{ color: 'rgb(255, 255, 255, 0.5)' }}>None</div>
-                </NoneContentWrapper> */}
+                { !winningBids.length ? (
+                    <NoneContentWrapper>
+                        <div className='text-base' style={{ color: 'rgb(255, 255, 255, 0.5)' }}>None</div>
+                    </NoneContentWrapper>
+                ): (
+                    <div className='flex flex-wrap'>
+                        { winningBids.map((item: any, index: number) => (
+                            <ItemWrapper key={`winningBids${index}`}>
+                                <LandInfo className='flex'>
+                                    <LandImage>
+                                        <img src={thumbnail} alt='pic'></img>
+                                    </LandImage>
 
-                <div className='flex flex-wrap'>
-                    <ItemWrapper>
-                        <LandInfo className='flex'>
-                            <LandImage>
-                                <img src={thumbnail} alt='pic'></img>
-                            </LandImage>
+                                    <DetailInfo>
+                                        <LandName>Name of Land</LandName>
+                                        <LandType>Tier 1</LandType>
+                                        <LandCoordinates className='flex items-center mb-2'>
+                                            <img src={locationImg}></img>
+                                            { item[0] }, { item[1] }
+                                        </LandCoordinates>
+                                    </DetailInfo>
+                                </LandInfo>
 
-                            <DetailInfo>
-                                <LandName>Name of Land</LandName>
-                                <LandType>Tier 1</LandType>
-                                <LandCoordinates className='flex items-center mb-2'>
-                                    <img src={locationImg}></img>
-                                    Coordinates
-                                </LandCoordinates>
-                            </DetailInfo>
-                        </LandInfo>
-
-                        <MintButton>MINT</MintButton>
-                    </ItemWrapper>
-                </div>
+                                <MintButton>MINT</MintButton>
+                            </ItemWrapper>
+                        )) }
+                    </div>
+                ) }
 
                 <MintModal 
                     isOpen={showMintModal}

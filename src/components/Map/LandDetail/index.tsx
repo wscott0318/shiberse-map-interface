@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled, { ThemeContext } from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, AppState } from 'state'
@@ -7,7 +7,8 @@ import thumbnail from 'assets/images/map/thumbnail.png'
 import locationImg from 'assets/images/map/location.svg'
 import { NormalButton } from 'theme';
 import useShiberseLandAuction from 'hooks/useShiberseLandAuction';
-import { EventsText } from 'constants/map';
+import { Events, EventsText } from 'constants/map';
+import BidModal from '../bidModal';
 
 const LandDetailPanel = styled.div<{ show: boolean }>`
     display: ${({ show }) => (show ? 'block' : 'none')};
@@ -85,7 +86,11 @@ const OpenType = styled.div`
 `
 
 export const LandDetail = () => {
-    const { currentStage } = useShiberseLandAuction()
+    const [ showBidModal, setShowBidModal ] = useState(false)
+    
+    const { currentStage, currentBidCount } = useShiberseLandAuction()
+
+    const maxBidCount = 400
 
     const selectedInfo = useSelector<AppState, AppState['map']['selectedLandInfo']>(state => state.map.selectedLandInfo)
 
@@ -96,6 +101,8 @@ export const LandDetail = () => {
     const closeAction = () => {
         updateSelectedInfo( { ...selectedInfo, show: false } )
     }
+
+    const toggleBidModal = () => setShowBidModal(prev => !prev)
 
     return (
         <LandDetailPanel show={ selectedInfo.show }>
@@ -113,18 +120,32 @@ export const LandDetail = () => {
 
             <LandCoordinates className='flex items-center mb-2'>
                 <img src={locationImg}></img>
-                X: { selectedInfo.x }   Y: { selectedInfo.y }
+                X: { selectedInfo?.coordinates.x }   Y: { selectedInfo?.coordinates.y }
             </LandCoordinates>
 
             <LandType className='mb-4'>Owner:</LandType>
 
             <LandName className='mb-1'>Current price</LandName>
-            <BidBalance className='mb-2'>1 ETH</BidBalance>
+            <BidBalance className='mb-2'>{ selectedInfo.price } ETH</BidBalance>
             <OpenType className='mb-4'>{ EventsText[ currentStage ] }</OpenType>
 
             <div className='text-center'>
-                <NormalButton className='px-10 font-bold'>Bid</NormalButton>
+                { currentStage === Events['Bid'] ? (
+                    <NormalButton 
+                        disabled={ currentBidCount === 0 ? true : false }
+                        className={`px-10 font-bold ${ selectedInfo.noBidAllowedOnLand ? 'hidden' : '' }`}
+                        onClick={toggleBidModal}
+                    >
+                        Bid
+                    </NormalButton>
+                ) : null }
             </div>
+
+            <BidModal 
+                isOpen={ showBidModal }
+                onDismiss={ toggleBidModal }
+                selectedInfo={ selectedInfo }
+            />
         </LandDetailPanel>
     )
 }

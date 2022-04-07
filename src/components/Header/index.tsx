@@ -82,16 +82,16 @@ export default function Header(): JSX.Element {
                     </div>
 
                     <div className="flex items-center">
-                        <MenuButton disabled={false} className={`font-bold ${ isOnMapPage() || !account ? 'hidden' : '' }`}>
-                            <NavLink exact strict to="/map" className={''}>
+                        <NavLink exact strict to="/map" className={''}>
+                            <MenuButton disabled={false} className={`font-bold ${ isOnMapPage() || !account ? 'hidden' : '' }`}>
                                 <span className='full'>
                                     { 'Enter the Lands Map' }
                                 </span>
                                 <span className='shorten'>
                                     { 'M' }
                                 </span>
-                            </NavLink>
-                        </MenuButton>
+                            </MenuButton>
+                        </NavLink>
 
                         <Web3Status />
                     </div>

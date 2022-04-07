@@ -3,12 +3,7 @@ import { range, zoomRange } from 'constants/map'
 import { setSelectedLandInfo, updateLandData, updateMapCenterPos, updateMapZoomLevel, updateSearchOptions } from './actions'
 
 export interface MapState {
-    readonly selectedLandInfo: {
-        show: boolean,
-        x: number,
-        y: number,
-        size: number,
-    }
+    readonly selectedLandInfo: any
     readonly mapCenterPos: {
         x: number,
         y: number,
@@ -21,9 +16,10 @@ export interface MapState {
 const initialState: MapState = {
     selectedLandInfo: {
         show: false,
-        x: 0,
-        y: 0,
-        size: 1,
+        coordinates: {
+            x: 0,
+            y: 0,
+        }
     },
     mapCenterPos: {
         x: 0,

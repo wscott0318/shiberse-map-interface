@@ -1,10 +1,15 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Modal from '../Modal'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { NormalButton } from 'theme'
 import confirmIcon from '../../assets/images/map/confirmIcon.svg'
-import Loader from '../Loader'
+import { useWeb3React } from '@web3-react/core'
+import { useETHBalances } from 'state/wallet/hooks'
+import { shortenDouble } from 'utils'
+import useShiberseLandAuction from 'hooks/useShiberseLandAuction'
+import { useIsTransactionPending } from 'state/transactions/hooks'
+import ShiberseLoader from 'components/Loader/loader'
 
 const UpperSection = styled.div`
     position: relative;
@@ -155,54 +160,112 @@ const BidValue = styled.div`
     color: #FFD59D;
 `
 
+const ValidationText = styled.p`
+    font-size: 14px;
+`
+
 export const BidModal = (props: any) => {
+    const { account } = useWeb3React()
+    const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
+    const currentBalance = parseFloat(userEthBalance?.toSignificant() as any)
+
+    const { bidOne } = useShiberseLandAuction()
+
+    const [bidPrice, setBidPrice] = useState( 0.1 )
+    const [validateText, setValidateText] = useState(null) as any
+    const [ pendingTx, setPendingTx ] = useState<string | null>(null)
+
+    const isPending = useIsTransactionPending(pendingTx ?? undefined)
+
+    const isConfirmedBid = pendingTx !== null && !isPending
+
+    const handleBid = async () => {
+        if( Number(bidPrice) > Number(currentBalance) )
+            setValidateText('Insufficient ETH balance!')
+        // else if( Number(bidPrice) <= Number(props.selectedInfo.price) )
+        //     setValidateText('Bid price mush be more than the current price!')
+        else {
+            setValidateText(null)
+
+            // bid event;
+            if( props.selectedInfo.isShiboshiZone ) {
+                // shiobshi zone bid
+            } else {
+                const inputData = {
+                    bidOne: bidPrice, 
+                    x: props.selectedInfo.coordinates.x,
+                    y: props.selectedInfo.coordinates.y
+                }
+                const tx = await bidOne(inputData)
+                console.error('---------------tx--------------', tx)
+                if( tx.hash )
+                    setPendingTx(tx.hash)
+            }
+        }
+    }
+
+    const handleOnDismiss = () => {
+        setBidPrice(0.1)
+        setValidateText(null)
+        setPendingTx(null)
+
+        props.onDismiss()
+    }
+
     return (
-        <Modal isOpen={ props.isOpen } onDismiss={ props.onDismiss } minHeight={false} maxHeight={80}>
+        <Modal isOpen={ props.isOpen } onDismiss={ handleOnDismiss } minHeight={false} maxHeight={80}>
             <UpperSection>
-                <CloseIcon onClick={ props.onDismiss }>
+                <CloseIcon onClick={ handleOnDismiss }>
                     <CloseColor />
                 </CloseIcon>
 
-                <ConnectWalletWrapper className='relative flex flex-col items-center'>
-                    <>
-                        <HeaderText className='text-center text-3xl'>Place a bid</HeaderText>
-                        <HeaderDescription className='text-center'>You are about to bid for a Land.</HeaderDescription>
-                        <HeaderDescription className='text-center'>Bids will close in 3 days.</HeaderDescription>
-                    </>
+                { !isConfirmedBid ? (
+                    <ConnectWalletWrapper className='relative flex flex-col items-center'>
+                        <>
+                            <HeaderText className='text-center text-3xl'>Place a bid</HeaderText>
+                            <HeaderDescription className='text-center'>You are about to bid for a Land.</HeaderDescription>
+                            <HeaderDescription className='text-center'>Bids will close in 3 days.</HeaderDescription>
+                        </>
 
-                    <ContentWrapper className='relative'>
-                       <InputDesc className='text-left mb-2'>Amount</InputDesc>
+                        <ContentWrapper className='relative'>
+                        <InputDesc className='text-left mb-2'>Amount</InputDesc>
 
-                       <div className='relative'>
-                           <BidInput type='text' />
-                           <ScaleText>ETH</ScaleText>
-                       </div>
-                       
-                        <BalanceWrapper className='flex justify-between w-full'>
-                            <span>Your balance</span>
-                            <span>1.254689 ETH</span>
-                        </BalanceWrapper>
-                    </ContentWrapper>
+                        <div className='relative'>
+                            <BidInput 
+                                    type='number' 
+                                    min={ Number( props.selectedInfo.price ) } 
+                                    value={ bidPrice } 
+                                    onChange={(e) => setBidPrice(Number(e.target.value))} 
+                                />
+                            <ScaleText>ETH</ScaleText>
+                        </div>
+                        <ValidationText className={`text-red ${!validateText ? 'hidden' : ''}`}>{ validateText }</ValidationText>
+                        
+                            <BalanceWrapper className='flex justify-between w-full'>
+                                <span>Your balance</span>
+                                <span>{ currentBalance ? shortenDouble( currentBalance, 5) : 0 } ETH</span>
+                            </BalanceWrapper>
+                        </ContentWrapper>
 
+                        <NormalButton className='px-14 flex justify-center items-center' onClick={ handleBid } disabled={ isPending ? true : false }>
+                            BID { isPending ? <ShiberseLoader className='ml-1' /> : null }
+                        </NormalButton>
+                    </ConnectWalletWrapper>
+                ) : (
+                    <ConnectWalletWrapper className='relative flex flex-col items-center'>
+                        <>
+                            <HeaderIcon><img src={confirmIcon}/></HeaderIcon>
+                            <HeaderText className='text-center text-3xl'>Bid confirmed</HeaderText>
+                            <HeaderDescription className='text-center'>Your ETH have been locked until the end of the event.</HeaderDescription>
+                            <HeaderDescription className='text-center'>If you are outbid, your locked ETH will be returned to your wallet.</HeaderDescription>
+                        </>
 
-                    <NormalButton className='px-14' onClick={ props.onDismiss }>
-                        BID
-                    </NormalButton>
-                </ConnectWalletWrapper>
-
-                {/* <ConnectWalletWrapper className='relative flex flex-col items-center'>
-                    <>
-                        <HeaderIcon><img src={confirmIcon}/></HeaderIcon>
-                        <HeaderText className='text-center text-3xl'>Bid confirmed</HeaderText>
-                        <HeaderDescription className='text-center'>Your ETH have been locked until the end of the event.</HeaderDescription>
-                        <HeaderDescription className='text-center'>If you are outbid, your locked ETH will be returned to your wallet.</HeaderDescription>
-                    </>
-
-                    <div className='py-4 pt-8'>
-                        <HeaderDescription className='text-center'>Your bid</HeaderDescription>
-                        <BidValue>1.2625 ETH</BidValue>
-                    </div>
-                </ConnectWalletWrapper> */}
+                        <div className='py-4 pt-8'>
+                            <HeaderDescription className='text-center'>Your bid</HeaderDescription>
+                            <BidValue>{ bidPrice } ETH</BidValue>
+                        </div>
+                    </ConnectWalletWrapper>
+                ) }
             </UpperSection>
         </Modal>
     )

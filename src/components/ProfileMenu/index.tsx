@@ -102,11 +102,11 @@ export default function ProfileMenu() {
             </ProfileButton>
 
             <ProfileMenuDiv className={`profileMenu ${ show ? 'active' : '' }`}>
-                <ProfileMenuButton>
-                    <NavLink exact strict to="/profile" className={''}>
-                        PROFILE
-                    </NavLink>
-                </ProfileMenuButton>
+                <NavLink exact strict to="/profile" className={''}>
+                    <ProfileMenuButton>
+                            PROFILE
+                    </ProfileMenuButton>
+                </NavLink>
                 <ProfileMenuButton 
                     onClick={() => {
                         deactivate()

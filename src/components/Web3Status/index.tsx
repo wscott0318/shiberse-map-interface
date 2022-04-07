@@ -27,6 +27,8 @@ import { NETWORK_ICON, NETWORK_LABEL } from 'constants/networks'
 import { Currency } from '@shibaswap/sdk'
 import ProfileMenu from '../ProfileMenu'
 import { mainNetworkChainId } from '../../constants'
+import useShiberseLandAuction from 'hooks/useShiberseLandAuction'
+import { useLocation } from 'react-router-dom'
 
 const IconWrapper = styled.div<{ size?: number }>`
     ${({ theme }) => theme.flexColumnNoWrap};
@@ -144,6 +146,8 @@ function Web3StatusInner() {
 
     const allTransactions = useAllTransactions()
 
+    const { currentBidCount } = useShiberseLandAuction()
+
     const sortedRecentTransactions = useMemo(() => {
         const txs = Object.values(allTransactions)
         return txs.filter(isTransactionRecent).sort(newTransactionsFirst)
@@ -156,6 +160,9 @@ function Web3StatusInner() {
     const toggleWalletModal = useWalletModalToggle()
 
     const CorrectNetwork = mainNetworkChainId === chainId
+
+    const { pathname } = useLocation()
+    const isOnMapPage = () => pathname === '/map'
 
     if (account) {
         return (
@@ -170,6 +177,17 @@ function Web3StatusInner() {
                     </div>
                 ) : CorrectNetwork ? (
                     <div className='flex items-center'>
+                        { isOnMapPage() ? (
+                            <div className='text-white mr-4'>
+                                <div className='network_label text-xs mb-1 text-center'>Bid Power</div>
+                                <div className='flex items-center justify-center'>
+                                    <div className='text-base flex items-center'> 
+                                        { currentBidCount } lands
+                                    </div>
+                                </div>
+                            </div>
+                        ): null }
+
                         <WalletBalance>
                             <div className='network_label text-xs mb-1 text-center'>{ chainLabel } Network</div>
                             <div className='flex items-center justify-center'>

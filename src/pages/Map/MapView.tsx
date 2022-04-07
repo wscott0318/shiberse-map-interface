@@ -142,7 +142,7 @@ export default class Map extends Component<MapViewProps> {
                     spritesArray[i].x = Math.ceil((this.mapInfo[i].coordinates.x - this.props.mapCenterPos.x) * this.props.mapZoomLevel + this.app.screen.width / 2)
                     spritesArray[i].y = Math.ceil((this.mapInfo[i].coordinates.y - this.props.mapCenterPos.y) * this.props.mapZoomLevel + this.app.screen.height / 2)
 
-                    if( this.mapInfo[i].coordinates.x === this.props.selectedInfo.x && this.mapInfo[i].coordinates.y === this.props.selectedInfo.y )
+                    if( this.mapInfo[i].coordinates.x === this.props.selectedInfo.coordinates.x && this.mapInfo[i].coordinates.y === this.props.selectedInfo.coordinates.y )
                         spritesArray[i].tint = 0xfd33e6
                     else {
                         spritesArray[i].tint = TileColors[ this.mapInfo[i].tierName as keyof typeof TileColors ]
@@ -295,10 +295,8 @@ export default class Map extends Component<MapViewProps> {
             if( targetIndex !== -1 )
                 this.props.setSelectedInfo( { 
                     index: targetIndex,
-                    x: this.mapInfo[targetIndex].coordinates.x, 
-                    y: this.mapInfo[targetIndex].coordinates.y, 
-                    size: 1,
                     show: true,
+                    ...this.mapInfo[targetIndex]
                 } )
             else
                 this.props.setSelectedInfo( {} )

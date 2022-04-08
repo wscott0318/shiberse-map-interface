@@ -85,6 +85,10 @@ const NetworkIcon = styled(Activity)`
 
 const WalletBalance = styled.div`
     color: white;
+
+    @media( max-width: 420px ) {
+        display: none;
+    }
 `
 
 // we want the latest one to come first, so return negative if a is after b

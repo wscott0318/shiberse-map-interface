@@ -115,7 +115,7 @@ export const LandDetail = () => {
     }, [ currentStage, selectedInfo, isShiboshiHolder, isShiberseLocker ])
 
     return (
-        <LandDetailPanel show={ selectedInfo.show }>
+        <LandDetailPanel show={ selectedInfo?.show }>
             <LandInfo className='flex'>
                 <LandImage>
                     <img src={thumbnail} alt='pic'></img>
@@ -130,29 +130,29 @@ export const LandDetail = () => {
 
             <LandCoordinates className='flex items-center mb-2'>
                 <img src={locationImg}></img>
-                X: { selectedInfo?.coordinates.x }   Y: { selectedInfo?.coordinates.y }
+                X: { selectedInfo?.coordinates?.x }   Y: { selectedInfo?.coordinates?.y }
             </LandCoordinates>
 
             <LandType className='mb-4'>Owner:</LandType>
 
             <LandName className='mb-1'>Current price</LandName>
-            <BidBalance className='mb-2'>{ selectedInfo.price } ETH</BidBalance>
+            <BidBalance className='mb-2'>{ selectedInfo?.price } ETH</BidBalance>
             <OpenType className='mb-4'>{ EventsText[ currentStage ] }</OpenType>
 
             { canShowButton() ? (
                 <div className='text-center'>
                     { currentStage === Events['Bid'] ? (
                         <NormalButton 
-                            disabled={ !selectedInfo.isShiboshiZone && currentBidCount === 0 ? true : false }
-                            className={`px-10 font-bold ${ selectedInfo.noBidAllowedOnLand ? 'hidden' : '' }`}
+                            disabled={ !selectedInfo?.isShiboshiZone && currentBidCount === 0 ? true : false }
+                            className={`px-10 font-bold ${ selectedInfo?.noBidAllowedOnLand ? 'hidden' : '' }`}
                             onClick={toggleBidModal}
                         >
                             Bid
                         </NormalButton>
                     ) : (
                         <NormalButton 
-                            disabled={ !selectedInfo.isShiboshiZone && currentBidCount === 0 ? true : false }
-                            className={`px-10 font-bold ${ selectedInfo.noBidAllowedOnLand ? 'hidden' : '' }`}
+                            disabled={ !selectedInfo?.isShiboshiZone && currentBidCount === 0 ? true : false }
+                            className={`px-10 font-bold ${ selectedInfo?.noBidAllowedOnLand ? 'hidden' : '' }`}
                             // onClick={toggleBidModal}
                         >
                             Mint

@@ -21,6 +21,16 @@ const ProfileWrapper = styled.div`
     position: relative;
     padding: 5rem;
     padding-top: 8rem;
+
+    @media (max-width: 1200px) {
+        padding: 3rem;
+        padding-top: 6rem;
+    }
+
+    @media (max-width: 576px) {
+        padding: 1rem;
+        padding-top: 4rem;
+    }
 `
 
 const SubTitle = styled.div`
@@ -67,6 +77,15 @@ const ItemWrapper = styled(WalletStatusWrapper)`
     width: 280px;
     margin-right: 2rem;
     margin-bottom: 2rem;
+
+    @media(max-width: 576px) {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+
+    @media(max-width: 400px) {
+        width: 100%;
+    }
 `
 
 const ViewBidHistoryButton = styled(ModalToggleButton)`
@@ -196,7 +215,9 @@ export const Profile = () => {
 		const result = await fetch(mapLandDataUrl)
 		const json_data = await result.json()
 
-		setLandData(json_data)
+		const result_data = json_data.filter((item: any) => item.tierName !== 'locked')
+
+		setLandData(result_data)
 	}, [setLandData])
 
     const handleBidMore = (posX: any, posY: any) => {

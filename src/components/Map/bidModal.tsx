@@ -189,8 +189,8 @@ export const BidModal = (props: any) => {
 
             const inputData = {
                 value: bidPrice, 
-                x: props.selectedInfo?.coordinates.x,
-                y: props.selectedInfo?.coordinates.y
+                x: props.selectedInfo?.coordinates?.x,
+                y: props.selectedInfo?.coordinates?.y
             }
 
             if( props.selectedInfo?.isShiboshiZone ) { /* Show shiboshizone */

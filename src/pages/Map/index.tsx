@@ -2,10 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react'
 import MapFilter from '../../components/Map/Filter'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, AppState } from '../../state'
-import { setSelectedLandInfo, updateLandData, updateMapCenterPos, updateMapZoomLevel } from '../../state/map/actions'
+import { setSelectedLandInfo, updateMapCenterPos, updateMapZoomLevel } from '../../state/map/actions'
 import Map from './MapView'
 import LandDetail from '../../components/Map/LandDetail';
-import { getAllLandData } from 'state/map/hooks'
 import { socket } from 'feathers'
 import { mapLandDataUrl } from 'constants/map'
 import { useLocation } from 'react-router-dom'
@@ -54,7 +53,9 @@ export const MapScene = () => {
 		const result = await fetch(mapLandDataUrl)
 		const json_data = await result.json()
 
-		setLandData(json_data)
+		const result_data = json_data.filter((item: any) => item.tierName !== 'locked')
+
+		setLandData(result_data)
 	}, [dispatch])
 
 	useEffect(() => {
@@ -96,47 +97,49 @@ export const MapScene = () => {
 	}, [ query.get('x'), query.get('y'), query.get('zoom') ])
 	
 	return (
-		<div className='w-screen h-full'>
-			<div className='flex justify-between overflow-hidden h-full'>
-				<MapFilter />
-				<div className='w-full fixed top-0 left-0 h-full' id="mapContainer">
-					{ landData.length > 0 ? (
-						<Map 
-							mapCenterPos={ mapCenterPos } 
-							updateMapCenterPos={ setMapCenterPos }
-							mapZoomLevel={mapZoomLevel} 
-							updateMapZoomLevel={setMapZoomLevel}
-							selectedInfo={selectedInfo}
-							setSelectedInfo={setSelectedInfo}
-							landData={landData}
-							searchOptions={searchOptions}
-							clearFilter={ showClearFilter }
-							setClearFilter={() => setShowClearFilter(prev => !prev)}
-						/>
-					) : (
-						<LoadingWrapper>
-							<ShiberseLoader size='40px'/>
-							<div className='text-3xl mt-4'>
-								Loading<Dots></Dots>
-							</div>
-						</LoadingWrapper>
-					) }
+		<>
+			<div className='w-screen h-full'>
+				<div className='flex justify-between overflow-hidden h-full'>
+					<MapFilter />
+					<div className='w-full fixed top-0 left-0 h-full' id="mapContainer">
+						{ landData.length > 0 ? (
+							<Map 
+								mapCenterPos={ mapCenterPos } 
+								updateMapCenterPos={ setMapCenterPos }
+								mapZoomLevel={mapZoomLevel} 
+								updateMapZoomLevel={setMapZoomLevel}
+								selectedInfo={selectedInfo}
+								setSelectedInfo={setSelectedInfo}
+								landData={landData}
+								searchOptions={searchOptions}
+								clearFilter={ showClearFilter }
+								setClearFilter={() => setShowClearFilter(prev => !prev)}
+							/>
+						) : (
+							<LoadingWrapper>
+								<ShiberseLoader size='40px'/>
+								<div className='text-3xl mt-4'>
+									Loading<Dots></Dots>
+								</div>
+							</LoadingWrapper>
+						) }
 
-					{ showClearFilter ? (
-						<LoadingWrapper>
-							<div className='text-xl mb-4'>
-								No results were found in your search
-							</div>
+						{ showClearFilter ? (
+							<LoadingWrapper>
+								<div className='text-xl mb-4'>
+									No results were found in your search
+								</div>
 
-							<PrimaryButton>
-								Clear Filters
-							</PrimaryButton>
-						</LoadingWrapper>
-					) : null }
+								<PrimaryButton>
+									Clear Filters
+								</PrimaryButton>
+							</LoadingWrapper>
+						) : null }
+					</div>
+					<LandDetail />
 				</div>
-				<LandDetail />
 			</div>
-		</div>
+		</>
 	)
 }
 

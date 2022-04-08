@@ -9,7 +9,7 @@ export interface MapState {
         y: number,
     }
     readonly mapZoomLevel: number
-    readonly landData: object[]
+    readonly landData: any
     readonly searchOptions: any
 }
 
@@ -26,7 +26,7 @@ const initialState: MapState = {
         y: 0,
     },
     mapZoomLevel: 20,
-    landData: [],
+    landData: {},
     searchOptions: {
         shiboshiZone: false,
         privatehub: false,

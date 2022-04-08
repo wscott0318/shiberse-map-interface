@@ -274,8 +274,18 @@ export default class Map extends Component<MapViewProps> {
             y: this.props.mapCenterPos.y - diff.y / this.props.mapZoomLevel,
         }
 
-        this.props.updateMapCenterPos( newCenterPosition )
         this.pointDownPos = clickPosition
+        
+        if( newCenterPosition.x < -96 )
+            newCenterPosition.x = -96
+        if( newCenterPosition.x > 96 )
+            newCenterPosition.x = 96
+        if( newCenterPosition.y < -98 )
+            newCenterPosition.y = -98
+        if( newCenterPosition.y > 99 )
+            newCenterPosition.y = 99
+
+        this.props.updateMapCenterPos( newCenterPosition )
     }
 
     onPointerUpHandler(e: any) {
@@ -348,8 +358,19 @@ export default class Map extends Component<MapViewProps> {
             y: this.props.mapCenterPos.y - diff.y / this.props.mapZoomLevel,
         }
 
-        this.props.updateMapCenterPos( newCenterPosition )
+
         this.pointDownPos = clickPosition
+        
+        if( newCenterPosition.x < -96 )
+            newCenterPosition.x = -96
+        if( newCenterPosition.x > 96 )
+            newCenterPosition.x = 96
+        if( newCenterPosition.y < -98 )
+            newCenterPosition.y = -98
+        if( newCenterPosition.y > 99 )
+            newCenterPosition.y = 99
+
+        this.props.updateMapCenterPos( newCenterPosition )
     }
 
     onTouchEndHandler(e: any) {

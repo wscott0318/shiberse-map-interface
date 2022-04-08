@@ -31,6 +31,7 @@ const useShiberseStakeNFT = (props:any) => {
         DAYS_MAX: 90,
         DAYS_MIN: 45,
     })
+    const [unlockAt, setUnlockAt] = useState(null)
 
     //Fetch Sushi Allowance
     const fetchAllowance = useCallback(async () => {
@@ -92,6 +93,9 @@ const useShiberseStakeNFT = (props:any) => {
             } else {
                 setStakedBalance('0')
             }
+
+            const unlockTime = await stakeContract?.unlockAt( account )
+            setUnlockAt( unlockTime )
         } catch(e) {
             return e
         }
@@ -164,7 +168,7 @@ const useShiberseStakeNFT = (props:any) => {
             fetchStakeLimitInfo()
     }, [ account, chainId, fetchStakeLimitInfo ])
 
-    return {isApproved, approve, stake, stakedBalance, fetchWalletNFT, lockDays, stakeLimitInfo}
+    return {isApproved, approve, stake, stakedBalance, fetchWalletNFT, lockDays, stakeLimitInfo, unlockAt}
 }
 
 export default useShiberseStakeNFT

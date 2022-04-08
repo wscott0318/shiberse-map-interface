@@ -1,12 +1,12 @@
 import { Events } from 'constants/map'
 import useShiberseLandAuction from 'hooks/useShiberseLandAuction'
-import useShiberseStakeNFT from 'hooks/useShiberseStakeNFT'
-import useShiberseStakeToken from 'hooks/useShiberseStakeToken'
 import NotificationPage from 'pages/Notification'
 import React from 'react'
 import styled from 'styled-components'
 import Map from './index'
 import { NavLink } from '../../components/Link'
+import useShiberseStakeToken from 'hooks/useShiberseStakeToken'
+import useShiberseStakeNFT from 'hooks/useShiberseStakeNFT'
 
 const HeaderText = styled.div`
     padding: 1rem 0;
@@ -53,12 +53,15 @@ const Notification = () => {
 }
 
 export const RedirectIfLockedToken = (props: any) => {
-
+    const { currentStage, isShiboshiHolder } = useShiberseLandAuction()
     const { stakedBalance: leashStakedBalance } = useShiberseStakeToken({ tokenType: 'leash' })
     const { stakedBalance: shiboshiStakedBalance } = useShiberseStakeNFT({ tokenType: 'shiboshi' })
-    const { currentStage } = useShiberseLandAuction()
 
-    const canGoToMapPage = () => (Number(leashStakedBalance) > 0 || Number(shiboshiStakedBalance) > 0) || currentStage === Events['Public']
+    const isShiberseLocker = (Number(leashStakedBalance) > 0 || Number(shiboshiStakedBalance) > 0)
+
+    const canGoToMapPage = () => isShiberseLocker
+                                    || currentStage === Events['Public'] 
+                                    || isShiboshiHolder
 
     return (
         <>

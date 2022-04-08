@@ -1,42 +1,52 @@
-import { ethers } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
-import { Fraction } from '../entities'
 import { useActiveWeb3React } from '.'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { useShiberseLandAuctionContract } from './useContract'
 import { mainNetworkChainId } from '../constants'
 import { useBlockNumber } from 'state/application/hooks'
 import { formatFromBalance, formatToBalance } from 'utils'
-
-const { BigNumber } = ethers
+import signatures from 'constants/map/signatures.json'
 
 const useShiberseLandAuction = () => {
-    const { account, chainId, library } = useActiveWeb3React()
+    const { account, chainId } = useActiveWeb3React()
     const addTransaction = useTransactionAdder()
     const currentBlockNumber = useBlockNumber()
 
     const landContract = useShiberseLandAuctionContract(true)
-    
+
     const [currentStage, setCurrentStage] = useState(1)
     const [currentBidCount, setCurrentBidCount] = useState(0)
     const [allPlacedBids, setAllPlacedBids] = useState([])
     const [winningBids, setWinningBids] = useState([])
+    const [isShiboshiHolder, setIsShiboshiHolder] = useState(null) as any
 
     // fetch current event stage
     const fetchCurrentStage = useCallback(async () => {
         try {
             const current = await landContract?.currentStage()
             setCurrentStage(Number(current))
-        } catch {
-            console.error('fetch current stage error occured')
+        } catch(e) {
+            console.error('fetch current stage error occured', e)
         }
     }, [account, landContract])
+
+    const fetchIfShiboshiHolder = useCallback(async () => {
+        try {
+            const signature = signatures[ account as keyof typeof signatures ]
+
+            if( signature )
+                setIsShiboshiHolder(signature)
+        } catch(e) {
+            console.error('fetchIfShiboshiHolder error occured', e)
+        }
+    }, [account])
 
     useEffect(() => {
         if (account && landContract && chainId === mainNetworkChainId) {
             fetchCurrentStage()
+            fetchIfShiboshiHolder()
         }
-    }, [account, fetchCurrentStage, landContract])
+    }, [account, fetchCurrentStage, fetchIfShiboshiHolder, landContract, currentBlockNumber])
 
     const fetchCurrentBidCapacity = useCallback(async() => {
         if( account && landContract && chainId === mainNetworkChainId ) {
@@ -56,7 +66,7 @@ const useShiberseLandAuction = () => {
 
         const refreshInterval = setInterval(fetchCurrentBidCapacity, 10000)
         return () => clearInterval(refreshInterval)
-    }, [account, fetchCurrentBidCapacity, landContract])
+    }, [account, fetchCurrentBidCapacity, landContract, currentBlockNumber])
 
     const fetchBidsInfo = useCallback(async () => {
         try {
@@ -77,15 +87,15 @@ const useShiberseLandAuction = () => {
         if( account && landContract && chainId === mainNetworkChainId ) {
             fetchBidsInfo()
         }
-    }, [account, fetchBidsInfo, landContract])
+    }, [account, fetchBidsInfo, landContract, currentBlockNumber])
 
     const bidOne = useCallback(
         async ( input: any ) => {
-            if( input?.bidOne && input?.x && input?.y ) {
+            if( input?.value && input?.x && input?.y ) {
                 try {
                     const tx = await landContract?.bidOne(input?.x, input?.y, {
                         from: account,
-                        value: formatToBalance(input?.bidOne).value
+                        value: formatToBalance(input?.value).value
                     })
                     addTransaction(tx, { summary: `Bid placed!` })
                     return tx
@@ -96,32 +106,116 @@ const useShiberseLandAuction = () => {
         },
         [addTransaction, landContract]
     )
+    
+    const bidShiboshiZone = useCallback(
+        async( input: any ) => {
+            const signature = signatures[ account as keyof typeof signatures ]
 
-    const signMessage = async (provider: any, account: any, message: any) => {
-        /**
-         * Wallet Connect does not sign the message correctly unless you use their method
-         * @see https://github.com/WalletConnect/walletconnect-monorepo/issues/462
-         */
-        if (provider.provider?.wc) {
-            const wcMessage = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(message))
-            const signature = await provider.provider?.wc.signPersonalMessage([wcMessage, account])
-            return signature
-        }
+            if( input?.value && input?.x && input?.y && signature ) {
+                try {
+                    const tx = await landContract?.bidShiboshiZone(input?.x, input?.y, signature, {
+                        from: account,
+                        value: formatToBalance(input?.value).value
+                    })
+                    addTransaction(tx, { summary: `Bid placed on Shiboshi Zone!` })
+                    return tx
+                } catch(e) {
+                    return e
+                }
+            }
+        },
+        [addTransaction, landContract]
+    )
 
-        return provider.getSigner(account).signMessage(message)
-    }
+    const mintPrivate = useCallback(
+        async( input: any ) => {
+            if( input?.value && input?.x && input?.y ) {
+                try {
+                    const tx = await landContract?.mintPrivate(input?.x, input?.y, {
+                        from: account,
+                        value: formatToBalance(input?.value).value
+                    })
+                    addTransaction(tx, { summary: `Mint succeed!` })
+                    return tx
+                } catch(e) {
+                    return e
+                }
+            }
+        },
+        [addTransaction, landContract]
+    )
+
+    const mintPrivateShiboshiZone = useCallback(
+        async( input: any ) => {
+            const signature = signatures[ account as keyof typeof signatures ]
+
+            if( input?.value && input?.x && input?.y && signature ) {
+                try {
+                    const tx = await landContract?.mintPrivateShiboshiZone(input?.x, input?.y, signature, {
+                        from: account,
+                        value: formatToBalance(input?.value).value
+                    })
+                    addTransaction(tx, { summary: `Mint succeed on Shiboshi Zone!` })
+                    return tx
+                } catch(e) {
+                    return e
+                }
+            }
+        },
+        [addTransaction, landContract]
+    )
+
+    const mintPublic = useCallback(
+        async( input: any ) => {
+            if( input?.value && input?.x && input?.y ) {
+                try {
+                    const tx = await landContract?.mintPublic(input?.x, input?.y, {
+                        from: account,
+                        value: formatToBalance(input?.value).value
+                    })
+                    addTransaction(tx, { summary: `Mint Public succeed!` })
+                    return tx
+                } catch(e) {
+                    return e
+                }
+            }
+        },
+        [addTransaction, landContract]
+    )
+
+    const mintWinningBid = useCallback(
+        async( input: any ) => {
+            if( input?.xArray && input?.yArray ) {
+                try {
+                    const tx = await landContract?.mintWinningBid(input?.xArray, input?.yArray)
+                    addTransaction(tx, { summary: `Mint Winning Bid succeed!` })
+                    return tx
+                } catch(e) {
+                    return e
+                }
+            }
+        },
+        [addTransaction, landContract]
+    )
+
+    // const signMessage = async (provider: any, account: any, message: any) => {
+    //     /**
+    //      * Wallet Connect does not sign the message correctly unless you use their method
+    //      * @see https://github.com/WalletConnect/walletconnect-monorepo/issues/462
+    //      */
+    //     if (provider.provider?.wc) {
+    //         const wcMessage = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(message))
+    //         const signature = await provider.provider?.wc.signPersonalMessage([wcMessage, account])
+    //         return signature
+    //     }
+
+    //     return provider.getSigner(account).signMessage(message)
+    // }
 
     // const signMsg = await signMessage(library, account, 'Test Sign Message')
     // console.error(signMsg)
 
-
-    // const bidShiboshiZone = useCallback(
-    //     async ( input: any ) => {
-    //         if( input?. )
-    //     }
-    // )
-
-    return { currentBidCount, currentStage, allPlacedBids, winningBids, bidOne, }
+    return { currentBidCount, currentStage, allPlacedBids, winningBids, isShiboshiHolder, bidOne, bidShiboshiZone, mintPrivate, mintPrivateShiboshiZone, mintPublic, mintWinningBid }
 
 }
 

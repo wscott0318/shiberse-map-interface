@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled, { ThemeContext } from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, AppState } from 'state'
@@ -9,6 +9,8 @@ import { NormalButton } from 'theme';
 import useShiberseLandAuction from 'hooks/useShiberseLandAuction';
 import { Events, EventsText } from 'constants/map';
 import BidModal from '../bidModal';
+import useShiberseStakeToken from 'hooks/useShiberseStakeToken';
+import useShiberseStakeNFT from 'hooks/useShiberseStakeNFT';
 
 const LandDetailPanel = styled.div<{ show: boolean }>`
     display: ${({ show }) => (show ? 'block' : 'none')};
@@ -88,21 +90,29 @@ const OpenType = styled.div`
 export const LandDetail = () => {
     const [ showBidModal, setShowBidModal ] = useState(false)
     
-    const { currentStage, currentBidCount } = useShiberseLandAuction()
+    const { currentStage, currentBidCount, isShiboshiHolder } = useShiberseLandAuction()
+    const { stakedBalance: leashStakedBalance } = useShiberseStakeToken({ tokenType: 'leash' })
+    const { stakedBalance: shiboshiStakedBalance } = useShiberseStakeNFT({ tokenType: 'shiboshi' })
+
+    const isShiberseLocker = (Number(leashStakedBalance) > 0 || Number(shiboshiStakedBalance) > 0)
 
     const maxBidCount = 400
 
     const selectedInfo = useSelector<AppState, AppState['map']['selectedLandInfo']>(state => state.map.selectedLandInfo)
 
-    const dispatch = useDispatch<AppDispatch>()
-
-    const updateSelectedInfo = (newLandInfo: object): any => dispatch( setSelectedLandInfo( { newLandInfo } ) )
-
-    const closeAction = () => {
-        updateSelectedInfo( { ...selectedInfo, show: false } )
-    }
-
     const toggleBidModal = () => setShowBidModal(prev => !prev)
+
+    const canShowButton = useCallback(() => {
+        if( currentStage === Events['Public'] )
+            return true
+
+        if( selectedInfo.isShiboshiZone && isShiboshiHolder )
+            return true
+        if( !selectedInfo.isShiboshiZone && isShiberseLocker )
+            return true
+        
+        return false
+    }, [ currentStage, selectedInfo, isShiboshiHolder, isShiberseLocker ])
 
     return (
         <LandDetailPanel show={ selectedInfo.show }>
@@ -129,17 +139,28 @@ export const LandDetail = () => {
             <BidBalance className='mb-2'>{ selectedInfo.price } ETH</BidBalance>
             <OpenType className='mb-4'>{ EventsText[ currentStage ] }</OpenType>
 
-            <div className='text-center'>
-                { currentStage === Events['Bid'] ? (
-                    <NormalButton 
-                        disabled={ currentBidCount === 0 ? true : false }
-                        className={`px-10 font-bold ${ selectedInfo.noBidAllowedOnLand ? 'hidden' : '' }`}
-                        onClick={toggleBidModal}
-                    >
-                        Bid
-                    </NormalButton>
-                ) : null }
-            </div>
+            { canShowButton() ? (
+                <div className='text-center'>
+                    { currentStage === Events['Bid'] ? (
+                        <NormalButton 
+                            disabled={ !selectedInfo.isShiboshiZone && currentBidCount === 0 ? true : false }
+                            className={`px-10 font-bold ${ selectedInfo.noBidAllowedOnLand ? 'hidden' : '' }`}
+                            onClick={toggleBidModal}
+                        >
+                            Bid
+                        </NormalButton>
+                    ) : (
+                        <NormalButton 
+                            disabled={ !selectedInfo.isShiboshiZone && currentBidCount === 0 ? true : false }
+                            className={`px-10 font-bold ${ selectedInfo.noBidAllowedOnLand ? 'hidden' : '' }`}
+                            // onClick={toggleBidModal}
+                        >
+                            Mint
+                        </NormalButton>
+                    ) }
+                </div>
+            ) : ''}
+
 
             <BidModal 
                 isOpen={ showBidModal }

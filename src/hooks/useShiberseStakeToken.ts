@@ -30,6 +30,7 @@ const useShiberseStakeToken = (props:any) => {
         DAYS_MAX: 90,
         DAYS_MIN: 45,
     })
+    const [unlockAt, setUnlockAt] = useState(null)
 
     //Fetch Sushi Allowance
     const fetchAllowance = useCallback(async () => {
@@ -93,6 +94,9 @@ const useShiberseStakeToken = (props:any) => {
             } else {
                 setStakedBalance('0')
             }
+
+            const unlockTime = await stakeContract?.unlockAt( account )
+            setUnlockAt( unlockTime )
         } catch(e) {
             return e
         }
@@ -125,7 +129,7 @@ const useShiberseStakeToken = (props:any) => {
             fetchStakeLimitInfo()
     }, [account, chainId, fetchStakeLimitInfo])
 
-    return {allowance, approve, stake, stakedBalance, lockDays, stakeLimitInfo}
+    return {allowance, approve, stake, stakedBalance, lockDays, stakeLimitInfo, unlockAt}
 
 }
 

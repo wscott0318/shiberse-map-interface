@@ -169,7 +169,7 @@ export const BidModal = (props: any) => {
     const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
     const currentBalance = parseFloat(userEthBalance?.toSignificant() as any)
 
-    const { bidOne } = useShiberseLandAuction()
+    const { bidOne, bidShiboshiZone } = useShiberseLandAuction()
 
     const [bidPrice, setBidPrice] = useState( 0.1 )
     const [validateText, setValidateText] = useState(null) as any
@@ -187,17 +187,18 @@ export const BidModal = (props: any) => {
         else {
             setValidateText(null)
 
-            // bid event;
-            if( props.selectedInfo.isShiboshiZone ) {
-                // shiobshi zone bid
+            const inputData = {
+                value: bidPrice, 
+                x: props.selectedInfo?.coordinates.x,
+                y: props.selectedInfo?.coordinates.y
+            }
+
+            if( props.selectedInfo?.isShiboshiZone ) { /* Show shiboshizone */
+                const tx = await bidShiboshiZone(inputData)
+                if( tx.hash )
+                    setPendingTx(tx.hash)
             } else {
-                const inputData = {
-                    bidOne: bidPrice, 
-                    x: props.selectedInfo.coordinates.x,
-                    y: props.selectedInfo.coordinates.y
-                }
                 const tx = await bidOne(inputData)
-                console.error('---------------tx--------------', tx)
                 if( tx.hash )
                     setPendingTx(tx.hash)
             }
@@ -228,18 +229,18 @@ export const BidModal = (props: any) => {
                         </>
 
                         <ContentWrapper className='relative'>
-                        <InputDesc className='text-left mb-2'>Amount</InputDesc>
+                            <InputDesc className='text-left mb-2'>Amount</InputDesc>
 
-                        <div className='relative'>
-                            <BidInput 
-                                    type='number' 
-                                    min={ Number( props.selectedInfo.price ) } 
-                                    value={ bidPrice } 
-                                    onChange={(e) => setBidPrice(Number(e.target.value))} 
-                                />
-                            <ScaleText>ETH</ScaleText>
-                        </div>
-                        <ValidationText className={`text-red ${!validateText ? 'hidden' : ''}`}>{ validateText }</ValidationText>
+                            <div className='relative'>
+                                <BidInput 
+                                        type='number' 
+                                        min={ Number( props.selectedInfo?.price ) } 
+                                        value={ bidPrice } 
+                                        onChange={(e) => setBidPrice(Number(e.target.value))} 
+                                    />
+                                <ScaleText>ETH</ScaleText>
+                            </div>
+                            <ValidationText className={`text-red ${!validateText ? 'hidden' : ''}`}>{ validateText }</ValidationText>
                         
                             <BalanceWrapper className='flex justify-between w-full'>
                                 <span>Your balance</span>

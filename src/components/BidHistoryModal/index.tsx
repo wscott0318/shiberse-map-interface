@@ -98,57 +98,11 @@ const TableItem = styled.div`
 `
 
 export const BidHistoryModal = (props: any) => {
-    const rows = [
-        {
-            description: 'Land coordinates, Tier 1',
-            bidAmount: '1.2625 ETH',
-            dateOfBid: '12 Mar 2022, 14:56'
-        }, {
-            description: 'Land coordinates, Tier 1',
-            bidAmount: '1.2625 ETH',
-            dateOfBid: '12 Mar 2022, 14:56'
-        },{
-            description: 'Land coordinates, Tier 1',
-            bidAmount: '1.2125 ETH',
-            dateOfBid: '12 Mar 2022, 14:56'
-        }, {
-            description: 'Land coordinates, Tier 1',
-            bidAmount: '1.2825 ETH',
-            dateOfBid: '12 Mar 2022, 14:56'
-        },{
-            description: 'Land coordinates, Tier 1',
-            bidAmount: '1.2625 ETH',
-            dateOfBid: '12 Mar 2022, 14:56'
-        }, {
-            description: 'Land coordinates, Tier 1',
-            bidAmount: '1.3025 ETH',
-            dateOfBid: '12 Mar 2022, 14:56'
-        },{
-            description: 'Land coordinates, Tier 1',
-            bidAmount: '1.2625 ETH',
-            dateOfBid: '12 Mar 2022, 14:56'
-        }, {
-            description: 'Land coordinates, Tier 1',
-            bidAmount: '1.2625 ETH',
-            dateOfBid: '12 Mar 2022, 14:56'
-        },{
-            description: 'Land coordinates, Tier 1',
-            bidAmount: '1.2625 ETH',
-            dateOfBid: '12 Mar 2022, 14:56'
-        }, {
-            description: 'Land coordinates, Tier 1',
-            bidAmount: '1.2625 ETH',
-            dateOfBid: '12 Mar 2022, 14:56'
-        },{
-            description: 'Land coordinates, Tier 1',
-            bidAmount: '1.2625 ETH',
-            dateOfBid: '12 Mar 2022, 14:56'
-        }, {
-            description: 'Land coordinates, Tier 1',
-            bidAmount: '1.2625 ETH',
-            dateOfBid: '12 Mar 2022, 14:56'
-        },
-    ]
+    const rows = props.allPlacedBids.map((item: any) => ({
+        description: `(${item[0]}, ${item[1]}), Tier 1`,
+        bidAmount: `1.2625 ETH`,
+        dateOfBid: `12 Mar 2022, 14:56`
+    }))
 
     return (
         <Modal isOpen={ props.isOpen } onDismiss={ props.onDismiss } minHeight={false} maxHeight={80}>
@@ -164,33 +118,36 @@ export const BidHistoryModal = (props: any) => {
                 </ConnectWalletWrapper>
 
                 <ContentWrapper>
-                    <NoContent>You currently have no bidding history</NoContent>
-
-                    {/* <SortableTable 
-                        title={'bid history'}
-                        columns={[
-                            {
-                                key: 'description',
-                                numeric: false,
-                                render: (row: any, index: any) => (
-                                    <TableItem key={'description' + index}>{row.description} </TableItem>
-                                ),
-                                label: 'Description'
-                            }, {
-                                key: 'bidAmount',
-                                render: (row: any, index: any) => (<TableItem key={'bidAmount' + index}>{ row.bidAmount }</TableItem>),
-                                align: 'right',
-                                label: 'Bid Amount'
-                            }, {
-                                key: 'dateOfBid',
-                                render: (row: any, index: any) => (<TableItem key={'dateOfBid' + index}>{ row.dateOfBid }</TableItem>),
-                                align: 'right',
-                                label: 'Date of Bid'
-                            },
-                        ]}
-                        rows={rows}
-                        rowsPerPage={5}
-                    /> */}
+                    { !props.allPlacedBids.length 
+                        ? (<NoContent>You currently have no bidding history</NoContent> )
+                        : (
+                            <SortableTable 
+                                title={'bid history'}
+                                columns={[
+                                    {
+                                        key: 'description',
+                                        numeric: false,
+                                        render: (row: any, index: any) => (
+                                            <TableItem key={'description' + index}>{row.description} </TableItem>
+                                        ),
+                                        label: 'Description'
+                                    }, {
+                                        key: 'bidAmount',
+                                        render: (row: any, index: any) => (<TableItem key={'bidAmount' + index}>{ row.bidAmount }</TableItem>),
+                                        align: 'right',
+                                        label: 'Bid Amount'
+                                    }, {
+                                        key: 'dateOfBid',
+                                        render: (row: any, index: any) => (<TableItem key={'dateOfBid' + index}>{ row.dateOfBid }</TableItem>),
+                                        align: 'right',
+                                        label: 'Date of Bid'
+                                    },
+                                ]}
+                                rows={rows}
+                                rowsPerPage={5}
+                            />
+                        )
+                    }
                 </ContentWrapper>
             </UpperSection>
         </Modal>

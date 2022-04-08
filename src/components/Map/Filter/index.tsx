@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { useState } from 'react'
 import expandIcon from 'assets/images/expand.svg'
@@ -174,9 +174,13 @@ const filterData = [
 
 export const MapFilter = () => {
     const [ expand, setExpand ] = useState(true)
-    const [ priceRangeValues, setPriceRangeValues ] = useState([ 0.2, 3 ])
 
     const searchOptions = useSelector<AppState, AppState['map']['searchOptions']>(state => state.map.searchOptions)
+
+    const [ priceRangeValues, setPriceRangeValues ] = useState([ 0, 1 ])
+    const [ minPos, setMinPos ] = useState('') as any
+    const [ maxPos, setMaxPos ] = useState('') as any
+    const [ searchWallet, setSearchWallet ] = useState('') as any
 
     const dispatch = useDispatch<AppDispatch>()
 
@@ -187,6 +191,74 @@ export const MapFilter = () => {
 
         newOptions[ option ] = !newOptions[ option ]
 
+        setSearchOptions( newOptions )
+    }
+
+    useEffect(() => {
+        if( searchOptions.clearFilters ) {
+            setMinPos('')
+            setMaxPos('')
+            setSearchWallet('')
+            setPriceRangeValues([ searchOptions.searchMinPrice, searchOptions.searchMaxPrice ])
+
+            const newOptions = { ...searchOptions }
+            newOptions.clearFilters = false
+            setSearchOptions( newOptions )
+        } else {
+            let [ min, max ] = priceRangeValues
+        
+            if( max > searchOptions.maxPrice || min < searchOptions.minPrice ) {
+                if( max > searchOptions.maxPrice )
+                    max = searchOptions.maxPrice
+                if( min < searchOptions.minPrice )
+                    min = searchOptions.minPrice
+    
+                setPriceRangeValues([ min, max ])
+            }
+        }
+    }, [ searchOptions ])
+
+    useEffect(() => {
+        const [ min, max ] = priceRangeValues
+
+        const newOptions = { ...searchOptions }
+        newOptions.searchMinPrice = min
+        newOptions.searchMaxPrice = max
+        setSearchOptions( newOptions )
+    }, [priceRangeValues])
+
+    const updatePosRange = () => {
+        let [minX, minY] = minPos.split(',')
+        let [maxX, maxY] = maxPos.split(',')
+
+        if( minPos === '' ) {
+            minX = null
+            minY = null
+        }
+
+        if( maxPos === '' ) {
+            maxX = null
+            maxY = null
+        }
+
+        if( Number(minX) === NaN || Number(minY) === NaN || Number(maxX) === NaN || Number(maxY) === NaN )
+            return
+
+        const newOptions = { ...searchOptions }
+        newOptions.minPos = {
+            x: !minX ? null : Number(minX),
+            y: !minY ? null : Number(minY)
+        }
+        newOptions.maxPos = {
+            x: !maxX ? null : Number(maxX),
+            y: !maxY ? null : Number(maxY)
+        }
+        setSearchOptions( newOptions )
+    }
+
+    const updateSearchWallet = () => {
+        const newOptions = { ...searchOptions }
+        newOptions.walletAddress = searchWallet
         setSearchOptions( newOptions )
     }
 
@@ -225,8 +297,8 @@ export const MapFilter = () => {
 
             <RangeWrapper>
                 <RangeInputMinMax
-                    min={ 0.1 }
-                    max={ 5 }
+                    min={ searchOptions.minPrice }
+                    max={ searchOptions.maxPrice }
                     values={ priceRangeValues }
                     setValues={ setPriceRangeValues }
                     step={ 0.1 }
@@ -240,16 +312,26 @@ export const MapFilter = () => {
                     <div className='flex items-center'>
                         <div className='flex items-center mr-2'>
                             <InputDesc>Min</InputDesc>
-                            <CoordinateInput type='text' placeholder='-31, 82'/>
+                            <CoordinateInput 
+                                type='text'
+                                placeholder='-31,82'
+                                value={ minPos } 
+                                onChange={(e) => setMinPos(e.target.value)} 
+                            />
                         </div>
 
                         <div className='flex items-center'>
                             <InputDesc>Max</InputDesc>
-                            <CoordinateInput type='text' placeholder='12, 134'/>
+                            <CoordinateInput 
+                                type='text'
+                                placeholder='12, 134'
+                                value={ maxPos } 
+                                onChange={(e) => setMaxPos(e.target.value)} 
+                            />
                         </div>
                     </div>
 
-                    <GoButton>GO</GoButton>
+                    <GoButton onClick={updatePosRange}>GO</GoButton>
                 </div>
             </SearchByWrapper>
 
@@ -257,9 +339,14 @@ export const MapFilter = () => {
                 <SearchDesc>Search by wallet</SearchDesc>
 
                 <div className='flex justify-between items-center'>
-                    <WalletInput type='text' placeholder='Paste your wallet address'/>
+                    <WalletInput 
+                        type='text'
+                        placeholder='Paste your wallet address'
+                        value={ searchWallet } 
+                        onChange={(e) => setSearchWallet(e.target.value)}
+                    />
 
-                    <GoButton>GO</GoButton>
+                    <GoButton onClick={updateSearchWallet}>GO</GoButton>
                 </div>
             </SearchByWrapper>
         </FilterPanel>

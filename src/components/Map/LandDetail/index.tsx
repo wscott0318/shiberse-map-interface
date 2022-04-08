@@ -1,16 +1,21 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled, { ThemeContext } from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, AppState } from 'state'
 import { setSelectedLandInfo } from 'state/map/actions'
 import thumbnail from 'assets/images/map/thumbnail.png'
 import locationImg from 'assets/images/map/location.svg'
-import { NormalButton } from 'theme';
+import { ModalToggleButton, NormalButton } from 'theme';
 import useShiberseLandAuction from 'hooks/useShiberseLandAuction';
-import { Events, EventsText } from 'constants/map';
+import { apiServer, Events, EventsText } from 'constants/map';
 import BidModal from '../bidModal';
 import useShiberseStakeToken from 'hooks/useShiberseStakeToken';
 import useShiberseStakeNFT from 'hooks/useShiberseStakeNFT';
+import useLandMap from 'hooks/useLandMap';
+import axios from 'axios';
+import { useWeb3React } from '@web3-react/core';
+import { shortenAddress } from 'utils';
+import { useBlockNumber } from 'state/application/hooks';
 
 const LandDetailPanel = styled.div<{ show: boolean }>`
     display: ${({ show }) => (show ? 'block' : 'none')};
@@ -87,12 +92,25 @@ const OpenType = styled.div`
     color: #FFFFFF;
 `
 
+const BidHistory = styled(ModalToggleButton)`
+    color: #F8A93E;
+
+    :hover {
+        color: #d18f36;
+    }
+`
+
 export const LandDetail = () => {
     const [ showBidModal, setShowBidModal ] = useState(false)
+    const [ currentLandInfo, setCurrentLandInfo ] = useState({}) as any
     
+    const { account } = useWeb3React()
+
     const { currentStage, currentBidCount, isShiboshiHolder } = useShiberseLandAuction()
     const { stakedBalance: leashStakedBalance } = useShiberseStakeToken({ tokenType: 'leash' })
     const { stakedBalance: shiboshiStakedBalance } = useShiberseStakeNFT({ tokenType: 'shiboshi' })
+
+    const currentBlockNumber = useBlockNumber()
 
     const isShiberseLocker = (Number(leashStakedBalance) > 0 || Number(shiboshiStakedBalance) > 0)
 
@@ -114,6 +132,35 @@ export const LandDetail = () => {
         return false
     }, [ currentStage, selectedInfo, isShiboshiHolder, isShiberseLocker ])
 
+    const checkDistrict = function (x: number, y: number ) {
+        if(x > -166 && x < 0) {
+            if( y > -151 && y < 0) {
+                return "Defense"
+            } else {
+                return "Technology"
+            }
+        } else {
+            if( y < 151 && y > 0) {
+                return "Growth"
+            } else {
+                return "Currency"
+            }
+        }
+    }
+
+    const fetchLand = async (id: any) => {
+        const response = await axios.get(`${apiServer}/kennels?id=${id}`)
+        const data = response.data
+        setCurrentLandInfo(data.length > 0 ? data[0] : {})
+    }
+
+    useEffect(() => {
+        if( selectedInfo.id )
+            fetchLand(selectedInfo.id)
+    }, [selectedInfo, currentBlockNumber])
+
+    const isCurrentOwner = account?.toUpperCase() === currentLandInfo?.currentBidWinner?.toUpperCase()
+
     return (
         <LandDetailPanel show={ selectedInfo?.show }>
             <LandInfo className='flex'>
@@ -123,36 +170,38 @@ export const LandDetail = () => {
 
                 <DetailInfo>
                     <LandName>Name of Land</LandName>
-                    <LandType>Tier 1</LandType>
-                    <LandType>District:</LandType>
+                    <LandType>{ currentLandInfo?.tierName }</LandType>
+                    <LandType>District: { checkDistrict( Number(currentLandInfo?.coordinates?.x), Number(currentLandInfo?.coordinates?.y) ) }</LandType>
                 </DetailInfo>
             </LandInfo>
 
             <LandCoordinates className='flex items-center mb-2'>
                 <img src={locationImg}></img>
-                X: { selectedInfo?.coordinates?.x }   Y: { selectedInfo?.coordinates?.y }
+                X: { currentLandInfo?.coordinates?.x }   Y: { currentLandInfo?.coordinates?.y }
             </LandCoordinates>
 
-            <LandType className='mb-4'>Owner:</LandType>
+            <LandType className='mb-2'>Owner: { currentLandInfo?.currentBidWinner ? shortenAddress(currentLandInfo?.currentBidWinner) : 'none' }</LandType>
+
+            <BidHistory className='mb-4'>Bid history</BidHistory>
 
             <LandName className='mb-1'>Current price</LandName>
-            <BidBalance className='mb-2'>{ selectedInfo?.price } ETH</BidBalance>
+            <BidBalance className='mb-2'>{ currentLandInfo?.price } ETH</BidBalance>
             <OpenType className='mb-4'>{ EventsText[ currentStage ] }</OpenType>
 
             { canShowButton() ? (
                 <div className='text-center'>
                     { currentStage === Events['Bid'] ? (
                         <NormalButton 
-                            disabled={ !selectedInfo?.isShiboshiZone && currentBidCount === 0 ? true : false }
-                            className={`px-10 font-bold ${ selectedInfo?.noBidAllowedOnLand ? 'hidden' : '' }`}
+                            disabled={ !currentLandInfo?.isShiboshiZone && currentBidCount === 0 ? true : false }
+                            className={`px-10 font-bold ${ currentLandInfo?.noBidAllowedOnLand || isCurrentOwner ? 'hidden' : '' }`}
                             onClick={toggleBidModal}
                         >
                             Bid
                         </NormalButton>
                     ) : (
                         <NormalButton 
-                            disabled={ !selectedInfo?.isShiboshiZone && currentBidCount === 0 ? true : false }
-                            className={`px-10 font-bold ${ selectedInfo?.noBidAllowedOnLand ? 'hidden' : '' }`}
+                            disabled={ !currentLandInfo?.isShiboshiZone && currentBidCount === 0 ? true : false }
+                            className={`px-10 font-bold ${ currentLandInfo?.noBidAllowedOnLand ? 'hidden' : '' }`}
                             // onClick={toggleBidModal}
                         >
                             Mint
@@ -165,7 +214,7 @@ export const LandDetail = () => {
             <BidModal 
                 isOpen={ showBidModal }
                 onDismiss={ toggleBidModal }
-                selectedInfo={ selectedInfo }
+                selectedInfo={ currentLandInfo }
             />
         </LandDetailPanel>
     )

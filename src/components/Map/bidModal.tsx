@@ -171,7 +171,7 @@ export const BidModal = (props: any) => {
 
     const { bidOne, bidShiboshiZone } = useShiberseLandAuction()
 
-    const [bidPrice, setBidPrice] = useState( 0.1 )
+    const [bidPrice, setBidPrice] = useState(0.1)
     const [validateText, setValidateText] = useState(null) as any
     const [ pendingTx, setPendingTx ] = useState<string | null>(null)
 

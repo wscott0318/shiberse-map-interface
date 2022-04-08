@@ -37,7 +37,10 @@ const initialState: MapState = {
         openforbid: false,
 
         minPrice: 0,
-        maxPrice: 100000,
+        maxPrice: 10,
+
+        searchMinPrice: 0,
+        searchMaxPrice: 10,
 
         minPos: {
             x: null,
@@ -48,7 +51,7 @@ const initialState: MapState = {
             y: null,
         },
 
-        walletAddress: null,
+        walletAddress: '',
     }
 }
 

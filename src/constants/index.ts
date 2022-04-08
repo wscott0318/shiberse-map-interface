@@ -1108,7 +1108,7 @@ export const shiberseContractAddresses = {
         'STAKE_LEASH': '0x25a3c1baf69f219bc33b8d48ec5aca70d8acc181',
         'STAKE_SHIBOSHI': '0x48a672cbe00ebf54669230c1cff9c97ef703b989',
         'MOCKSALE': '0x736f9284b43c058b84a5e32ab57942db6cc5c1aa',
-        'LAND_AUCTION': '0x764Ce25A0C07C6abFf5F59AF62eB5C9640177c77'
+        'LAND_AUCTION': '0xf1af476ACdC61259f035867Eb4bdEd5bd4B74C88'
     }
 }
 

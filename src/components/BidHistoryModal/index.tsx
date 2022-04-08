@@ -99,8 +99,8 @@ const TableItem = styled.div`
 
 export const BidHistoryModal = (props: any) => {
     const rows = props.allPlacedBids.map((item: any) => ({
-        description: `(${item[0]}, ${item[1]}), Tier 1`,
-        bidAmount: `1.2625 ETH`,
+        description: `(${item.coordinates.x}, ${item.coordinates.y}), ${item.tierName}`,
+        bidAmount: `${item.price} ETH`,
         dateOfBid: `12 Mar 2022, 14:56`
     }))
 

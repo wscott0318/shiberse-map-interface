@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import MapFilter from '../../components/Map/Filter'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, AppState } from '../../state'
-import { setSelectedLandInfo, updateMapCenterPos, updateMapZoomLevel } from '../../state/map/actions'
+import { setSelectedLandInfo, updateMapCenterPos, updateMapZoomLevel, updateSearchOptions } from '../../state/map/actions'
 import Map from './MapView'
 import LandDetail from '../../components/Map/LandDetail';
 import { socket } from 'feathers'
@@ -12,6 +12,8 @@ import styled from 'styled-components'
 import { Dots } from 'pages/Pool/styleds'
 import ShiberseLoader from 'components/Loader/loader'
 import { PrimaryButton } from 'theme'
+import axios from 'axios'
+import useLandMap from 'hooks/useLandMap'
 
 const useQuery = () => {
 	const { search } = useLocation();
@@ -35,8 +37,9 @@ export const MapScene = () => {
 	let query = useQuery()
 
 	const [ isFirst, setIsFirst ] = useState(true)
-	const [ landData, setLandData ] = useState([])
 	const [ showClearFilter, setShowClearFilter ] = useState(false)
+
+	const { landData, landPriceData, updatePriceData, isLandDataLoaded, minPrice, maxPrice } = useLandMap()
 
     const mapCenterPos = useSelector<AppState, AppState['map']['mapCenterPos']>(state => state.map.mapCenterPos)
     const mapZoomLevel = useSelector<AppState, AppState['map']['mapZoomLevel']>(state => state.map.mapZoomLevel)
@@ -48,22 +51,12 @@ export const MapScene = () => {
     const setSelectedInfo = (newLandInfo: object): any => dispatch( setSelectedLandInfo( { newLandInfo } ) )
     const setMapCenterPos = (newPos: object): any => dispatch( updateMapCenterPos( { newPos } ) )
     const setMapZoomLevel = (newLevel: number): any => dispatch( updateMapZoomLevel( { newLevel } ) )
-
-	const fetchLandData = useCallback(async () => {
-		const result = await fetch(mapLandDataUrl)
-		const json_data = await result.json()
-
-		const result_data = json_data.filter((item: any) => item.tierName !== 'locked')
-
-		setLandData(result_data)
-	}, [dispatch])
+	const setSearchOptions = (newOptions: any): any => dispatch( updateSearchOptions( { newOptions } ) )
 
 	useEffect(() => {
 		setIsFirst(false)
 
 		if( isFirst ) {
-			fetchLandData()
-
 			socket.on('connect', () => {
 				console.error('connected')
 			})
@@ -76,8 +69,8 @@ export const MapScene = () => {
 
 	useEffect(() => {
 		const centerPos = {
-			x: query.get('x'),
-			y: query.get('y'),
+			x: query.get('currentX'),
+			y: query.get('currentY'),
 		}
 
 		const zoomLevel = query.get('zoom')
@@ -94,15 +87,48 @@ export const MapScene = () => {
 				show: false
 			})
 		}
-	}, [ query.get('x'), query.get('y'), query.get('zoom') ])
+	}, [ query ])
 	
+	const handleClearFilters = () => {
+		const newOptions = {
+			shiboshiZone: false,
+			privatehub: false,
+			diamond: false,
+			platinum: false,
+			gold: false,
+			silver: false,
+			openforbid: false,
+	
+			minPrice: minPrice,
+			maxPrice: maxPrice,
+	
+			searchMinPrice: minPrice,
+			searchMaxPrice: maxPrice,
+	
+			minPos: {
+				x: null,
+				y: null,
+			},
+			maxPos: {
+				x: null,
+				y: null,
+			},
+	
+			walletAddress: '',
+
+			clearFilters: true
+		}
+
+		setSearchOptions( newOptions )
+	}
+
 	return (
 		<>
 			<div className='w-screen h-full'>
 				<div className='flex justify-between overflow-hidden h-full'>
 					<MapFilter />
 					<div className='w-full fixed top-0 left-0 h-full' id="mapContainer">
-						{ landData.length > 0 ? (
+						{ isLandDataLoaded ? (
 							<Map 
 								mapCenterPos={ mapCenterPos } 
 								updateMapCenterPos={ setMapCenterPos }
@@ -111,6 +137,7 @@ export const MapScene = () => {
 								selectedInfo={selectedInfo}
 								setSelectedInfo={setSelectedInfo}
 								landData={landData}
+								landPriceData={landPriceData}
 								searchOptions={searchOptions}
 								clearFilter={ showClearFilter }
 								setClearFilter={() => setShowClearFilter(prev => !prev)}
@@ -130,7 +157,7 @@ export const MapScene = () => {
 									No results were found in your search
 								</div>
 
-								<PrimaryButton>
+								<PrimaryButton onClick={handleClearFilters}>
 									Clear Filters
 								</PrimaryButton>
 							</LoadingWrapper>

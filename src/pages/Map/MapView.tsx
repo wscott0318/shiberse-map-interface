@@ -14,6 +14,7 @@ type MapViewProps = {
     searchOptions: any,
     clearFilter: any,
     setClearFilter: any,
+    landPriceData: any,
 }
 
 export default class Map extends Component<MapViewProps> {
@@ -195,17 +196,24 @@ export default class Map extends Component<MapViewProps> {
     isApplyFilter( item: any ) {
         const searchOptions = this.props.searchOptions
 
-        if( !searchOptions )
-            return true
+        const priceData = this.props.landPriceData[ item.id ]
 
-        if( !searchOptions.shiboshiZone 
-            && !searchOptions.privatehub 
-            && !searchOptions.diamond 
-            && !searchOptions.platinum 
-            && !searchOptions.gold
-            && !searchOptions.silver )
-            return true
+        if( Number(priceData.price) < Number(searchOptions.searchMinPrice) || Number(priceData.price) > Number(searchOptions.searchMaxPrice) )
+            return false
 
+        if( searchOptions.minPos.x !== null 
+            && searchOptions.minPos.y !== null
+            && searchOptions.maxPos.x !== null
+            && searchOptions.maxPos.y !== null
+            && (item.coordinates.x < searchOptions.minPos.x 
+            || item.coordinates.y < searchOptions.minPos.y 
+            || item.coordinates.x > searchOptions.maxPos.x
+            || item.coordinates.y > searchOptions.maxPos.y) )
+            return false
+
+        if( searchOptions.walletAddress !== '' && (priceData.currentBidWinner?.toUpperCase() !== searchOptions.walletAddress.toUpperCase()) )
+            return false
+            
         if( searchOptions.shiboshiZone && item.isShiboshiZone )
             return true
         if( searchOptions.privatehub && item.tierName === 'hub' )
@@ -218,18 +226,12 @@ export default class Map extends Component<MapViewProps> {
             return true
         if( searchOptions.silver && item.tierName === 'tier4' )
             return true
-        // open for bid
-        // if( searchOptions.openforbid && item.openforbid )
-        //     return true
-
-        // if( item.price >= searchOptions.minPrice && item.price <= searchOptions.maxPrice )
-        //     return true
+        if( searchOptions.openforbid && !item.noBidAllowedOnLand )
+            return true
+        if( !searchOptions.shiboshiZone && !searchOptions.privatehub && !searchOptions.diamond && !searchOptions.platinum && !searchOptions.gold && !searchOptions.silver && !searchOptions.openforbid )
+            return true
 
         return false
-        
-        // x, y search option
-
-        // owner search option
     }
 
     onKeyPressEventHandler(e: any) {

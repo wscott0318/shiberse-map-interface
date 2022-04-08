@@ -69,7 +69,11 @@ export const DarkTileColors = {
     'locked': 0x161721,
 }
 
-export const mapLandDataUrl = 'https://shiboshis.mypinata.cloud/ipfs/Qmap4SnwxpV6nCQZ9rgTXm8LtpyRjowcQB2UDhCfC1cohZ'
+export const mapLandDataUrl = 'https://shiboshis.mypinata.cloud/ipfs/QmYXckMd93DPq6XPaC1iisUs1t2jReE8mdaTuQYpmmLbgP'
+
+export const apiServer = 'https://blabla-dev.herokuapp.com'
+
+export const mapLandPriceDataUrl = apiServer + '/kennels?tierName[$in]=tier1&tierName[$in]=tier2&tierName[$in]=tier3&tierName[$in]=tier4&tierName[$in]=hub&tierName[$in]=road&$select[]=price&$select[]=id&$select[]=currentBidWinner'
 
 export const backRectPos = [
     {

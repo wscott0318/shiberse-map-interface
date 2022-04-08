@@ -12,7 +12,7 @@ const Wrapper = styled.div`
 
 const MinMaxWrapper = styled.div`
     font-weight: 500;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 21px;
     color: #785838;
 

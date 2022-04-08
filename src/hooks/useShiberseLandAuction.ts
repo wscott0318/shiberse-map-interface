@@ -5,7 +5,8 @@ import { useShiberseLandAuctionContract } from './useContract'
 import { mainNetworkChainId } from '../constants'
 import { useBlockNumber } from 'state/application/hooks'
 import { formatFromBalance, formatToBalance } from 'utils'
-import signatures from 'constants/map/signatures.json'
+import axios from 'axios'
+import { apiServer } from 'constants/map'
 
 const useShiberseLandAuction = () => {
     const { account, chainId } = useActiveWeb3React()
@@ -30,12 +31,19 @@ const useShiberseLandAuction = () => {
         }
     }, [account, landContract])
 
+    const getSignature = async () => {
+        const response = (await axios.get(`${apiServer}/shiboshis?address=${account}`)).data
+        if( response.data.length > 0 ) {
+            return response.data[0].signature
+        }
+        return null
+    }
+
     const fetchIfShiboshiHolder = useCallback(async () => {
         try {
-            const signature = signatures[ account as keyof typeof signatures ]
+            const signature = await getSignature()
 
-            if( signature )
-                setIsShiboshiHolder(signature)
+            setIsShiboshiHolder(signature)
         } catch(e) {
             console.error('fetchIfShiboshiHolder error occured', e)
         }
@@ -109,7 +117,7 @@ const useShiberseLandAuction = () => {
     
     const bidShiboshiZone = useCallback(
         async( input: any ) => {
-            const signature = signatures[ account as keyof typeof signatures ]
+            const signature = await getSignature()
 
             if( input?.value && input?.x && input?.y && signature ) {
                 try {
@@ -147,7 +155,7 @@ const useShiberseLandAuction = () => {
 
     const mintPrivateShiboshiZone = useCallback(
         async( input: any ) => {
-            const signature = signatures[ account as keyof typeof signatures ]
+            const signature = await getSignature()
 
             if( input?.value && input?.x && input?.y && signature ) {
                 try {

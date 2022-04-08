@@ -16,6 +16,7 @@ import useShiberseStakeToken from 'hooks/useShiberseStakeToken'
 import useShiberseStakeNFT from 'hooks/useShiberseStakeNFT'
 import BidModal from 'components/Map/bidModal'
 import { mapLandDataUrl } from 'constants/map'
+import useLandMap from 'hooks/useLandMap'
 
 const ProfileWrapper = styled.div`
     position: relative;
@@ -188,7 +189,6 @@ export const Profile = () => {
     const [showBidHistoryModal, setShowBidHistoryModal] = useState(false)
     const [showMintModal, setShowMintModal] = useState(false)
     const [showBidModal, setShowBidModal] = useState(false)
-    const [landData, setLandData] = useState([]) as any
     const [landInfo, setLandInfo] = useState({})
 
     const { account, chainId } = useWeb3React()
@@ -199,8 +199,28 @@ export const Profile = () => {
 
     const { allPlacedBids, winningBids, currentStage } = useShiberseLandAuction()
 
-    const lostBids = allPlacedBids.filter((item: any) => {
-        const index = winningBids.findIndex((wonbid: any) => wonbid[0] === item[0] && wonbid[1] === item[1])
+    const { landData, landPriceData, updatePriceData, isLandDataLoaded, minPrice, maxPrice } = useLandMap()
+
+    const allBids = allPlacedBids.map((bidPos: any) => {
+        const index = landData.findIndex((item: any) => Number(item.coordinates.x) === Number(bidPos[0]) && Number(item.coordinates.y) === Number(bidPos[1]))
+
+        return {
+            ...(landData[index] as any),
+            ...landPriceData[ landData[index]['id'] ]
+        }
+    })
+
+    const winBids = winningBids.map((bidPos: any) => {
+        const index = landData.findIndex((item: any) => Number(item.coordinates.x) === Number(bidPos[0]) && Number(item.coordinates.y) === Number(bidPos[1]))
+
+        return {
+            ...(landData[index] as any),
+            ...landPriceData[ landData[index]['id'] ]
+        }
+    })
+
+    const lostBids = allBids.filter((item: any) => {
+        const index = winBids.findIndex((wonbid: any) => wonbid.id === item.id)
         return index === -1 ? true : false
     })
 
@@ -211,30 +231,12 @@ export const Profile = () => {
 
     const toggleBidModal = () => setShowBidModal(prev => !prev)
 
-	const fetchLandData = useCallback(async () => {
-		const result = await fetch(mapLandDataUrl)
-		const json_data = await result.json()
-
-		const result_data = json_data.filter((item: any) => item.tierName !== 'locked')
-
-		setLandData(result_data)
-	}, [setLandData])
-
-    const handleBidMore = (posX: any, posY: any) => {
-        const targetIndex = landData.findIndex((item: any) => Number(item.coordinates.x) === Number(posX) && Number(item.coordinates.y) === Number(posY))
-
-        if( targetIndex !== -1 ) {
-            setLandInfo({
-                index: targetIndex,
-                ...landData[targetIndex]
-            })
-            toggleBidModal()
-        }
+    const handleBidMore = (item: any) => {
+        setLandInfo({
+            ...item
+        })
+        toggleBidModal()
     }
-
-    useEffect(() => {
-        fetchLandData()
-    }, [])
 
     return (
         <ProfileWrapper className='container'>
@@ -255,13 +257,13 @@ export const Profile = () => {
                     <ViewBidHistoryButton onClick={() => setShowBidHistoryModal(prev => !prev)}>View Bidding History</ViewBidHistoryButton>
                 </SubTitle>
 
-                { !allPlacedBids.length ? (
+                { !allBids.length ? (
                     <NoneContentWrapper>
                         <div className='text-base' style={{ color: 'rgb(255, 255, 255, 0.5)' }}>None</div>
                     </NoneContentWrapper>
                 ): ( 
                     <div className='flex flex-wrap'>
-                        { allPlacedBids.map((item: any, index: number) => (
+                        { allBids.map((item: any, index: number) => (
                             <ItemWrapper key={`allbids${index}`}>
                                 <LandInfo className='flex'>
                                     <LandImage>
@@ -270,16 +272,16 @@ export const Profile = () => {
 
                                     <DetailInfo>
                                         <LandName>Name of Land</LandName>
-                                        <LandType>Tier 1</LandType>
+                                        <LandType>{ item.tierName }</LandType>
                                         <LandCoordinates className='flex items-center mb-2'>
                                             <img src={locationImg}></img>
-                                            { item[0] }, { item[1] }
+                                            { item.coordinates.x }, { item.coordinates.y }
                                         </LandCoordinates>
                                     </DetailInfo>
                                 </LandInfo>
 
                                 <CurrentBid className='mb-1'>Current bid placed</CurrentBid>
-                                <BidBalance className='mb-2'>1.2625 ETH</BidBalance>
+                                <BidBalance className='mb-2'>{ item.price } ETH</BidBalance>
                                 {/* <OpenType className='mb-4'>Bid closing in 2 days</OpenType> */}
                             </ItemWrapper>
                         )) }
@@ -289,7 +291,7 @@ export const Profile = () => {
                 <BidHistoryModal 
                     isOpen={showBidHistoryModal}
                     onDismiss={() => setShowBidHistoryModal(prev => !prev)}
-                    allPlacedBids={allPlacedBids}
+                    allPlacedBids={allBids}
                 />
             </div>
 
@@ -313,21 +315,21 @@ export const Profile = () => {
 
                                     <DetailInfo>
                                         <LandName>Name of Land</LandName>
-                                        <LandType>Tier 1</LandType>
+                                        <LandType>{ item.tierName }</LandType>
                                         <LandCoordinates className='flex items-center mb-2'>
                                             <img src={locationImg}></img>
-                                            { item[0] }, { item[1] }
+                                            { item.coordinates.x }, { item.coordinates.y }
                                         </LandCoordinates>
                                     </DetailInfo>
                                 </LandInfo>
 
                                 <CurrentBid className='mb-1'>Current bid placed</CurrentBid>
-                                <BidBalance className='mb-2'>1.2625 ETH</BidBalance>
+                                <BidBalance className='mb-2'>{item.price} ETH</BidBalance>
                                 {/* <OpenType className='mb-4'>Bid closing in 2 days</OpenType> */}
 
                                 <MintButton
                                     className={`mt-2`}
-                                    onClick={() => handleBidMore(item[0], item[1])}
+                                    onClick={() => handleBidMore(item)}
                                 >
                                     BID
                                 </MintButton>
@@ -354,14 +356,14 @@ export const Profile = () => {
                     </ViewBidHistoryButton>
                 </SubTitle>
 
-                { !winningBids.length ? (
+                { !winBids.length ? (
                     <NoneContentWrapper>
                         <div className='text-base' style={{ color: 'rgb(255, 255, 255, 0.5)' }}>None</div>
                     </NoneContentWrapper>
                 ): (
                     <div className='flex flex-wrap'>
-                        { winningBids.map((item: any, index: number) => (
-                            <ItemWrapper key={`winningBids${index}`}>
+                        { winBids.map((item: any, index: number) => (
+                            <ItemWrapper key={`winBids${index}`}>
                                 <LandInfo className='flex'>
                                     <LandImage>
                                         <img src={thumbnail} alt='pic'></img>
@@ -369,10 +371,10 @@ export const Profile = () => {
 
                                     <DetailInfo>
                                         <LandName>Name of Land</LandName>
-                                        <LandType>Tier 1</LandType>
+                                        <LandType>{ item.tierName }</LandType>
                                         <LandCoordinates className='flex items-center'>
                                             <img src={locationImg}></img>
-                                            { item[0] }, { item[1] }
+                                            { item.coordinates.x }, { item.coordinates.y }
                                         </LandCoordinates>
                                     </DetailInfo>
                                 </LandInfo>

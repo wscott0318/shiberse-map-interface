@@ -17,6 +17,7 @@ import useShiberseStakeNFT from 'hooks/useShiberseStakeNFT'
 import BidModal from 'components/Map/bidModal'
 import { mapLandDataUrl } from 'constants/map'
 import useLandMap from 'hooks/useLandMap'
+import { getLandName } from 'utils/mapHelper'
 
 const ProfileWrapper = styled.div`
     position: relative;
@@ -199,25 +200,25 @@ export const Profile = () => {
 
     const { allPlacedBids, winningBids, currentStage } = useShiberseLandAuction()
 
-    const { landData, landPriceData, updatePriceData, isLandDataLoaded, minPrice, maxPrice } = useLandMap()
+    const { landData, landPriceData, accountBidsInfo, updatePriceData, isLandDataLoaded, minPrice, maxPrice } = useLandMap()
 
-    const allBids = allPlacedBids.map((bidPos: any) => {
+    const allBids = isLandDataLoaded ? allPlacedBids.map((bidPos: any) => {
         const index = landData.findIndex((item: any) => Number(item.coordinates.x) === Number(bidPos[0]) && Number(item.coordinates.y) === Number(bidPos[1]))
 
         return {
             ...(landData[index] as any),
             ...landPriceData[ landData[index]['id'] ]
         }
-    })
+    }): []
 
-    const winBids = winningBids.map((bidPos: any) => {
+    const winBids = isLandDataLoaded ? winningBids.map((bidPos: any) => {
         const index = landData.findIndex((item: any) => Number(item.coordinates.x) === Number(bidPos[0]) && Number(item.coordinates.y) === Number(bidPos[1]))
 
         return {
             ...(landData[index] as any),
             ...landPriceData[ landData[index]['id'] ]
         }
-    })
+    }): []
 
     const lostBids = allBids.filter((item: any) => {
         const index = winBids.findIndex((wonbid: any) => wonbid.id === item.id)
@@ -253,51 +254,9 @@ export const Profile = () => {
 
             <div className='relative mb-12'>
                 <SubTitle>
-                    bids placed
-                    <ViewBidHistoryButton onClick={() => setShowBidHistoryModal(prev => !prev)}>View Bidding History</ViewBidHistoryButton>
-                </SubTitle>
-
-                { !allBids.length ? (
-                    <NoneContentWrapper>
-                        <div className='text-base' style={{ color: 'rgb(255, 255, 255, 0.5)' }}>None</div>
-                    </NoneContentWrapper>
-                ): ( 
-                    <div className='flex flex-wrap'>
-                        { allBids.map((item: any, index: number) => (
-                            <ItemWrapper key={`allbids${index}`}>
-                                <LandInfo className='flex'>
-                                    <LandImage>
-                                        <img src={thumbnail} alt='pic'></img>
-                                    </LandImage>
-
-                                    <DetailInfo>
-                                        <LandName>Name of Land</LandName>
-                                        <LandType>{ item.tierName }</LandType>
-                                        <LandCoordinates className='flex items-center mb-2'>
-                                            <img src={locationImg}></img>
-                                            { item.coordinates.x }, { item.coordinates.y }
-                                        </LandCoordinates>
-                                    </DetailInfo>
-                                </LandInfo>
-
-                                <CurrentBid className='mb-1'>Current bid placed</CurrentBid>
-                                <BidBalance className='mb-2'>{ item.price } ETH</BidBalance>
-                                {/* <OpenType className='mb-4'>Bid closing in 2 days</OpenType> */}
-                            </ItemWrapper>
-                        )) }
-                    </div>
-                ) }
-
-                <BidHistoryModal 
-                    isOpen={showBidHistoryModal}
-                    onDismiss={() => setShowBidHistoryModal(prev => !prev)}
-                    allPlacedBids={allBids}
-                />
-            </div>
-
-            <div className='relative mb-12'>
-                <SubTitle>
                     lost bids
+
+                    <span className='ml-4 text-sm font-normal normal-case'>You can bid again on the lost bids</span>
                 </SubTitle>
 
                 { !lostBids.length ? (
@@ -314,8 +273,8 @@ export const Profile = () => {
                                     </LandImage>
 
                                     <DetailInfo>
-                                        <LandName>Name of Land</LandName>
-                                        <LandType>{ item.tierName }</LandType>
+                                        <LandName>Land</LandName>
+                                        <LandType>{ getLandName(item.tierName) }</LandType>
                                         <LandCoordinates className='flex items-center mb-2'>
                                             <img src={locationImg}></img>
                                             { item.coordinates.x }, { item.coordinates.y }
@@ -323,7 +282,7 @@ export const Profile = () => {
                                     </DetailInfo>
                                 </LandInfo>
 
-                                <CurrentBid className='mb-1'>Current bid placed</CurrentBid>
+                                <CurrentBid className='mb-1'>Current bid</CurrentBid>
                                 <BidBalance className='mb-2'>{item.price} ETH</BidBalance>
                                 {/* <OpenType className='mb-4'>Bid closing in 2 days</OpenType> */}
 
@@ -347,7 +306,7 @@ export const Profile = () => {
 
             <div className='relative mb-12'>
                 <SubTitle>
-                    LANDS OWNED
+                    leading bids
                     <ViewBidHistoryButton 
                         onClick={() => setShowMintModal(prev => !prev)}
                         className={`${ currentStage === Events['Bid'] ? 'hidden': '' }`}
@@ -370,8 +329,8 @@ export const Profile = () => {
                                     </LandImage>
 
                                     <DetailInfo>
-                                        <LandName>Name of Land</LandName>
-                                        <LandType>{ item.tierName }</LandType>
+                                        <LandName>Land</LandName>
+                                        <LandType>{ getLandName(item.tierName) }</LandType>
                                         <LandCoordinates className='flex items-center'>
                                             <img src={locationImg}></img>
                                             { item.coordinates.x }, { item.coordinates.y }
@@ -395,6 +354,51 @@ export const Profile = () => {
                 />
             </div>
 
+            <div className='relative mb-12'>
+                <SubTitle>
+                    bids placed
+                    <ViewBidHistoryButton onClick={() => setShowBidHistoryModal(prev => !prev)}>View Bidding History</ViewBidHistoryButton>
+                </SubTitle>
+
+                { !allBids.length ? (
+                    <NoneContentWrapper>
+                        <div className='text-base' style={{ color: 'rgb(255, 255, 255, 0.5)' }}>None</div>
+                    </NoneContentWrapper>
+                ): ( 
+                    <div className='flex flex-wrap'>
+                        { allBids.map((item: any, index: number) => (
+                            <ItemWrapper key={`allbids${index}`}>
+                                <LandInfo className='flex'>
+                                    <LandImage>
+                                        <img src={thumbnail} alt='pic'></img>
+                                    </LandImage>
+
+                                    <DetailInfo>
+                                        <LandName>Land</LandName>
+                                        <LandType>{ getLandName(item.tierName) }</LandType>
+                                        <LandCoordinates className='flex items-center mb-2'>
+                                            <img src={locationImg}></img>
+                                            { item.coordinates.x }, { item.coordinates.y }
+                                        </LandCoordinates>
+                                    </DetailInfo>
+                                </LandInfo>
+
+                                <CurrentBid className='mb-1'>Current bid</CurrentBid>
+                                <BidBalance className='mb-2'>{ item.price } ETH</BidBalance>
+                                {/* <OpenType className='mb-4'>Bid closing in 2 days</OpenType> */}
+                            </ItemWrapper>
+                        )) }
+                    </div>
+                ) }
+
+                <BidHistoryModal 
+                    isOpen={showBidHistoryModal}
+                    onDismiss={() => setShowBidHistoryModal(prev => !prev)}
+                    allPlacedBids={allBids}
+                    bidsInfo={accountBidsInfo}
+                />
+            </div>
+
             <div className='relative'>
                 <SubTitleSmall>
                     Unlock
@@ -413,24 +417,24 @@ export const Profile = () => {
                         </LockRewards> */}
 
                         <MintButton 
-                            disabled={ Number(leashStakedBalance) === 0 || (new Date().getTime()) <= Number( leashUnlockAt ) ? true : false }
+                            disabled={ true || Number(leashStakedBalance) === 0 || (new Date().getTime()) <= Number( leashUnlockAt ) ? true : false }
                             className='mb-4'>
                                 UNLOCK
                         </MintButton>
 
-                        <OpenType>Your locking will end in { getRemainingDays( leashUnlockAt ) } days</OpenType>
+                        {/* <OpenType>Your locking will end in { getRemainingDays( leashUnlockAt ) } days</OpenType> */}
                     </ItemWrapper>
 
                     <ItemWrapper className='flex flex-col justify-between'>
                         <TotalLocked className='mb-4'>Total Shiboshis locked: { shiboshiStakedBalance }</TotalLocked>
                         <div>
                             <MintButton 
-                                disabled={ Number(shiboshiStakedBalance) === 0 || (new Date().getTime()) <= Number( shiboshiUnlockAt ) ? true : false }
+                                disabled={ true || Number(shiboshiStakedBalance) === 0 || (new Date().getTime()) <= Number( shiboshiUnlockAt ) ? true : false }
                                 className='mb-4'>
                                     UNLOCK
                             </MintButton>
 
-                            <OpenType>Your locking will end in { getRemainingDays( shiboshiUnlockAt ) } days</OpenType>
+                            {/* <OpenType>Your locking will end in { getRemainingDays( shiboshiUnlockAt ) } days</OpenType> */}
                         </div>
                     </ItemWrapper>
                 </div>

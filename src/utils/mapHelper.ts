@@ -1,3 +1,5 @@
+import { landNames } from "constants/map"
+
 export const getRandValue = (val: any) => Math.ceil(Math.random() * 100000000) % val
 
 export const rad2Ang = (rad: any) => rad * 180 / Math.PI
@@ -27,3 +29,5 @@ export const pauseEvent = (e: any) => {
 export const getMapColorByType = (type: any) => {
     return type === 1 ? 0xd0e0e3 : type === 2 ? 0xd9ead3 : type === 3 ? 0xf4cccc : type === 4 ? 0xffd966 : type === 5 ? 0x6aa84d : 0x000000
 }
+
+export const getLandName = (name: any) => landNames[name as keyof typeof landNames] ? landNames[name as keyof typeof landNames] : name

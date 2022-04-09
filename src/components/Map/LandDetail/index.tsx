@@ -16,6 +16,9 @@ import axios from 'axios';
 import { useWeb3React } from '@web3-react/core';
 import { shortenAddress } from 'utils';
 import { useBlockNumber } from 'state/application/hooks';
+import LandBidHistoryModal from 'components/BidHistoryModal/landHistory';
+import { getLandName } from 'utils/mapHelper';
+import { ReactComponent as Close } from 'assets/images/x.svg'
 
 const LandDetailPanel = styled.div<{ show: boolean }>`
     display: ${({ show }) => (show ? 'block' : 'none')};
@@ -93,10 +96,34 @@ const OpenType = styled.div`
 `
 
 const BidHistory = styled(ModalToggleButton)`
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+
     color: #F8A93E;
 
     :hover {
         color: #d18f36;
+    }
+`
+
+const CloseIcon = styled.div`
+    position: absolute;
+    right: .7rem;
+    top: 0.4rem;
+    &:hover {
+        cursor: pointer;
+        opacity: 0.6;
+    }
+
+    svg {
+        width: 15px;
+    }
+`
+
+const CloseColor = styled(Close)`
+    path {
+        stroke: ${({ theme }) => theme.text4};
     }
 `
 
@@ -118,7 +145,13 @@ export const LandDetail = () => {
 
     const selectedInfo = useSelector<AppState, AppState['map']['selectedLandInfo']>(state => state.map.selectedLandInfo)
 
+    const dispatch = useDispatch<AppDispatch>()
+
+    const setSelectedInfo = (newLandInfo: object): any => dispatch( setSelectedLandInfo( { newLandInfo } ) )
+
     const toggleBidModal = () => setShowBidModal(prev => !prev)
+
+    const [showBidHistoryModal, setShowBidHistoryModal] = useState(false)
 
     const canShowButton = useCallback(() => {
         if( currentStage === Events['Public'] )
@@ -161,16 +194,28 @@ export const LandDetail = () => {
 
     const isCurrentOwner = account?.toUpperCase() === currentLandInfo?.currentBidWinner?.toUpperCase()
 
+    const handleClose = () => {
+        const newInfo = { ...selectedInfo }
+        newInfo.show = false
+        setSelectedInfo(newInfo)
+    }
+
+    const hideDetail = (info: any) => info?.tierName === 'road' || info?.tierName === 'hub'
+
     return (
         <LandDetailPanel show={ selectedInfo?.show }>
+            <CloseIcon onClick={handleClose}>
+                <CloseColor />
+            </CloseIcon>
+
             <LandInfo className='flex'>
                 <LandImage>
                     <img src={thumbnail} alt='pic'></img>
                 </LandImage>
 
                 <DetailInfo>
-                    <LandName>Name of Land</LandName>
-                    <LandType>{ currentLandInfo?.tierName }</LandType>
+                    <LandName>Land</LandName>
+                    <LandType>{ getLandName(currentLandInfo?.tierName) }</LandType>
                     <LandType>District: { checkDistrict( Number(currentLandInfo?.coordinates?.x), Number(currentLandInfo?.coordinates?.y) ) }</LandType>
                 </DetailInfo>
             </LandInfo>
@@ -180,42 +225,57 @@ export const LandDetail = () => {
                 X: { currentLandInfo?.coordinates?.x }   Y: { currentLandInfo?.coordinates?.y }
             </LandCoordinates>
 
-            <LandType className='mb-2'>Owner: { currentLandInfo?.currentBidWinner ? shortenAddress(currentLandInfo?.currentBidWinner) : 'none' }</LandType>
+            { hideDetail(currentLandInfo) ? '' : (
+                <>
+                    <LandType className='mb-2'>
+                        Owner: 
+                        { currentLandInfo?.currentBidWinner 
+                            ? <a className='font-normal ml-1' target='_blank' rel="noreferrer" href={`https://etherscan.io/address/${ currentLandInfo?.currentBidWinner }`} >{shortenAddress(currentLandInfo?.currentBidWinner, 8)}</a> 
+                            : ' none' }
+                    </LandType>
 
-            <BidHistory className='mb-4'>Bid history</BidHistory>
+                    <BidHistory className='mb-4' onClick={() => setShowBidHistoryModal(prev => !prev)}>Bid history</BidHistory>
 
-            <LandName className='mb-1'>Current price</LandName>
-            <BidBalance className='mb-2'>{ currentLandInfo?.price } ETH</BidBalance>
-            <OpenType className='mb-4'>{ EventsText[ currentStage ] }</OpenType>
+                    <LandBidHistoryModal 
+                        isOpen={showBidHistoryModal}
+                        onDismiss={() => setShowBidHistoryModal(prev => !prev)}
+                        allPlacedBids={ currentLandInfo?.bids ? currentLandInfo?.bids : [] }
+                    />
 
-            { canShowButton() ? (
-                <div className='text-center'>
-                    { currentStage === Events['Bid'] ? (
-                        <NormalButton 
-                            disabled={ !currentLandInfo?.isShiboshiZone && currentBidCount === 0 ? true : false }
-                            className={`px-10 font-bold ${ currentLandInfo?.noBidAllowedOnLand || isCurrentOwner ? 'hidden' : '' }`}
-                            onClick={toggleBidModal}
-                        >
-                            Bid
-                        </NormalButton>
-                    ) : (
-                        <NormalButton 
-                            disabled={ !currentLandInfo?.isShiboshiZone && currentBidCount === 0 ? true : false }
-                            className={`px-10 font-bold ${ currentLandInfo?.noBidAllowedOnLand ? 'hidden' : '' }`}
-                            // onClick={toggleBidModal}
-                        >
-                            Mint
-                        </NormalButton>
-                    ) }
-                </div>
-            ) : ''}
+                    <LandName className='mb-1'>Current price</LandName>
+                    <BidBalance className='mb-2'>{ currentLandInfo?.price } ETH</BidBalance>
+                    <OpenType className='mb-4'>{ EventsText[ currentStage ] }</OpenType>
+
+                    { canShowButton() ? (
+                        <div className='text-center'>
+                            { currentStage === Events['Bid'] ? (
+                                <NormalButton 
+                                    disabled={ !currentLandInfo?.isShiboshiZone && currentBidCount === 0 ? true : false }
+                                    className={`px-10 font-bold ${ currentLandInfo?.noBidAllowedOnLand || isCurrentOwner ? 'hidden' : '' }`}
+                                    onClick={toggleBidModal}
+                                >
+                                    Bid
+                                </NormalButton>
+                            ) : (
+                                <NormalButton 
+                                    disabled={ !currentLandInfo?.isShiboshiZone && currentBidCount === 0 ? true : false }
+                                    className={`px-10 font-bold ${ currentLandInfo?.noBidAllowedOnLand ? 'hidden' : '' }`}
+                                    // onClick={toggleBidModal}
+                                >
+                                    Mint
+                                </NormalButton>
+                            ) }
+                        </div>
+                    ) : ''}
 
 
-            <BidModal 
-                isOpen={ showBidModal }
-                onDismiss={ toggleBidModal }
-                selectedInfo={ currentLandInfo }
-            />
+                    <BidModal 
+                        isOpen={ showBidModal }
+                        onDismiss={ toggleBidModal }
+                        selectedInfo={ currentLandInfo }
+                    />
+                </>
+            )}
         </LandDetailPanel>
     )
 }

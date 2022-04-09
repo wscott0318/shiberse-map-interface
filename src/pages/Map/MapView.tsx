@@ -127,7 +127,7 @@ export default class Map extends Component<MapViewProps> {
                 })
 
                 // draw ShiboshiZone outline
-                drawLine({ graphics: hubGraphic, points: shiboshiZonePos, borderColor: 0xf31111 })
+                drawLine({ graphics: hubGraphic, points: shiboshiZonePos, borderColor: 0xa7352d })
 
                 let hasFilterLand = false;
                 for( let i = 0; i < spritesArray.length; i++ ) {
@@ -144,7 +144,7 @@ export default class Map extends Component<MapViewProps> {
                     spritesArray[i].y = Math.ceil((this.mapInfo[i].coordinates.y - this.props.mapCenterPos.y) * this.props.mapZoomLevel + this.app.screen.height / 2)
 
                     if( this.mapInfo[i].coordinates.x === this.props.selectedInfo?.coordinates?.x && this.mapInfo[i].coordinates.y === this.props.selectedInfo?.coordinates?.y )
-                        spritesArray[i].tint = 0xfd33e6
+                        spritesArray[i].tint = 0x49ad4e
                     else {
                         spritesArray[i].tint = TileColors[ this.mapInfo[i].tierName as keyof typeof TileColors ]
 
@@ -201,14 +201,23 @@ export default class Map extends Component<MapViewProps> {
         if( Number(priceData.price) < Number(searchOptions.searchMinPrice) || Number(priceData.price) > Number(searchOptions.searchMaxPrice) )
             return false
 
-        if( searchOptions.minPos.x !== null 
-            && searchOptions.minPos.y !== null
-            && searchOptions.maxPos.x !== null
-            && searchOptions.maxPos.y !== null
-            && (item.coordinates.x < searchOptions.minPos.x 
-            || item.coordinates.y < searchOptions.minPos.y 
-            || item.coordinates.x > searchOptions.maxPos.x
-            || item.coordinates.y > searchOptions.maxPos.y) )
+        // if( searchOptions.minPos.x !== null 
+        //     && searchOptions.minPos.y !== null
+        //     && searchOptions.maxPos.x !== null
+        //     && searchOptions.maxPos.y !== null
+        //     && (item.coordinates.x < searchOptions.minPos.x 
+        //     || item.coordinates.y < searchOptions.minPos.y 
+        //     || item.coordinates.x > searchOptions.maxPos.x
+        //     || item.coordinates.y > searchOptions.maxPos.y) )
+        //     return false
+
+        if( searchOptions.minPos.x !== null && item.coordinates.x < searchOptions.minPos.x )
+            return false
+        if( searchOptions.minPos.y !== null && item.coordinates.y < searchOptions.minPos.y )
+            return false
+        if( searchOptions.maxPos.x !== null && item.coordinates.x > searchOptions.maxPos.x )
+            return false
+        if( searchOptions.maxPos.y !== null && item.coordinates.y > searchOptions.maxPos.y )
             return false
 
         if( searchOptions.walletAddress !== '' && (priceData.currentBidWinner?.toUpperCase() !== searchOptions.walletAddress.toUpperCase()) )

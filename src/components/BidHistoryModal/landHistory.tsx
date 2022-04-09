@@ -5,9 +5,8 @@ import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { NormalButton } from 'theme'
 import Loader from '../Loader'
 import SortableTable from 'components/SortableTable/SortableTable'
-import { landNames } from 'constants/map'
-import { getLandName } from 'utils/mapHelper'
-import { DateTimeFormat } from 'helper/dateformat'
+import { shortenAddress } from 'utils'
+import {DateTimeFormat} from 'helper/dateformat'
 
 const UpperSection = styled.div`
     position: relative;
@@ -100,20 +99,11 @@ const TableItem = styled.div`
     color: #FFFFFF;
 `
 
-export const BidHistoryModal = (props: any) => {
-    const getBidsDate = (item: any) => {
-        const index = props.bidsInfo.findIndex((bid: any) => Number(item.coordinates.x) === Number(bid.x) && Number(item.coordinates.y) === Number(bid.y))
-
-        if( index !== -1 ) {
-            return props.bidsInfo[index].createdAt
-        }
-        return ''
-    }
-
+export const LandBidHistoryModal = (props: any) => {
     const rows = props.allPlacedBids.map((item: any) => ({
-        description: `(${item.coordinates.x}, ${item.coordinates.y}), ${ getLandName(item.tierName) }`,
-        bidAmount: `${item.price} ETH`,
-        dateOfBid: `${ getBidsDate(item) }`
+        bidBy: `${ shortenAddress(item.bidBy, 7) }`,
+        bidAmount: `${item.bidPrice} ETH`,
+        dateOfBid: `${ item.createdAt ? item.createdAt : '' }`
     }))
 
     return (
@@ -131,26 +121,26 @@ export const BidHistoryModal = (props: any) => {
 
                 <ContentWrapper>
                     { !props.allPlacedBids.length 
-                        ? (<NoContent>You currently have no bidding history</NoContent> )
+                        ? (<NoContent>This land currently has no bidding history</NoContent> )
                         : (
                             <SortableTable 
                                 title={'bid history'}
                                 columns={[
                                     {
-                                        key: 'description',
+                                        key: 'bidBy',
                                         numeric: false,
                                         render: (row: any, index: any) => (
-                                            <TableItem key={'description' + index}>{row.description} </TableItem>
+                                            <TableItem key={'bidBy' + index}>{row.bidBy} </TableItem>
                                         ),
-                                        label: 'Description'
+                                        label: 'Bid By'
                                     }, {
-                                        key: 'bidAmount',
+                                        key: 'BidAmount',
                                         render: (row: any, index: any) => (<TableItem key={'bidAmount' + index}>{ row.bidAmount }</TableItem>),
                                         align: 'right',
-                                        label: 'Bid Amount'
+                                        label: 'Bid Price'
                                     }, {
                                         key: 'dateOfBid',
-                                        render: (row: any, index: any) => (<TableItem key={'dateOfBid' + index}>{ row.dateOfBid !== '' ? <DateTimeFormat data={row.dateOfBid} /> : 'Not sure' }</TableItem>),
+                                        render: (row: any, index: any) => (<TableItem key={'dateOfBid' + index}>{row.dateOfBid !== '' ? <DateTimeFormat data={row.dateOfBid} /> : 'Not sure'}</TableItem>),
                                         align: 'right',
                                         label: 'Date of Bid'
                                     },
@@ -166,4 +156,4 @@ export const BidHistoryModal = (props: any) => {
     )
 }
 
-export default BidHistoryModal
+export default LandBidHistoryModal

@@ -60,10 +60,15 @@ export const MapScene = () => {
 			socket.on('connect', () => {
 				console.error('connected')
 			})
+
+			socket.on('updatePriceInfo', (data: any) => {
+				console.error('updatePriceInfo', data)
+			})
 		}
 
 		return (() => {
 			socket.off('connect')
+			socket.off('updatePriceInfo')
 		})
 	}, [])
 

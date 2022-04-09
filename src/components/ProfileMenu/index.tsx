@@ -103,8 +103,8 @@ export default function ProfileMenu() {
 
             <ProfileMenuDiv className={`profileMenu ${ show ? 'active' : '' }`}>
                 <NavLink exact strict to="/profile" className={''}>
-                    <ProfileMenuButton>
-                            PROFILE
+                    <ProfileMenuButton className='font-bold'>
+                        Profile
                     </ProfileMenuButton>
                 </NavLink>
                 <ProfileMenuButton 

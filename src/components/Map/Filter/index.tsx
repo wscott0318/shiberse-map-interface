@@ -8,6 +8,7 @@ import RangeInputMinMax from 'components/RangeInputMinMax'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, AppState } from 'state'
 import { updateSearchOptions } from 'state/map/actions'
+import { ReactComponent as Close } from 'assets/images/x.svg'
 
 /* styled elements */
 const FilterPanel = styled.div<{expand: boolean}>`
@@ -94,7 +95,7 @@ const InputDesc = styled.span`
 `
 
 const CoordinateInput = styled.input`
-    width: 61px;
+    width: 65px;
     height: 24px;
     font-size: 14px;
     font-weight: 400;
@@ -107,7 +108,7 @@ const CoordinateInput = styled.input`
 `
 
 const WalletInput = styled.input`
-    width: 158px;
+    width: 184px;
     height: 25px;
     border: 1px solid #785838;
     border-radius: 2px;
@@ -116,6 +117,7 @@ const WalletInput = styled.input`
     line-height: 15px;
     padding: .5rem .3rem;
     color: #785838;
+    padding-right: 1.4rem;
 
     ::placeholder {
         font-style: italic;
@@ -139,6 +141,28 @@ const GoButton = styled.button`
     }
 `
 
+const CloseIcon = styled.div`
+    position: absolute;
+    right: 2.5rem;
+    top: 0;
+
+    svg {
+        width: 15px;
+        stroke: #363755 !important;
+    }
+
+    &:hover {
+        cursor: pointer;
+        opacity: 0.6;
+    }
+`
+
+const CloseColor = styled(Close)`
+    path {
+        stroke: 'black';
+    }
+`
+
 const filterData = [
     {
         color: '#FFFFFF',
@@ -159,14 +183,14 @@ const filterData = [
         searchOption: 'platinum'
     }, {
         color: '#75747D',
-        text: 'Gold Tail',
+        text: 'Golden Tail',
         searchOption: 'gold'
     }, {
         color: '#31323E',
         text: 'Silver Fur',
         searchOption: 'silver'
     }, {
-        color: '#05DC1B',
+        color: '#49ad4e',
         text: 'Open for Bid',
         searchOption: 'openforbid'
     },
@@ -262,6 +286,14 @@ export const MapFilter = () => {
         setSearchOptions( newOptions )
     }
 
+    const handleClearWalletAddress = () => {
+        const newOptions = { ...searchOptions }
+        newOptions.walletAddress = ''
+        setSearchOptions( newOptions )
+
+        setSearchWallet('')
+    }
+    
     return (
         <FilterPanel expand={expand}>
             <FilterHeader>
@@ -306,22 +338,22 @@ export const MapFilter = () => {
             </RangeWrapper>
 
             <SearchByWrapper>
-                <SearchDesc>Search by coordinates</SearchDesc>
+                <SearchDesc>Search by zone</SearchDesc>
 
                 <div className='flex justify-between items-center'>
                     <div className='flex items-center'>
                         <div className='flex items-center mr-2'>
-                            <InputDesc>Min</InputDesc>
+                            <InputDesc>XY</InputDesc>
                             <CoordinateInput 
                                 type='text'
-                                placeholder='-31,82'
+                                placeholder='-31, 82'
                                 value={ minPos } 
                                 onChange={(e) => setMinPos(e.target.value)} 
                             />
                         </div>
 
                         <div className='flex items-center'>
-                            <InputDesc>Max</InputDesc>
+                            <InputDesc>XY</InputDesc>
                             <CoordinateInput 
                                 type='text'
                                 placeholder='12, 134'
@@ -338,13 +370,16 @@ export const MapFilter = () => {
             <SearchByWrapper className='borderNone'>
                 <SearchDesc>Search by wallet</SearchDesc>
 
-                <div className='flex justify-between items-center'>
+                <div className='flex justify-between items-center relative'>
                     <WalletInput 
                         type='text'
                         placeholder='Paste your wallet address'
                         value={ searchWallet } 
                         onChange={(e) => setSearchWallet(e.target.value)}
                     />
+                    <CloseIcon onClick={handleClearWalletAddress}>
+                        <CloseColor />
+                    </CloseIcon>
 
                     <GoButton onClick={updateSearchWallet}>GO</GoButton>
                 </div>

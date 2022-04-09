@@ -20,7 +20,7 @@ export const stageProps = {
 
 export const zoomRange = {
     min: 10,
-    max: 50,
+    max: 80,
 }
 
 export const Events = {
@@ -396,3 +396,10 @@ export const shiboshiZonePos = [
     [49, -63],
     [12, -63]
 ]
+
+export const landNames = {
+    tier1: 'Diamond Woof',
+    tier2: 'Platinum Paw',
+    tier3: 'Golden Tail',
+    tier4: 'Silver Fur',
+}

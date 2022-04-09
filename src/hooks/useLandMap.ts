@@ -1,3 +1,4 @@
+import { useWeb3React } from "@web3-react/core"
 import axios from "axios"
 import { apiServer, mapLandDataUrl, mapLandPriceDataUrl } from "constants/map"
 import { useCallback, useEffect, useState } from "react"
@@ -6,11 +7,14 @@ import { AppDispatch, AppState } from 'state'
 import { updateSearchOptions } from 'state/map/actions'
 
 const useLandMap = () => {
+    const { account } = useWeb3React()
+
     const [landData, setLandData] = useState([])
     const [landPriceData, setLandPriceData] = useState({}) as any
     const [isLandDataLoaded, setIsLandDataLoaded] = useState(false)
     const [minPrice, setMinPrice] = useState(0)
     const [maxPrice, setMaxPrice] = useState(1)
+    const [accountBidsInfo, setAccountBidsInfo] = useState([])
 
     const searchOptions = useSelector<AppState, AppState['map']['searchOptions']>(state => state.map.searchOptions)
 
@@ -63,15 +67,22 @@ const useLandMap = () => {
         console.error(arrayData)
     }, [setLandData, setLandPriceData])
 
+    const fetchAccountBidsInfo = useCallback(async () => {
+        const response = await axios.get(`${apiServer}/bids?user=${account?.toLowerCase()}`)
+        const arrayData = response.data.data.length > 0 ? response.data.data : []
+        setAccountBidsInfo(arrayData)
+    }, [account])
+
     useEffect(() => {
         fetchInfo()
-    }, [setLandData, setLandPriceData])
+        fetchAccountBidsInfo()
+    }, [setLandData, setLandPriceData, setAccountBidsInfo])
 
     const updatePriceData = (newData: any) => {
         setLandPriceData((prev: any) => ({...prev, ...newData}))
     }
 
-    return { landData, landPriceData, updatePriceData, isLandDataLoaded, minPrice, maxPrice }
+    return { landData, landPriceData, updatePriceData, isLandDataLoaded, minPrice, maxPrice, accountBidsInfo }
 }
 
 export default useLandMap

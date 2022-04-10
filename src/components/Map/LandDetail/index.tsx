@@ -3,7 +3,6 @@ import styled, { ThemeContext } from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, AppState } from 'state'
 import { setSelectedLandInfo } from 'state/map/actions'
-import thumbnail from 'assets/images/map/thumbnail.png'
 import locationImg from 'assets/images/map/location.svg'
 import { ModalToggleButton, NormalButton } from 'theme';
 import useShiberseLandAuction from 'hooks/useShiberseLandAuction';
@@ -17,7 +16,7 @@ import { useWeb3React } from '@web3-react/core';
 import { shortenAddress } from 'utils';
 import { useBlockNumber } from 'state/application/hooks';
 import LandBidHistoryModal from 'components/BidHistoryModal/landHistory';
-import { getLandName } from 'utils/mapHelper';
+import { getLandName, getLandImage } from 'utils/mapHelper';
 import { ReactComponent as Close } from 'assets/images/x.svg'
 
 const LandDetailPanel = styled.div<{ show: boolean }>`
@@ -184,6 +183,9 @@ export const LandDetail = () => {
     const fetchLand = async (id: any) => {
         const response = await axios.get(`${apiServer}/kennels?id=${id}`)
         const data = response.data
+        if (data[0].bids) {
+            data[0].price = data[0].price + 0.05*data[0].price
+        }
         setCurrentLandInfo(data.length > 0 ? data[0] : {})
     }
 
@@ -210,7 +212,7 @@ export const LandDetail = () => {
 
             <LandInfo className='flex'>
                 <LandImage>
-                    <img src={thumbnail} alt='pic'></img>
+                    <img src={getLandImage(currentLandInfo?.tierName)} alt='pic'></img>
                 </LandImage>
 
                 <DetailInfo>
@@ -228,7 +230,7 @@ export const LandDetail = () => {
             { hideDetail(currentLandInfo) ? '' : (
                 <>
                     <LandType className='mb-2'>
-                        Owner: 
+                        Highest Bid By:
                         { currentLandInfo?.currentBidWinner 
                             ? <a className='font-normal ml-1' target='_blank' rel="noreferrer" href={`https://etherscan.io/address/${ currentLandInfo?.currentBidWinner }`} >{shortenAddress(currentLandInfo?.currentBidWinner, 8)}</a> 
                             : ' none' }
@@ -239,7 +241,7 @@ export const LandDetail = () => {
                     <LandBidHistoryModal 
                         isOpen={showBidHistoryModal}
                         onDismiss={() => setShowBidHistoryModal(prev => !prev)}
-                        allPlacedBids={ currentLandInfo?.bids ? currentLandInfo?.bids : [] }
+                        allPlacedBids={ currentLandInfo?.bids ? currentLandInfo?.bids.sort((a: any,b: any) => b.bidPrice - a.bidPrice) : [] }
                     />
 
                     <LandName className='mb-1'>Current price</LandName>

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { useState } from 'react'
 import expandIcon from 'assets/images/expand.svg'
+import x from 'assets/images/x.svg'
 import checkIcon from 'assets/images/map/icons/check.svg'
 import './selectbutton.scss'
 import RangeInputMinMax from 'components/RangeInputMinMax'
@@ -44,6 +45,20 @@ const Title = styled.div`
     line-height: 24px;
     text-align: center;
     color: #785838;
+`
+
+const FilterActions = styled.div`
+    display: flex;
+`
+
+const ClearIcon = styled.div`
+    width: 18px;
+    margin-top: -4px;
+    margin-right: 10px;
+
+    &:hover {
+        cursor: pointer;
+    }
 `
 
 const ExpandIcon = styled.div`
@@ -213,7 +228,27 @@ export const MapFilter = () => {
     const setSearchOption = ( option: string ) => {
         const newOptions = { ...searchOptions }
 
-        newOptions[ option ] = !newOptions[ option ]
+        if (option == '') {
+            newOptions['shiboshiZone'] = false
+            newOptions['privatehub'] = false
+            newOptions['diamond'] = false
+            newOptions['platinum'] = false
+            newOptions['gold'] = false
+            newOptions['silver'] = false
+            newOptions['openforbid'] = false
+
+            // ToDo - Make components reactive based on below values
+            newOptions['searchMinPrice'] = 0
+            newOptions['searchMaxPrice'] = 1
+            newOptions['minPos'] = {
+                x: null, y: null
+            }
+            newOptions['maxPos'] = {
+                x: null, y: null
+            }
+        } else {
+            newOptions[ option ] = !newOptions[ option ]
+        }
 
         setSearchOptions( newOptions )
     }
@@ -298,9 +333,14 @@ export const MapFilter = () => {
         <FilterPanel expand={expand}>
             <FilterHeader>
                 <Title>Filters</Title>
-                <ExpandIcon onClick={() => setExpand(prev => !prev)}>
-                    <img src={expandIcon}></img>
-                </ExpandIcon>
+                <FilterActions>
+                    <ClearIcon onClick={() => setSearchOption( "" ) }>
+                        <img src={x}></img>
+                    </ClearIcon>
+                    <ExpandIcon onClick={() => setExpand(prev => !prev)}>
+                        <img src={expandIcon}></img>
+                    </ExpandIcon>
+                </FilterActions>
             </FilterHeader>
 
             <FilterContent className='w-full'>
@@ -346,7 +386,7 @@ export const MapFilter = () => {
                             <InputDesc>XY</InputDesc>
                             <CoordinateInput 
                                 type='text'
-                                placeholder='-31, 82'
+                                placeholder='12, 11'
                                 value={ minPos } 
                                 onChange={(e) => setMinPos(e.target.value)} 
                             />
@@ -356,7 +396,7 @@ export const MapFilter = () => {
                             <InputDesc>XY</InputDesc>
                             <CoordinateInput 
                                 type='text'
-                                placeholder='12, 134'
+                                placeholder='21, 14'
                                 value={ maxPos } 
                                 onChange={(e) => setMaxPos(e.target.value)} 
                             />

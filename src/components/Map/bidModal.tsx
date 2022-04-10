@@ -171,7 +171,12 @@ export const BidModal = (props: any) => {
 
     const { bidOne, bidShiboshiZone } = useShiberseLandAuction()
 
-    const [bidPrice, setBidPrice] = useState(0.1)
+    const [bidPrice, setBidPrice] = useState(Number(props.selectedInfo.price))
+    useEffect(() => {
+        if (props.selectedInfo.price !== bidPrice) {
+            setBidPrice(props.selectedInfo.price);
+        }
+      }, [props.selectedInfo]);
     const [validateText, setValidateText] = useState(null) as any
     const [ pendingTx, setPendingTx ] = useState<string | null>(null)
 
@@ -180,7 +185,10 @@ export const BidModal = (props: any) => {
     const isConfirmedBid = pendingTx !== null && !isPending
 
     const handleBid = async () => {
-        if( Number(bidPrice) > Number(currentBalance) )
+        if (Number(bidPrice) < Number(props.selectedInfo.price)) {
+            setValidateText('Bid amount should be greater than or equal to current price!')
+        }
+        else if( Number(bidPrice) > Number(currentBalance) )
             setValidateText('Insufficient ETH balance!')
         // else if( Number(bidPrice) <= Number(props.selectedInfo.price) )
         //     setValidateText('Bid price mush be more than the current price!')

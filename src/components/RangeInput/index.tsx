@@ -23,7 +23,8 @@ export const RangeInput = ( { min, max, value, setValue, step = 1, disable = fal
                 <div>Min. <span className='font-bold'>{` ${ step === 0.1 ? min.toFixed(1) : min }`}</span></div>
                 <div>Max. <span className='font-bold'>{`${ step === 0.1 ? max.toFixed(1) : max }`}</span></div>
             </MinMaxWrapper>
-
+{/*
+ // @ts-ignore */}
             <Range
                 values={value}
                 step={step}

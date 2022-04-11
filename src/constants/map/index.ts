@@ -76,6 +76,30 @@ export const DarkTileColors = {
     'locked': 0x161721,
 }
 
+export const RoadColors = {
+    'WOOF STREET': 0x93c47d,
+    'SHIB ROAD': 0xea9999,
+    'ALL TIME HIGH LANE': 0xf4cccc,
+    'WHALE STREET': 0xf6b26b,
+    'WEN STREET': 0xd9d9d9,
+    'DECENTRALIZED CORRIDOR': 0xb6d7a8,
+    'LEASH STREET': 0x6d9eeb,
+    'BONE BOULEVARD': 0xb6d7a8,
+    'FUD AVENUE': 0xdd7e6b,
+}
+
+export const DarkRoadColors = {
+    'WOOF STREET': 0x1e2819,
+    'SHIB ROAD': 0x1c1212,
+    'ALL TIME HIGH LANE': 0x201b1b,
+    'WHALE STREET': 0x281c10,
+    'WEN STREET': 0x2a2a2a,
+    'DECENTRALIZED CORRIDOR': 0x20261d,
+    'LEASH STREET': 0x131c2a,
+    'BONE BOULEVARD': 0x20261d,
+    'FUD AVENUE': 0x201210,
+}
+
 export const mapLandDataUrl = 'https://shiboshis.mypinata.cloud/ipfs/QmZBj8nZBCGGZx2d87EoboFW1YH1oSHWHMFGzoxUHbnMRD'
     //'https://shiboshis.mypinata.cloud/ipfs/QmYXckMd93DPq6XPaC1iisUs1t2jReE8mdaTuQYpmmLbgP'
 
@@ -420,3 +444,135 @@ export const landImages = {
     road: Roads,
     hub: Private_Hubs,
 }
+
+export const hubNames = [
+    {
+        name: 'THE KENNEL CLUB',
+        x: 0,
+        y: -84,
+    }, {
+        name: 'DEFENSE VALLEY',
+        x: -62,
+        y: -64,
+    }, {
+        name: 'GROWTH DUNES',
+        x: 62,
+        y: -64,
+    }, {
+        name: 'BARK PARK',
+        x: 0,
+        y: -41,
+    }, {
+        name: 'ROCKET POND',
+        x: -81,
+        y: 0,
+    }, {
+        name: 'RYO PLAZA',
+        x: 0,
+        y: 0,
+    }, {
+        name: 'THE WAGMI TEMPLE',
+        x: 81,
+        y: 0,
+    }, {
+        name: 'THE BACKYARD',
+        x: 0,
+        y: 84,
+    }, {
+        name: 'TECH TRENCH',
+        x: -62,
+        y: 64,
+    }, {
+        name: 'CURRENCY CANYON',
+        x: 62,
+        y: 64,
+    }, {
+        name: 'FUD GROUND',
+        x: 0,
+        y: 41,
+    }
+]
+
+export const roadNames = [
+    {
+        name: `SHIB'S ROAD`,
+        x: 0,
+        y: 64,
+        rotate: false
+    }, {
+        name: `LEASH ST`,
+        x: -40,
+        y: 0,
+        rotate: false
+    }, {
+        name: `LEASH ST`,
+        x: 44,
+        y: 0,
+        rotate: false
+    }, {
+        name: `BONE BOULEVARD`,
+        x: 0,
+        y: -64,
+        rotate: false
+    }, {
+        name: `ALL-TIME-HIGH LANE`,
+        x: -62,
+        y: 27,
+        rotate: true
+    }, {
+        name: `WHALE ST`,
+        x: -22,
+        y: 31,
+        rotate: true
+    }, {
+        name: `WEN ST`,
+        x: 22,
+        y: 31,
+        rotate: true
+    }, {
+        name: `WOOF ST`,
+        x: 0,
+        y: 56,
+        rotate: true
+    }, {
+        name: `WOOF ST`,
+        x: 0,
+        y: 22,
+        rotate: true
+    }, {
+        name: `DECENTRALIZED CORRIDOR`,
+        x: 62,
+        y: 27,
+        rotate: true
+    }, {
+        name: `ALL-TIME-HIGH LANE`,
+        x: -62,
+        y: -27,
+        rotate: true
+    }, {
+        name: `WHALE ST`,
+        x: -22,
+        y: -31,
+        rotate: true
+    }, {
+        name: `WEN ST`,
+        x: 22,
+        y: -31,
+        rotate: true
+    }, {
+        name: `FUD AVENUE`,
+        x: 0,
+        y: -56,
+        rotate: true
+    }, {
+        name: `FUD AVENUE`,
+        x: 0,
+        y: -22,
+        rotate: true
+    }, {
+        name: `DECENTRALIZED CORRIDOR`,
+        x: 62,
+        y: -27,
+        rotate: true
+    }
+]

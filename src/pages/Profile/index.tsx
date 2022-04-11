@@ -274,7 +274,7 @@ export const Profile = () => {
 
                                     <DetailInfo>
                                         <LandName>Land</LandName>
-                                        <LandType>{ getLandName(item.tierName) }</LandType>
+                                        <LandType>{ getLandName(item.tierName, item) }</LandType>
                                         <LandCoordinates className='flex items-center mb-2'>
                                             <img src={locationImg}></img>
                                             { item.coordinates.x }, { item.coordinates.y }
@@ -330,7 +330,7 @@ export const Profile = () => {
 
                                     <DetailInfo>
                                         <LandName>Land</LandName>
-                                        <LandType>{ getLandName(item.tierName) }</LandType>
+                                        <LandType>{ getLandName(item.tierName, item) }</LandType>
                                         <LandCoordinates className='flex items-center'>
                                             <img src={locationImg}></img>
                                             { item.coordinates.x }, { item.coordinates.y }
@@ -375,7 +375,7 @@ export const Profile = () => {
 
                                     <DetailInfo>
                                         <LandName>Land</LandName>
-                                        <LandType>{ getLandName(item.tierName) }</LandType>
+                                        <LandType>{ getLandName(item.tierName, item) }</LandType>
                                         <LandCoordinates className='flex items-center mb-2'>
                                             <img src={locationImg}></img>
                                             { item.coordinates.x }, { item.coordinates.y }

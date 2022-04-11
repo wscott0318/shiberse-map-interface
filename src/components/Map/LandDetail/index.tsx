@@ -24,7 +24,7 @@ const LandDetailPanel = styled.div<{ show: boolean }>`
     opacity: ${({ show }) => (show ? 1 : 0)};
     background: #201F31;
     border-radius: 8px;
-    width: 240px;
+    width: 250px;
     transition: all 1s ease;
 
     position: absolute;
@@ -165,19 +165,22 @@ export const LandDetail = () => {
     }, [ currentStage, selectedInfo, isShiboshiHolder, isShiberseLocker ])
 
     const checkDistrict = function (x: number, y: number ) {
-        if(x > -166 && x < 0) {
-            if( y > -151 && y < 0) {
+        if(x >= -96 && x < 0) {
+            if( y <= 99 && y > 0) {
                 return "Defense"
             } else {
                 return "Technology"
             }
         } else {
-            if( y < 151 && y > 0) {
-                return "Growth"
-            } else {
-                return "Currency"
+            if(x > 0 && x <= 96) {
+                if( y < 0 && y >= -99) {
+                    return "Currency"
+                } else {
+                    return "Growth"
+                }
             }
         }
+        return ""
     }
 
     const fetchLand = async (id: any) => {
@@ -217,7 +220,7 @@ export const LandDetail = () => {
 
                 <DetailInfo>
                     <LandName>Land</LandName>
-                    <LandType>{ getLandName(currentLandInfo?.tierName) }</LandType>
+                    <LandType>{ getLandName(currentLandInfo?.tierName, currentLandInfo) }</LandType>
                     <LandType>District: { checkDistrict( Number(currentLandInfo?.coordinates?.x), Number(currentLandInfo?.coordinates?.y) ) }</LandType>
                 </DetailInfo>
             </LandInfo>

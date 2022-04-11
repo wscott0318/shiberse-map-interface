@@ -111,7 +111,7 @@ export const BidHistoryModal = (props: any) => {
     }
 
     const rows = props.allPlacedBids.map((item: any) => ({
-        description: `(${item.coordinates.x}, ${item.coordinates.y}), ${ getLandName(item.tierName) }`,
+        description: `(${item.coordinates.x}, ${item.coordinates.y}), ${ getLandName(item.tierName, item) }`,
         bidAmount: `${item.price} ETH`,
         dateOfBid: `${ getBidsDate(item) }`
     }))

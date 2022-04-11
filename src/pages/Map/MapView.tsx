@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import * as PIXI from 'pixi.js'
 import { isConsistsPointer, pauseEvent } from 'utils/mapHelper'
-import { backRectPos, DarkTileColors, linePos, shiboshiZonePos, TileColors } from "constants/map"
+import { backRectPos, DarkRoadColors, DarkTileColors, hubNames, linePos, RoadColors, roadNames, shiboshiZonePos, TileColors } from "constants/map"
 
 type MapViewProps = {
     mapCenterPos: any,
@@ -45,6 +45,7 @@ export default class Map extends Component<MapViewProps> {
         const spritesArray: any[] = []
         this.mapInfo = mapData
         this.spritesArray = spritesArray
+        const textArray: any[] = []
 
         const onReady = () => {
             this.app = new PIXI.Application({ resizeTo: window, backgroundAlpha: 0, width: window.innerWidth, height: window.innerHeight })
@@ -93,7 +94,6 @@ export default class Map extends Component<MapViewProps> {
             const backGraphic = new PIXI.Graphics();
             this.app.stage.addChild( backGraphic )
 
-
             const container = new PIXI.ParticleContainer(100000, {
                 scale: true,
                 position: true,
@@ -114,6 +114,36 @@ export default class Map extends Component<MapViewProps> {
             const hubGraphic = new PIXI.Graphics();
             this.app.stage.addChild( hubGraphic )
 
+            const hubTextArray = [] as any
+            for( let i = 0; i < hubNames.length; i++ ) {
+                const textStyle = new PIXI.TextStyle({
+                    fontFamily: 'Arial',
+                    fontSize: 36,
+                    fontWeight: 'bold',
+                    fill: ['#2d2e3b'],
+                })
+                let text = new PIXI.Text(hubNames[i].name, textStyle)
+                text.anchor.set(0.5)
+                hubTextArray.push(text)
+                this.app.stage.addChild( text )
+            }
+
+            const roadTextArray = [] as any
+            for( let i = 0; i < roadNames.length; i++ ) {
+                const textStyle = new PIXI.TextStyle({
+                    fontFamily: 'Arial',
+                    fontSize: 12,
+                    fontWeight: 'bold',
+                    fill: ['#2d2e3b'],
+                })
+                let text = new PIXI.Text(roadNames[i].name, textStyle)
+                text.anchor.set(0.5)
+                if( roadNames[i].rotate )
+                    text.rotation = Math.PI * 1.5
+                roadTextArray.push(text)
+                this.app.stage.addChild( text )
+            }
+
             this.app.ticker.add(() => {
                 backGraphic.clear()
                 hubGraphic.clear()
@@ -128,6 +158,20 @@ export default class Map extends Component<MapViewProps> {
 
                 // draw ShiboshiZone outline
                 drawLine({ graphics: hubGraphic, points: shiboshiZonePos, borderColor: 0xa7352d })
+
+                // draw hub names
+                for( let i = 0; i < hubTextArray.length; i++ ) {
+                    hubTextArray[i].x = Math.ceil((hubNames[i].x - this.props.mapCenterPos.x) * this.props.mapZoomLevel + this.app.screen.width / 2)
+                    hubTextArray[i].y = Math.ceil((hubNames[i].y - this.props.mapCenterPos.y) * this.props.mapZoomLevel + this.app.screen.height / 2)
+                    hubTextArray[i].style.fontSize = 1.8 * this.props.mapZoomLevel
+                }
+
+                // draw road names
+                for( let i = 0; i < roadTextArray.length; i++ ) {
+                    roadTextArray[i].x = Math.ceil((roadNames[i].x - this.props.mapCenterPos.x) * this.props.mapZoomLevel + this.app.screen.width / 2)
+                    roadTextArray[i].y = Math.ceil((-roadNames[i].y - this.props.mapCenterPos.y) * this.props.mapZoomLevel + this.app.screen.height / 2)
+                    roadTextArray[i].style.fontSize = 0.6 * this.props.mapZoomLevel
+                }
 
                 let hasFilterLand = false;
                 for( let i = 0; i < spritesArray.length; i++ ) {
@@ -154,6 +198,15 @@ export default class Map extends Component<MapViewProps> {
                             spritesArray[i].tint = DarkTileColors[ mapLandInfo.tierName as keyof typeof DarkTileColors ]
                         else
                             hasFilterLand = true
+
+                        if( mapLandInfo.isRoad && mapLandInfo.primaryRoadName !== '' ) {
+                            spritesArray[i].width = Math.ceil(this.props.mapZoomLevel * (1))
+                            spritesArray[i].height = Math.ceil(this.props.mapZoomLevel * (1))
+                            if( this.isApplyFilter( mapLandInfo ) )
+                                spritesArray[i].tint = RoadColors[ mapLandInfo.primaryRoadName as keyof typeof RoadColors ]
+                            else
+                                spritesArray[i].tint = DarkRoadColors[ mapLandInfo.primaryRoadName as keyof typeof DarkRoadColors ]
+                        }
                     }
                 }
 

@@ -30,5 +30,14 @@ export const getMapColorByType = (type: any) => {
     return type === 1 ? 0xd0e0e3 : type === 2 ? 0xd9ead3 : type === 3 ? 0xf4cccc : type === 4 ? 0xffd966 : type === 5 ? 0x6aa84d : 0x000000
 }
 
-export const getLandName = (name: any) => landNames[name as keyof typeof landNames] ? landNames[name as keyof typeof landNames] : name
+export const getLandName = (name: any, info: any) => {
+    if( landNames[name as keyof typeof landNames] )
+        return landNames[name as keyof typeof landNames]
+    if( name === 'hub' ) {
+        return info.hubName
+    }
+    if( name === 'road' ) {
+        return info.primaryRoadName
+    }
+} 
 export const getLandImage = (name: any) => landImages[name as keyof typeof landImages] ? landImages[name as keyof typeof landImages] : name

@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, AppState } from 'state'
 import { updateSearchOptions } from 'state/map/actions'
 import { ReactComponent as Close } from 'assets/images/x.svg'
+import useLandMap from 'hooks/useLandMap'
 
 /* styled elements */
 const FilterPanel = styled.div<{expand: boolean}>`
@@ -225,30 +226,12 @@ export const MapFilter = () => {
 
     const setSearchOptions = (newOptions: any): any => dispatch( updateSearchOptions( { newOptions } ) )
 
+    const { minPrice, maxPrice } = useLandMap()
+
     const setSearchOption = ( option: string ) => {
         const newOptions = { ...searchOptions }
 
-        if (option == '') {
-            newOptions['shiboshiZone'] = false
-            newOptions['privatehub'] = false
-            newOptions['diamond'] = false
-            newOptions['platinum'] = false
-            newOptions['gold'] = false
-            newOptions['silver'] = false
-            newOptions['openforbid'] = false
-
-            // ToDo - Make components reactive based on below values
-            newOptions['searchMinPrice'] = 0
-            newOptions['searchMaxPrice'] = 1
-            newOptions['minPos'] = {
-                x: null, y: null
-            }
-            newOptions['maxPos'] = {
-                x: null, y: null
-            }
-        } else {
-            newOptions[ option ] = !newOptions[ option ]
-        }
+        newOptions[ option ] = !newOptions[ option ]
 
         setSearchOptions( newOptions )
     }
@@ -328,13 +311,46 @@ export const MapFilter = () => {
 
         setSearchWallet('')
     }
+
+    const handleClearFilters = () => {
+        const newOptions = {
+            shiboshiZone: false,
+            privatehub: false,
+            diamond: false,
+            platinum: false,
+            gold: false,
+            silver: false,
+            openforbid: false,
+    
+            minPrice: minPrice,
+            maxPrice: maxPrice,
+    
+            searchMinPrice: minPrice,
+            searchMaxPrice: maxPrice,
+    
+            minPos: {
+                x: null,
+                y: null,
+            },
+            maxPos: {
+                x: null,
+                y: null,
+            },
+    
+            walletAddress: '',
+
+            clearFilters: true
+        }
+
+        setSearchOptions( newOptions )
+    }
     
     return (
         <FilterPanel expand={expand}>
             <FilterHeader>
                 <Title>Filters</Title>
                 <FilterActions>
-                    <ClearIcon onClick={() => setSearchOption( "" ) }>
+                    <ClearIcon onClick={() => handleClearFilters() }>
                         <img src={x}></img>
                     </ClearIcon>
                     <ExpandIcon onClick={() => setExpand(prev => !prev)}>

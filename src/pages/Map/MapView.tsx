@@ -291,10 +291,10 @@ export default class Map extends Component<MapViewProps> {
             newCenterPosition.x = -96
         if( newCenterPosition.x > 96 )
             newCenterPosition.x = 96
-        if( newCenterPosition.y < -98 )
-            newCenterPosition.y = -98
-        if( newCenterPosition.y > 99 )
-            newCenterPosition.y = 99
+        if( newCenterPosition.y < -99 )
+            newCenterPosition.y = -99
+        if( newCenterPosition.y > 100 )
+            newCenterPosition.y = 100
 
         this.props.updateMapCenterPos( newCenterPosition )
     }
@@ -376,10 +376,10 @@ export default class Map extends Component<MapViewProps> {
             newCenterPosition.x = -96
         if( newCenterPosition.x > 96 )
             newCenterPosition.x = 96
-        if( newCenterPosition.y < -98 )
-            newCenterPosition.y = -98
-        if( newCenterPosition.y > 99 )
-            newCenterPosition.y = 99
+        if( newCenterPosition.y < -99 )
+            newCenterPosition.y = -99
+        if( newCenterPosition.y > 100 )
+            newCenterPosition.y = 100
 
         this.props.updateMapCenterPos( newCenterPosition )
     }

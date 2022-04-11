@@ -69,11 +69,12 @@ export const DarkTileColors = {
     'locked': 0x161721,
 }
 
-export const mapLandDataUrl = 'https://shiboshis.mypinata.cloud/ipfs/QmYXckMd93DPq6XPaC1iisUs1t2jReE8mdaTuQYpmmLbgP'
+export const mapLandDataUrl = 'https://shiboshis.mypinata.cloud/ipfs/QmZBj8nZBCGGZx2d87EoboFW1YH1oSHWHMFGzoxUHbnMRD'
+    //'https://shiboshis.mypinata.cloud/ipfs/QmYXckMd93DPq6XPaC1iisUs1t2jReE8mdaTuQYpmmLbgP'
 
 export const apiServer = 'https://blabla-dev.herokuapp.com'
 
-export const mapLandPriceDataUrl = apiServer + '/kennels?tierName[$in]=tier1&tierName[$in]=tier2&tierName[$in]=tier3&tierName[$in]=tier4&tierName[$in]=hub&tierName[$in]=road&$select[]=price&$select[]=id&$select[]=currentBidWinner'
+export const mapLandPriceDataUrl = apiServer + '/yards?$select[]=price&$select[]=id&$select[]=currentBidWinner'
 
 export const backRectPos = [
     {
@@ -88,38 +89,38 @@ export const backRectPos = [
     }, {
         start: {
             x: -11,
-            y: -94,
+            y: -95,
         },
         end: {
             x: 11,
-            y: -72,
+            y: -73,
         }
     }, {
         start: {
             x: -73,
-            y: -74,
+            y: -75,
         },
         end: {
             x: -51,
-            y: -52,
+            y: -53,
         }
     }, {
         start: {
             x: 51,
-            y: -74,
+            y: -75,
         },
         end: {
             x: 73,
-            y: -52,
+            y: -53,
         }
     }, {
         start: {
             x: -7,
-            y: -47,
+            y: -48,
         },
         end: {
             x: 7,
-            y: -33,
+            y: -34,
         }
     }, {
         start: {
@@ -182,11 +183,11 @@ export const roadRectPos = [
     {
         start: {
             x: -50,
-            y: -63,
+            y: -64,
         },
         end: {
             x: 50,
-            y: -63,
+            y: -64,
         }
     }, {
         start: {
@@ -209,7 +210,7 @@ export const roadRectPos = [
     }, {
         start: {
             x: -62,
-            y: -51,
+            y: -52,
         },
         end: {
             x: -62,
@@ -218,7 +219,7 @@ export const roadRectPos = [
     }, {
         start: {
             x: -22,
-            y: -62,
+            y: -63,
         },
         end: {
             x: -22,
@@ -227,7 +228,7 @@ export const roadRectPos = [
     }, {
         start: {
             x: 0,
-            y: -71,
+            y: -72,
         },
         end: {
             x: 0,
@@ -236,7 +237,7 @@ export const roadRectPos = [
     }, {
         start: {
             x: 22,
-            y: -63,
+            y: -64,
         },
         end: {
             x: 22,
@@ -245,7 +246,7 @@ export const roadRectPos = [
     }, {
         start: {
             x: 62,
-            y: -51,
+            y: -52,
         },
         end: {
             x: 62,
@@ -256,24 +257,24 @@ export const roadRectPos = [
 
 export const linePos = [
     [
-        [-62, -51],
-        [-73, -51], 
-        [-73, -74], 
-        [-50, -74], 
-        [-50, -63], 
-        [0, -63], 
-        [0, -71], 
-        [-11, -71], 
-        [-11, -94], 
-        [12, -94], 
-        [12, -71], 
-        [1, -71],
-        [1, -63],
-        [51, -63],
-        [51, -74],
-        [74, -74],
-        [74, -51],
-        [63, -51],
+        [-62, -52],
+        [-73, -52],
+        [-73, -75],
+        [-50, -75],
+        [-50, -64],
+        [0, -64],
+        [0, -72],
+        [-11, -72],
+        [-11, -95],
+        [12, -95],
+        [12, -72],
+        [1, -72],
+        [1, -64],
+        [51, -64],
+        [51, -75],
+        [74, -75],
+        [74, -52],
+        [63, -52],
         [63, 0],
         [70, 0],
         [70, -11],
@@ -309,39 +310,39 @@ export const linePos = [
         [-69, 0],
         [-62, 0],
     ], [
-        [-61, -51],
-        [-50, -51],
-        [-50, -62],
-        [-22, -62],
+        [-61, -52],
+        [-50, -52],
+        [-50, -63],
+        [-22, -63],
         [-22, 0],
         [-61, 0]
     ], [
-        [-21, -62],
-        [0, -62],
-        [0, -47],
-        [-7, -47],
-        [-7, -32],
-        [0, -32],
+        [-21, -63],
+        [0, -63],
+        [0, -48],
+        [-7, -48],
+        [-7, -33],
+        [0, -33],
         [0, -11],
         [-11, -11],
         [-11, 0],
         [-21, 0]
     ], [
-        [1, -62],
-        [22, -62],
+        [1, -63],
+        [22, -63],
         [22, 0],
         [12, 0],
         [12, -11],
         [1, -11],
-        [1, -32],
-        [8, -32],
-        [8, -47],
-        [1, -47]
+        [1, -33],
+        [8, -33],
+        [8, -48],
+        [1, -48]
     ], [
-        [23, -62],
-        [51, -62],
-        [51, -51],
-        [62, -51],
+        [23, -63],
+        [51, -63],
+        [51, -52],
+        [62, -52],
         [62, 0],
         [23, 0]
     ], [
@@ -385,16 +386,16 @@ export const linePos = [
 ]
 
 export const shiboshiZonePos = [
-    [12, -98],
-    [78, -98],
-    [78, -48],
-    [65, -48],
+    [12, -99],
+    [78, -99],
+    [78, -49],
     [65, -49],
-    [76, -49],
-    [76, -76],
-    [49, -76],
-    [49, -63],
-    [12, -63]
+    [65, -50],
+    [76, -50],
+    [76, -77],
+    [49, -77],
+    [49, -64],
+    [12, -64]
 ]
 
 export const landNames = {

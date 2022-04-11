@@ -166,7 +166,7 @@ const CloseColor = styled(Close)`
 const filterData = [
     {
         color: '#FFFFFF',
-        borderColor: '#E01515',
+        borderColor: '#a7352d',
         text: 'Shiboshis Zone',
         searchOption: 'shiboshiZone'
     }, {

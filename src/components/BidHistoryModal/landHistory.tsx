@@ -140,7 +140,7 @@ export const LandBidHistoryModal = (props: any) => {
                                         label: 'Bid Price'
                                     }, {
                                         key: 'dateOfBid',
-                                        render: (row: any, index: any) => (<TableItem key={'dateOfBid' + index}>{row.dateOfBid !== '' ? <DateTimeFormat data={row.dateOfBid} /> : 'Not sure'}</TableItem>),
+                                        render: (row: any, index: any) => (<TableItem key={'dateOfBid' + index}>{row.dateOfBid !== '' ? <DateTimeFormat data={row.dateOfBid} /> : ''}</TableItem>),
                                         align: 'right',
                                         label: 'Date of Bid'
                                     },

@@ -77,27 +77,27 @@ export const DarkTileColors = {
 }
 
 export const RoadColors = {
-    'WOOF STREET': 0x93c47d,
-    'SHIB ROAD': 0xea9999,
-    'ALL TIME HIGH LANE': 0xf4cccc,
-    'WHALE STREET': 0xf6b26b,
+    'WOOF STREET': 0xd9d9d9,
+    'SHIB ROAD': 0xd9d9d9,
+    'ALL TIME HIGH LANE': 0xd9d9d9,
+    'WHALE STREET': 0xd9d9d9,
     'WEN STREET': 0xd9d9d9,
-    'DECENTRALIZED CORRIDOR': 0xb6d7a8,
-    'LEASH STREET': 0x6d9eeb,
-    'BONE BOULEVARD': 0xb6d7a8,
-    'FUD AVENUE': 0xdd7e6b,
+    'DECENTRALIZED CORRIDOR': 0xd9d9d9,
+    'LEASH STREET': 0xd9d9d9,
+    'BONE BOULEVARD': 0xd9d9d9,
+    'FUD AVENUE': 0xd9d9d9,
 }
 
 export const DarkRoadColors = {
-    'WOOF STREET': 0x1e2819,
-    'SHIB ROAD': 0x1c1212,
-    'ALL TIME HIGH LANE': 0x201b1b,
-    'WHALE STREET': 0x281c10,
-    'WEN STREET': 0x2a2a2a,
-    'DECENTRALIZED CORRIDOR': 0x20261d,
-    'LEASH STREET': 0x131c2a,
-    'BONE BOULEVARD': 0x20261d,
-    'FUD AVENUE': 0x201210,
+    'WOOF STREET': 0x262626,
+    'SHIB ROAD': 0x262626,
+    'ALL TIME HIGH LANE': 0x262626,
+    'WHALE STREET': 0x262626,
+    'WEN STREET': 0x262626,
+    'DECENTRALIZED CORRIDOR': 0x262626,
+    'LEASH STREET': 0x262626,
+    'BONE BOULEVARD': 0x262626,
+    'FUD AVENUE': 0x262626,
 }
 
 export const mapLandDataUrl = 'https://shiboshis.mypinata.cloud/ipfs/QmZBj8nZBCGGZx2d87EoboFW1YH1oSHWHMFGzoxUHbnMRD'

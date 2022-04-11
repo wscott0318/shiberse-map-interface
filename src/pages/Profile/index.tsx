@@ -17,7 +17,7 @@ import useShiberseStakeNFT from 'hooks/useShiberseStakeNFT'
 import BidModal from 'components/Map/bidModal'
 import { mapLandDataUrl } from 'constants/map'
 import useLandMap from 'hooks/useLandMap'
-import { getLandName } from 'utils/mapHelper'
+import { getLandImage, getLandName } from 'utils/mapHelper'
 
 const ProfileWrapper = styled.div`
     position: relative;
@@ -269,7 +269,7 @@ export const Profile = () => {
                             <ItemWrapper key={`allbids${index}`}>
                                 <LandInfo className='flex'>
                                     <LandImage>
-                                        <img src={thumbnail} alt='pic'></img>
+                                        <img src={getLandImage(item?.tierName)} alt='pic'></img>
                                     </LandImage>
 
                                     <DetailInfo>
@@ -325,7 +325,7 @@ export const Profile = () => {
                             <ItemWrapper key={`winBids${index}`}>
                                 <LandInfo className='flex'>
                                     <LandImage>
-                                        <img src={thumbnail} alt='pic'></img>
+                                        <img src={getLandImage(item?.tierName)} alt='pic'></img>
                                     </LandImage>
 
                                     <DetailInfo>
@@ -370,7 +370,7 @@ export const Profile = () => {
                             <ItemWrapper key={`allbids${index}`}>
                                 <LandInfo className='flex'>
                                     <LandImage>
-                                        <img src={thumbnail} alt='pic'></img>
+                                        <img src={getLandImage(item?.tierName)} alt='pic'></img>
                                     </LandImage>
 
                                     <DetailInfo>

@@ -131,25 +131,27 @@ export default class Map extends Component<MapViewProps> {
 
                 let hasFilterLand = false;
                 for( let i = 0; i < spritesArray.length; i++ ) {
-                    if( this.mapInfo[i].tierName === 'road' )
-                        drawRect({ graphics: backGraphic, startPos: { x: this.mapInfo[i].coordinates.x, y: this.mapInfo[i].coordinates.y }, endPos: { x: this.mapInfo[i].coordinates.x, y: this.mapInfo[i].coordinates.y }, fillColor: !this.isApplyFilter( this.mapInfo[i] ) ? 0x1c1c1c : 0xcdcccc })
+                    let mapLandInfo = Object.assign( this.mapInfo[i] )
 
-                    if( this.mapInfo[i].tierName === 'hub' )
-                        drawRect({ graphics: backGraphic, startPos: { x: this.mapInfo[i].coordinates.x, y: this.mapInfo[i].coordinates.y }, endPos: { x: this.mapInfo[i].coordinates.x, y: this.mapInfo[i].coordinates.y }, fillColor: !this.isApplyFilter( this.mapInfo[i] ) ? 0x202628 : 0x8FA8B3  })
+                    if( mapLandInfo.isRoad )
+                        drawRect({ graphics: backGraphic, startPos: { x: mapLandInfo.coordinates.x, y: -mapLandInfo.coordinates.y }, endPos: { x: mapLandInfo.coordinates.x, y: -mapLandInfo.coordinates.y }, fillColor: !this.isApplyFilter( mapLandInfo ) ? 0x1c1c1c : 0xcdcccc })
+
+                    if( mapLandInfo.tierName === 'hub' )
+                        drawRect({ graphics: backGraphic, startPos: { x: mapLandInfo.coordinates.x, y: -mapLandInfo.coordinates.y }, endPos: { x: mapLandInfo.coordinates.x, y: -mapLandInfo.coordinates.y }, fillColor: !this.isApplyFilter( mapLandInfo ) ? 0x202628 : 0x8FA8B3  })
 
                     spritesArray[i].anchor.set(0.5)
                     spritesArray[i].width = Math.ceil(this.props.mapZoomLevel * (0.9))
                     spritesArray[i].height = Math.ceil(this.props.mapZoomLevel * (0.9))
-                    spritesArray[i].x = Math.ceil((this.mapInfo[i].coordinates.x - this.props.mapCenterPos.x) * this.props.mapZoomLevel + this.app.screen.width / 2)
-                    spritesArray[i].y = Math.ceil((this.mapInfo[i].coordinates.y - this.props.mapCenterPos.y) * this.props.mapZoomLevel + this.app.screen.height / 2)
+                    spritesArray[i].x = Math.ceil((mapLandInfo.coordinates.x - this.props.mapCenterPos.x) * this.props.mapZoomLevel + this.app.screen.width / 2)
+                    spritesArray[i].y = Math.ceil((-mapLandInfo.coordinates.y - this.props.mapCenterPos.y) * this.props.mapZoomLevel + this.app.screen.height / 2)
 
-                    if( this.mapInfo[i].coordinates.x === this.props.selectedInfo?.coordinates?.x && this.mapInfo[i].coordinates.y === this.props.selectedInfo?.coordinates?.y )
+                    if( mapLandInfo.coordinates.x === this.props.selectedInfo?.coordinates?.x && mapLandInfo.coordinates.y === this.props.selectedInfo?.coordinates?.y )
                         spritesArray[i].tint = 0x49ad4e
                     else {
-                        spritesArray[i].tint = TileColors[ this.mapInfo[i].tierName as keyof typeof TileColors ]
+                        spritesArray[i].tint = TileColors[ mapLandInfo.tierName as keyof typeof TileColors ]
 
-                        if( !this.isApplyFilter( this.mapInfo[i] ) )
-                            spritesArray[i].tint = DarkTileColors[ this.mapInfo[i].tierName as keyof typeof DarkTileColors ]
+                        if( !this.isApplyFilter( mapLandInfo ) )
+                            spritesArray[i].tint = DarkTileColors[ mapLandInfo.tierName as keyof typeof DarkTileColors ]
                         else
                             hasFilterLand = true
                     }

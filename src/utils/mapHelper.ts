@@ -1,4 +1,4 @@
-import { landNames } from "constants/map"
+import { landNames, landImages } from "constants/map"
 
 export const getRandValue = (val: any) => Math.ceil(Math.random() * 100000000) % val
 
@@ -31,3 +31,4 @@ export const getMapColorByType = (type: any) => {
 }
 
 export const getLandName = (name: any) => landNames[name as keyof typeof landNames] ? landNames[name as keyof typeof landNames] : name
+export const getLandImage = (name: any) => landImages[name as keyof typeof landImages] ? landImages[name as keyof typeof landImages] : name

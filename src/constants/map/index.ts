@@ -1,3 +1,10 @@
+import Diamond_Woof from 'assets/images/map/land/Diamond_Woof.svg'
+import Golden_Tail from 'assets/images/map/land/Golden_Tail.svg'
+import Platinum_Paw from 'assets/images/map/land/Platinum_Paw.svg'
+import Private_Hubs from 'assets/images/map/land/Private_Hubs.svg'
+import Roads from 'assets/images/map/land/Roads.svg'
+import Silver_Fur from 'assets/images/map/land/Silver_Fur.svg'
+
 export const pixel = {
     x: 1,
     y: 1
@@ -403,4 +410,13 @@ export const landNames = {
     tier2: 'Platinum Paw',
     tier3: 'Golden Tail',
     tier4: 'Silver Fur',
+}
+
+export const landImages = {
+    tier1: Diamond_Woof,
+    tier2: Platinum_Paw,
+    tier3: Golden_Tail,
+    tier4: Silver_Fur,
+    road: Roads,
+    hub: Private_Hubs,
 }

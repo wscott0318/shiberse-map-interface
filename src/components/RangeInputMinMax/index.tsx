@@ -25,7 +25,8 @@ export const RangeInputMinMax = ( { min, max, values, setValues, step = 1, disab
             <MinMaxWrapper>
                 Price range: { values[0] } ETH - { values[1] } ETH
             </MinMaxWrapper>
-
+{/*
+ // @ts-ignore */}
             <Range
                 values={values}
                 step={step}

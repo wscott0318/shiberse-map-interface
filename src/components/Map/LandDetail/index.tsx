@@ -182,7 +182,7 @@ export const LandDetail = () => {
     }
 
     const fetchLand = async (id: any) => {
-        const response = await axios.get(`${apiServer}/kennels?id=${id}`)
+        const response = await axios.get(`${apiServer}/yards?id=${id}`)
         const data = response.data
         setCurrentLandInfo(data.length > 0 ? data[0] : {})
     }

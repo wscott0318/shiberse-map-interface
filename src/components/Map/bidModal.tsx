@@ -169,7 +169,7 @@ export const BidModal = (props: any) => {
     const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
     const currentBalance = parseFloat(userEthBalance?.toSignificant() as any)
 
-    const { bidOne, bidShiboshiZone } = useShiberseLandAuction()
+    const { bidOne, bidShiboshiZone } = useShiberseLandAuction({})
 
     const [bidPrice, setBidPrice] = useState(Number(props.selectedInfo.price))
     useEffect(() => {
@@ -185,13 +185,12 @@ export const BidModal = (props: any) => {
     const isConfirmedBid = pendingTx !== null && !isPending
 
     const handleBid = async () => {
-        if (Number(bidPrice) < Number(props.selectedInfo.price)) {
+        
+        if( Number(bidPrice) > Number(currentBalance) )
+            setValidateText('Insufficient ETH balance!')
+        else if (Number(bidPrice) < Number(props.selectedInfo.price)) {
             setValidateText('Bid amount should be greater than or equal to current price!')
         }
-        else if( Number(bidPrice) > Number(currentBalance) )
-            setValidateText('Insufficient ETH balance!')
-        // else if( Number(bidPrice) <= Number(props.selectedInfo.price) )
-        //     setValidateText('Bid price mush be more than the current price!')
         else {
             setValidateText(null)
 
@@ -220,6 +219,12 @@ export const BidModal = (props: any) => {
 
         props.onDismiss()
     }
+
+    useEffect(() => {
+        if( isConfirmedBid ) {
+            props.handleCloseAction && props.handleCloseAction()
+        }
+    }, [isConfirmedBid])
 
     return (
         <Modal isOpen={ props.isOpen } onDismiss={ handleOnDismiss } minHeight={false} maxHeight={80}>

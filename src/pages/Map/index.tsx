@@ -61,14 +61,14 @@ export const MapScene = () => {
 				console.error('connected')
 			})
 
-			socket.on('updatePriceInfo', (data: any) => {
-				console.error('updatePriceInfo', data)
+			socket.on('created', (data: any) => {
+				console.error('Socket info: created', data)
 			})
 		}
 
 		return (() => {
 			socket.off('connect')
-			socket.off('updatePriceInfo')
+			socket.off('created')
 		})
 	}, [])
 

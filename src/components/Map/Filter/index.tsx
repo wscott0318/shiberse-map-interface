@@ -187,7 +187,7 @@ const filterData = [
         searchOption: 'shiboshiZone'
     }, {
         color: '#A1AFBA',
-        text: 'Private Hubs',
+        text: 'Leasing Hubs',
         searchOption: 'privatehub'
     }, {
         color: '#DFB850',
@@ -217,7 +217,7 @@ export const MapFilter = () => {
 
     const searchOptions = useSelector<AppState, AppState['map']['searchOptions']>(state => state.map.searchOptions)
 
-    const [ priceRangeValues, setPriceRangeValues ] = useState([ 0, 1 ])
+    const [ priceRangeValues, setPriceRangeValues ] = useState([ 0.2, 1 ])
     const [ minPos, setMinPos ] = useState('') as any
     const [ maxPos, setMaxPos ] = useState('') as any
     const [ searchWallet, setSearchWallet ] = useState('') as any

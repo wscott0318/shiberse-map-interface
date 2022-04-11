@@ -253,7 +253,10 @@ export default class Map extends Component<MapViewProps> {
 
         const priceData = this.props.landPriceData[ item.id ]
 
-        if( Number(priceData.price) < Number(searchOptions.searchMinPrice) || Number(priceData.price) > Number(searchOptions.searchMaxPrice) )
+        if( (Number(searchOptions.searchMinPrice) !== Number(searchOptions.minPrice) 
+            && Number(priceData.price) < Number(searchOptions.searchMinPrice)) 
+            || ( Number(searchOptions.searchMinPrice) !== Number(searchOptions.minPrice) 
+            && Number(priceData.price) > Number(searchOptions.searchMaxPrice) ) )
             return false
 
         // if( searchOptions.minPos.x !== null 

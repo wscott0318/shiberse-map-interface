@@ -8,7 +8,7 @@ import { formatFromBalance, formatToBalance } from 'utils'
 import axios from 'axios'
 import { apiServer } from 'constants/map'
 
-const useShiberseLandAuction = () => {
+const useShiberseLandAuction = (props: any) => {
     const { account, chainId } = useActiveWeb3React()
     const addTransaction = useTransactionAdder()
     const currentBlockNumber = useBlockNumber()
@@ -38,6 +38,24 @@ const useShiberseLandAuction = () => {
         }
         return null
     }
+
+    const fetchLandPrice = useCallback(async ({ x: posX, y: posY }) => {
+        if(account && landContract && chainId === mainNetworkChainId) {
+            if( (posX === 0 || posX) && (posY === 0 || posY) ) {
+                const price = await landContract?.getPriceOf( posX, posY )
+                return price
+            }
+        }
+    }, [account, landContract])
+
+    // useEffect(() => {
+    //     if (account && landContract && chainId === mainNetworkChainId) {
+    //         fetchLandPrice()
+    //     }
+
+    //     const refreshInterval = setInterval(fetchLandPrice, 10000)
+    //     return () => clearInterval(refreshInterval)
+    // }, [fetchLandPrice, account, landContract])
 
     const fetchIfShiboshiHolder = useCallback(async () => {
         try {
@@ -223,7 +241,7 @@ const useShiberseLandAuction = () => {
     // const signMsg = await signMessage(library, account, 'Test Sign Message')
     // console.error(signMsg)
 
-    return { currentBidCount, currentStage, allPlacedBids, winningBids, isShiboshiHolder, bidOne, bidShiboshiZone, mintPrivate, mintPrivateShiboshiZone, mintPublic, mintWinningBid }
+    return { currentBidCount, currentStage, allPlacedBids, winningBids, isShiboshiHolder, bidOne, bidShiboshiZone, mintPrivate, mintPrivateShiboshiZone, mintPublic, mintWinningBid, fetchLandPrice }
 
 }
 

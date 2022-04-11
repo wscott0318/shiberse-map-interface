@@ -198,9 +198,9 @@ export const Profile = () => {
     const currentBalance = parseFloat(userEthBalance?.toSignificant() as any)
     const chainLabel = NETWORK_LABEL[(chainId as keyof typeof NETWORK_LABEL)]
 
-    const { allPlacedBids, winningBids, currentStage } = useShiberseLandAuction()
+    const { allPlacedBids, winningBids, currentStage } = useShiberseLandAuction({})
 
-    const { landData, landPriceData, accountBidsInfo, updatePriceData, isLandDataLoaded, minPrice, maxPrice } = useLandMap()
+    const { landData, landPriceData, accountBidsInfo, isLandDataLoaded } = useLandMap()
 
     const allBids = isLandDataLoaded ? allPlacedBids.map((bidPos: any) => {
         const index = landData.findIndex((item: any) => Number(item.coordinates.x) === Number(bidPos[0]) && Number(item.coordinates.y) === Number(bidPos[1]))

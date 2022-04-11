@@ -44,7 +44,7 @@ const useLandMap = () => {
                 minPrice = item.price
                 maxPrice = item.price
             } else {
-                if( Number(minPrice) > Number(item.price) )
+                if( Number(item.price) > 0 && Number(minPrice) > Number(item.price) )
                     minPrice = Number(item.price)
                 if( Number(maxPrice) < Number(item.price) )
                     maxPrice = Number(item.price)

@@ -36,11 +36,11 @@ const initialState: MapState = {
         silver: false,
         openforbid: false,
 
-        minPrice: 0,
-        maxPrice: 10,
+        minPrice: 0.2,
+        maxPrice: 1,
 
-        searchMinPrice: 0,
-        searchMaxPrice: 10,
+        searchMinPrice: 0.2,
+        searchMaxPrice: 1,
 
         minPos: {
             x: null,

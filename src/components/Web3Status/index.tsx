@@ -150,7 +150,7 @@ function Web3StatusInner() {
 
     const allTransactions = useAllTransactions()
 
-    const { currentBidCount } = useShiberseLandAuction()
+    const { currentBidCount } = useShiberseLandAuction({})
 
     const sortedRecentTransactions = useMemo(() => {
         const txs = Object.values(allTransactions)

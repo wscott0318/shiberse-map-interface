@@ -45,7 +45,6 @@ export default class Map extends Component<MapViewProps> {
         const spritesArray: any[] = []
         this.mapInfo = mapData
         this.spritesArray = spritesArray
-        const textArray: any[] = []
 
         const onReady = () => {
             this.app = new PIXI.Application({ resizeTo: window, backgroundAlpha: 0, width: window.innerWidth, height: window.innerHeight })

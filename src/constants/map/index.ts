@@ -463,11 +463,11 @@ export const hubNames = [
         x: 0,
         y: -41,
     }, {
-        name: 'Rocket Pond',
+        name: 'ROCKET POND',
         x: -81,
         y: 0,
     }, {
-        name: 'Ryo Plaza',
+        name: 'RYO PLAZA',
         x: 0,
         y: 0,
     }, {
@@ -487,7 +487,7 @@ export const hubNames = [
         x: 62,
         y: 64,
     }, {
-        name: 'Fud Ground',
+        name: 'FUD GROUND',
         x: 0,
         y: 41,
     }

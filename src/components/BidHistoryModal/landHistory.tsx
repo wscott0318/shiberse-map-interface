@@ -102,7 +102,7 @@ const TableItem = styled.div`
 export const LandBidHistoryModal = (props: any) => {
     const rows = props.allPlacedBids.map((item: any) => ({
         bidBy: `${ item.bidBy }`,
-        bidAmount: `${item.bidPrice} ETH`,
+        bidAmount: `${Number(item.bidPrice).toFixed(2)} ETH`,
         dateOfBid: `${ item.createdAt ? item.createdAt : '' }`
     }))
 
@@ -135,7 +135,7 @@ export const LandBidHistoryModal = (props: any) => {
                                         label: 'Bid By'
                                     }, {
                                         key: 'BidAmount',
-                                        render: (row: any, index: any) => (<TableItem key={'bidAmount' + index}>{ row.bidAmount }</TableItem>),
+                                        render: (row: any, index: any) => (<TableItem key={'bidAmount' + index}>{ (row.bidAmount) }</TableItem>),
                                         align: 'right',
                                         label: 'Bid Price'
                                     }, {

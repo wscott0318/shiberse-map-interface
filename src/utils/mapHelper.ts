@@ -34,7 +34,10 @@ export const getLandName = (name: any, info: any) => {
     if( landNames[name as keyof typeof landNames] )
         return landNames[name as keyof typeof landNames]
     if( name === 'hub' ) {
-        return info.hubName
+        if( info.coordinates.x >= -92 && info.coordinates.x <= -70 && info.coordinates.y >= -11 && info.coordinates.y <= 11 )
+            return 'ROCKET POND'
+
+        return info.hubName.toUpperCase()
     }
     if( name === 'road' ) {
         return info.primaryRoadName

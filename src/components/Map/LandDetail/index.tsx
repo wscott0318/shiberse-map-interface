@@ -236,7 +236,7 @@ export const LandDetail = () => {
                         </LandImage>
 
                         <DetailInfo>
-                            <LandName>{ currentLandInfo?.isRoad ? 'Road' : currentLandInfo?.tierName === 'hub' ? 'Hub' : 'Land'}</LandName>
+                            <LandName>{ currentLandInfo?.isRoad ? 'Road' : currentLandInfo?.tierName === 'hub' ? 'HUB' : 'Land'}</LandName>
                             <LandType className="text-red">{ currentLandInfo?.reserved ? 'Reserved' : '' }</LandType>
                             <LandType>{ getLandName(currentLandInfo?.tierName, currentLandInfo) }</LandType>
                             <LandType>District: { checkDistrict( Number(currentLandInfo?.coordinates?.x), Number(currentLandInfo?.coordinates?.y) ) }</LandType>

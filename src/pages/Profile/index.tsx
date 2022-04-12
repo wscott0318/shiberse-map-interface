@@ -283,7 +283,7 @@ export const Profile = () => {
                                 </LandInfo>
 
                                 <CurrentBid className='mb-1'>Current bid</CurrentBid>
-                                <BidBalance className='mb-2'>{item.price} ETH</BidBalance>
+                                <BidBalance className='mb-2'>{Number(item.price).toFixed(2)} ETH</BidBalance>
                                 {/* <OpenType className='mb-4'>Bid closing in 2 days</OpenType> */}
 
                                 <MintButton
@@ -384,7 +384,7 @@ export const Profile = () => {
                                 </LandInfo>
 
                                 <CurrentBid className='mb-1'>Current bid</CurrentBid>
-                                <BidBalance className='mb-2'>{ item.price } ETH</BidBalance>
+                                <BidBalance className='mb-2'>{ Number(item.price).toFixed(2) } ETH</BidBalance>
                                 {/* <OpenType className='mb-4'>Bid closing in 2 days</OpenType> */}
                             </ItemWrapper>
                         )) }

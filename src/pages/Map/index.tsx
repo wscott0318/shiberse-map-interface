@@ -74,14 +74,17 @@ export const MapScene = () => {
 
 	useEffect(() => {
 		const centerPos = {
-			x: query.get('currentX'),
-			y: query.get('currentY'),
-		}
+			x: Number(query.get('currentX')),
+			y: Number(query.get('currentY')),
+		} as any
 
 		const zoomLevel = query.get('zoom')
 
 		if( centerPos.x && centerPos.y && zoomLevel ) {
-			setMapCenterPos( centerPos )
+			setMapCenterPos( {
+				...centerPos,
+				y: -(centerPos.y)
+			} )
 			setMapZoomLevel( Number(zoomLevel) )
 
 			setSelectedInfo({

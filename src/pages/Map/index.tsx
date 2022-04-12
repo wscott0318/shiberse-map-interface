@@ -74,8 +74,8 @@ export const MapScene = () => {
 
 	useEffect(() => {
 		const centerPos = {
-			x: Number(query.get('currentX')),
-			y: Number(query.get('currentY')),
+			x: Number(query.get('x')),
+			y: Number(query.get('y')),
 		} as any
 
 		const zoomLevel = query.get('zoom')

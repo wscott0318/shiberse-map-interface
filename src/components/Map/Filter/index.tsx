@@ -221,6 +221,7 @@ export const MapFilter = () => {
     const [ minPos, setMinPos ] = useState('') as any
     const [ maxPos, setMaxPos ] = useState('') as any
     const [ searchWallet, setSearchWallet ] = useState('') as any
+    const [ isFirst, setIsFirst ] = useState(true)
 
     const dispatch = useDispatch<AppDispatch>()
 
@@ -259,6 +260,16 @@ export const MapFilter = () => {
             }
         }
     }, [ searchOptions ])
+
+    useEffect(() => {
+        if( isFirst && searchOptions.maxPrice !== 1 ) {
+            setIsFirst(false)
+
+            let [ min, max ] = priceRangeValues
+            max = searchOptions.maxPrice
+            setPriceRangeValues([ min, max ])
+        }
+    }, [ searchOptions.maxPrice ])
 
     useEffect(() => {
         const [ min, max ] = priceRangeValues

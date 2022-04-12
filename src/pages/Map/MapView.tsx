@@ -40,7 +40,7 @@ export default class Map extends Component<MapViewProps> {
     componentDidMount() {
         const mapData = this.props.landData
         
-        console.error(mapData)
+        // console.error(mapData)
 
         const spritesArray: any[] = []
         this.mapInfo = mapData

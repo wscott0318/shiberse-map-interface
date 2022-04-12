@@ -66,8 +66,6 @@ const useLandMap = () => {
 
         setMinPrice(Number(minPrice))
         setMaxPrice(Number(maxPrice))
-
-        console.error(arrayData)
     }, [])
 
     const fetchAccountBidsInfo = useCallback(async () => {

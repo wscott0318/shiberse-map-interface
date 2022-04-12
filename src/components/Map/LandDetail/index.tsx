@@ -193,7 +193,7 @@ export const LandDetail = () => {
             const data = response.data
 
             const newInfo = data.length > 0 ? { ...data[0] } : {}
-            if( selectedInfo?.tierName && selectedInfo?.tierName !== 'hub' && selectedInfo?.tierName !== 'road' ) {
+            if( selectedInfo?.tierName && selectedInfo?.tierName !== 'hub' && selectedInfo?.tierName !== 'road' && !selectedInfo?.reserved ) {
                 const price = await fetchLandPrice({ x: selectedInfo.coordinates.x, y: selectedInfo.coordinates.y })
                 newInfo.price = Number( formatFromBalance(price, 18) )
             }
@@ -216,7 +216,7 @@ export const LandDetail = () => {
         setShowBidModal(false)
     }
 
-    const hideDetail = (info: any) => info?.tierName === 'road' || info?.tierName === 'hub'
+    const hideDetail = (info: any) => info?.tierName === 'road' || info?.tierName === 'hub' || info?.reserved
 
     return (
         <LandDetailPanel show={ selectedInfo?.show }>
@@ -237,6 +237,7 @@ export const LandDetail = () => {
 
                         <DetailInfo>
                             <LandName>{ currentLandInfo?.isRoad ? 'Road' : currentLandInfo?.tierName === 'hub' ? 'Hub' : 'Land'}</LandName>
+                            <LandType className="text-red">{ currentLandInfo?.reserved ? 'Reserved' : '' }</LandType>
                             <LandType>{ getLandName(currentLandInfo?.tierName, currentLandInfo) }</LandType>
                             <LandType>District: { checkDistrict( Number(currentLandInfo?.coordinates?.x), Number(currentLandInfo?.coordinates?.y) ) }</LandType>
                         </DetailInfo>

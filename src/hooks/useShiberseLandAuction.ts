@@ -139,7 +139,7 @@ const useShiberseLandAuction = (props: any) => {
 
             if( input?.value && input?.x && input?.y && signature ) {
                 try {
-                    const tx = await landContract?.bidShiboshiZone(input?.x, input?.y, signature, {
+                    const tx = await landContract?.bidShiboshiZoneOne(input?.x, input?.y, signature, {
                         from: account,
                         value: formatToBalance(input?.value).value
                     })

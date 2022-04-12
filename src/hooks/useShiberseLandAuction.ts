@@ -115,13 +115,15 @@ const useShiberseLandAuction = (props: any) => {
         }
     }, [account, fetchBidsInfo, landContract, currentBlockNumber])
 
+    const exceptionValue = 0.3000000000000001
+
     const bidOne = useCallback(
         async ( input: any ) => {
             if( input?.value && input?.x && input?.y ) {
                 try {
                     const tx = await landContract?.bidOne(input?.x, input?.y, {
                         from: account,
-                        value: formatToBalance(input?.value).value
+                        value: formatToBalance(input?.value === 0.3 ? exceptionValue : input?.value).value
                     })
                     addTransaction(tx, { summary: `Bid placed!` })
                     return tx
@@ -141,7 +143,7 @@ const useShiberseLandAuction = (props: any) => {
                 try {
                     const tx = await landContract?.bidShiboshiZoneOne(input?.x, input?.y, signature, {
                         from: account,
-                        value: formatToBalance(input?.value).value
+                        value: formatToBalance(input?.value === 0.3 ? exceptionValue : input?.value).value
                     })
                     addTransaction(tx, { summary: `Bid placed on Shiboshi Zone!` })
                     return tx

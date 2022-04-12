@@ -200,20 +200,27 @@ export const BidModal = (props: any) => {
                 y: props.selectedInfo?.coordinates?.y
             }
 
+            let tx
             if( props.selectedInfo?.isShiboshiZone ) { /* Show shiboshizone */
-                const tx = await bidShiboshiZone(inputData)
+                tx = await bidShiboshiZone(inputData)
                 if( tx.hash )
                     setPendingTx(tx.hash)
             } else {
-                const tx = await bidOne(inputData)
+                tx = await bidOne(inputData)
                 if( tx.hash )
                     setPendingTx(tx.hash)
+            }
+
+            if( !tx.hash ) {
+                if( JSON.stringify(tx.message).includes('ERR_INSUFFICIENT_AMOUNT_SENT') ) {
+                    setValidateText('Minimum bid amount not met, try some higher amount')
+                }
             }
         }
     }
 
     const handleOnDismiss = () => {
-        setBidPrice(0.1)
+        // setBidPrice(0.1)
         setValidateText(null)
         setPendingTx(null)
 

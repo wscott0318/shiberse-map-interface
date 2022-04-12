@@ -18,8 +18,6 @@ const useLandMap = () => {
 
     const searchOptions = useSelector<AppState, AppState['map']['searchOptions']>(state => state.map.searchOptions)
 
-    // console.error(searchOptions)
-
     const dispatch = useDispatch<AppDispatch>()
 
     const setSearchOptions = (newOptions: any): any => dispatch( updateSearchOptions( { newOptions } ) )

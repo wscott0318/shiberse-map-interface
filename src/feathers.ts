@@ -3,7 +3,7 @@ import feathers from '@feathersjs/client'
 import socketio from '@feathersjs/socketio-client'
 import { apiServer } from 'constants/map'
 // Socket.io is exposed as the `io` global.
-export const socket = io(`https://blabla-dev.herokuapp.com`)
+export const socket = io(`http://localhost:3000`)
 // @feathersjs/client is exposed as the `feathers` global.
 
 const client = feathers()

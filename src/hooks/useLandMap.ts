@@ -68,15 +68,17 @@ const useLandMap = () => {
     }, [setLandData, setLandPriceData])
 
     const fetchAccountBidsInfo = useCallback(async () => {
-        const response = await axios.get(`${apiServer}/bids?user=${account?.toLowerCase()}`)
-        const arrayData = response.data.data.length > 0 ? response.data.data : []
-        setAccountBidsInfo(arrayData)
+        if( account ) {
+            const response = await axios.get(`${apiServer}/bids?user=${account?.toLowerCase()}`)
+            const arrayData = response.data.data.length > 0 ? response.data.data : []
+            setAccountBidsInfo(arrayData)
+        }
     }, [account])
 
     useEffect(() => {
         fetchInfo()
         fetchAccountBidsInfo()
-    }, [setLandData, setLandPriceData, setAccountBidsInfo])
+    }, [setLandData, setLandPriceData, setAccountBidsInfo, account])
 
     const updatePriceData = (newData: any) => {
         setLandPriceData((prev: any) => ({...prev, ...newData}))

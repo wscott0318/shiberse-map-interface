@@ -212,6 +212,8 @@ export const LandDetail = () => {
         const newInfo = { ...selectedInfo }
         newInfo.show = false
         setSelectedInfo(newInfo)
+
+        setShowBidModal(false)
     }
 
     const hideDetail = (info: any) => info?.tierName === 'road' || info?.tierName === 'hub'
@@ -234,7 +236,7 @@ export const LandDetail = () => {
                         </LandImage>
 
                         <DetailInfo>
-                            <LandName>Land</LandName>
+                            <LandName>{ currentLandInfo?.isRoad ? 'Road' : currentLandInfo?.tierName === 'hub' ? 'Hub' : 'Land'}</LandName>
                             <LandType>{ getLandName(currentLandInfo?.tierName, currentLandInfo) }</LandType>
                             <LandType>District: { checkDistrict( Number(currentLandInfo?.coordinates?.x), Number(currentLandInfo?.coordinates?.y) ) }</LandType>
                         </DetailInfo>
@@ -244,6 +246,18 @@ export const LandDetail = () => {
                         <img src={locationImg}></img>
                         X: { currentLandInfo?.coordinates?.x }   Y: { currentLandInfo?.coordinates?.y }
                     </LandCoordinates>
+
+                    { currentLandInfo?.tierName === 'hub' ? (
+                        <div className='text-center mt-4'>
+                            <a>
+                                <NormalButton 
+                                    className={`px-8 font-bold`}
+                                >
+                                    Contact us
+                                </NormalButton>
+                            </a>
+                        </div>
+                    ): null }
 
                     { hideDetail(currentLandInfo) ? '' : (
                         <>

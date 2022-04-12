@@ -207,7 +207,7 @@ const filterData = [
         searchOption: 'silver'
     }, {
         color: '#49ad4e',
-        text: 'Open for Bid',
+        text: 'No bids yet',
         searchOption: 'openforbid'
     },
 ]

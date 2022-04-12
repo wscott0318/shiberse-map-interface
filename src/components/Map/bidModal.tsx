@@ -222,7 +222,11 @@ export const BidModal = (props: any) => {
 
     useEffect(() => {
         if( isConfirmedBid ) {
-            props.handleCloseAction && props.handleCloseAction()
+            if( props.handleCloseAction ) {
+                setTimeout(() => {
+                    props.handleCloseAction()
+                }, 1500)
+            }
         }
     }, [isConfirmedBid])
 

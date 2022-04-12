@@ -105,7 +105,7 @@ export const mapLandDataUrl = 'https://shiboshis.mypinata.cloud/ipfs/QmZBj8nZBCG
 
 export const apiServer = 'https://blabla-dev.herokuapp.com'
 
-export const mapLandPriceDataUrl = apiServer + '/yards?$select[]=price&$select[]=id&$select[]=currentBidWinner'
+export const mapLandPriceDataUrl = apiServer + '/yards?$select[]=price&$select[]=id&$select[]=currentBidWinner&$select[]=bidCount'
 
 export const backRectPos = [
     {

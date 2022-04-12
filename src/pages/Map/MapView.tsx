@@ -293,7 +293,8 @@ export default class Map extends Component<MapViewProps> {
             return true
         if( searchOptions.silver && item.tierName === 'tier4' )
             return true
-        if( searchOptions.openforbid && !item.noBidAllowedOnLand )
+
+        if( searchOptions.openforbid && !Number(priceData.bidCount) )
             return true
         if( !searchOptions.shiboshiZone && !searchOptions.privatehub && !searchOptions.diamond && !searchOptions.platinum && !searchOptions.gold && !searchOptions.silver && !searchOptions.openforbid )
             return true

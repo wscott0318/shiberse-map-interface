@@ -249,7 +249,7 @@ export const LandDetail = () => {
 
                     { currentLandInfo?.tierName === 'hub' ? (
                         <div className='text-center mt-4'>
-                            <a>
+                            <a href='https://en3t77relo9.typeform.com/to/gUBkkRxh' target='_blank' rel="noreferrer">
                                 <NormalButton 
                                     className={`px-8 font-bold`}
                                 >

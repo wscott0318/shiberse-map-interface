@@ -5,7 +5,7 @@ import { AppDispatch, AppState } from '../../state'
 import { setSelectedLandInfo, updateMapCenterPos, updateMapZoomLevel, updateSearchOptions } from '../../state/map/actions'
 import Map from './MapView'
 import LandDetail from '../../components/Map/LandDetail';
-import { socket } from 'feathers'
+// import { socket } from 'feathers'
 import { mapLandDataUrl } from 'constants/map'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
@@ -56,20 +56,20 @@ export const MapScene = () => {
 	useEffect(() => {
 		setIsFirst(false)
 
-		if( isFirst ) {
-			socket.on('connect', () => {
-				console.error('connected')
-			})
+		// if( isFirst ) {
+		// 	socket.on('connect', () => {
+		// 		console.error('connected')
+		// 	})
 
-			socket.on('created', (data: any) => {
-				console.error('Socket info: created', data)
-			})
-		}
+		// 	socket.on('created', (data: any) => {
+		// 		console.error('Socket info: created', data)
+		// 	})
+		// }
 
-		return (() => {
-			socket.off('connect')
-			socket.off('created')
-		})
+		// return (() => {
+		// 	socket.off('connect')
+		// 	socket.off('created')
+		// })
 	}, [])
 
 	useEffect(() => {

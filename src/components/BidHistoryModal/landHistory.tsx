@@ -101,7 +101,7 @@ const TableItem = styled.div`
 
 export const LandBidHistoryModal = (props: any) => {
     const rows = props.allPlacedBids.map((item: any) => ({
-        bidBy: `${ shortenAddress(item.bidBy, 7) }`,
+        bidBy: `${ item.bidBy }`,
         bidAmount: `${item.bidPrice} ETH`,
         dateOfBid: `${ item.createdAt ? item.createdAt : '' }`
     }))
@@ -130,7 +130,7 @@ export const LandBidHistoryModal = (props: any) => {
                                         key: 'bidBy',
                                         numeric: false,
                                         render: (row: any, index: any) => (
-                                            <TableItem key={'bidBy' + index}>{row.bidBy} </TableItem>
+                                            <TableItem key={'bidBy' + index}><a target={'_blank'} rel="noreferrer" href={`https://etherscan.io/address/${row.bidBy}`}>{shortenAddress(row.bidBy, 7)}</a> </TableItem>
                                         ),
                                         label: 'Bid By'
                                     }, {

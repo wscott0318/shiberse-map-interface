@@ -100,7 +100,7 @@ export const DarkRoadColors = {
     'FUD AVENUE': 0x262626,
 }
 
-export const mapLandDataUrl = 'https://shiboshis.mypinata.cloud/ipfs/QmZBj8nZBCGGZx2d87EoboFW1YH1oSHWHMFGzoxUHbnMRD'
+export const mapLandDataUrl = 'https://shiboshis.mypinata.cloud/ipfs/QmZ1U5PV21F3VzTw7791epzVmQ3RpeFbVhMQyZrZhDatVw'
     //'https://shiboshis.mypinata.cloud/ipfs/QmYXckMd93DPq6XPaC1iisUs1t2jReE8mdaTuQYpmmLbgP'
 
 export const apiServer = 'https://blabla-dev.herokuapp.com'

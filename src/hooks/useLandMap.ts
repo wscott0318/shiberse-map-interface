@@ -25,7 +25,7 @@ const useLandMap = () => {
     const setSearchOptions = (newOptions: any): any => dispatch( updateSearchOptions( { newOptions } ) )
 
     const fetchInfo = useCallback(async () => {
-        if( !landData.length ) {
+        if( !landData.length ) {    // only load at first time
             const result = await fetch(mapLandDataUrl)
             const json_data = await result.json()
     
@@ -70,8 +70,8 @@ const useLandMap = () => {
 
     const fetchAccountBidsInfo = useCallback(async () => {
         if( account ) {
-            const response = await axios.get(`${apiServer}/bids?user=${account?.toLowerCase()}`)
-            const arrayData = response.data.data.length > 0 ? response.data.data : []
+            const response = await axios.get(`${apiServer}/users/${account?.toLowerCase()}?$select[]=bids`)
+            const arrayData = response.data.bids.length > 0 ? response.data.bids : []
             setAccountBidsInfo(arrayData)
         }
     }, [account])

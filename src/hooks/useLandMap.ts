@@ -18,16 +18,20 @@ const useLandMap = () => {
 
     const searchOptions = useSelector<AppState, AppState['map']['searchOptions']>(state => state.map.searchOptions)
 
+    // console.error(searchOptions)
+
     const dispatch = useDispatch<AppDispatch>()
 
     const setSearchOptions = (newOptions: any): any => dispatch( updateSearchOptions( { newOptions } ) )
 
     const fetchInfo = useCallback(async () => {
-        const result = await fetch(mapLandDataUrl)
-		const json_data = await result.json()
-
-		const result_data = json_data.filter((item: any) => item.tierName !== 'locked')
-		setLandData(result_data)
+        if( !landData.length ) {
+            const result = await fetch(mapLandDataUrl)
+            const json_data = await result.json()
+    
+            const result_data = json_data.filter((item: any) => item.tierName !== 'locked')
+            setLandData(result_data)
+        }
 
 		const response = await axios.get(mapLandPriceDataUrl)
         const arrayData = response.data
@@ -52,11 +56,10 @@ const useLandMap = () => {
         })
         setLandPriceData( objectData )
 
-        const oldOption = { ...searchOptions }
+        const oldOption = {} as any
         oldOption.minPrice = Number(minPrice)
         oldOption.maxPrice = Number(maxPrice)
-        oldOption.searchMinPrice = Number(minPrice)
-        oldOption.searchMaxPrice = Number(maxPrice)
+
         setSearchOptions(oldOption)
 
         setIsLandDataLoaded(true)
@@ -65,7 +68,7 @@ const useLandMap = () => {
         setMaxPrice(Number(maxPrice))
 
         console.error(arrayData)
-    }, [setLandData, setLandPriceData])
+    }, [])
 
     const fetchAccountBidsInfo = useCallback(async () => {
         if( account ) {
@@ -78,6 +81,9 @@ const useLandMap = () => {
     useEffect(() => {
         fetchInfo()
         fetchAccountBidsInfo()
+
+        const refreshInterval = setInterval(fetchInfo, 30000)
+        return () => clearInterval(refreshInterval)
     }, [setLandData, setLandPriceData, setAccountBidsInfo, account])
 
     const updatePriceData = (newData: any) => {

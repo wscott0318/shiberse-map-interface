@@ -45,7 +45,7 @@ const Notification = () => {
         <NotificationPage>
             <>
                 <HeaderText className='text-center text-3xl'>Lock Leash or Shiboshi!</HeaderText>
-                <HeaderDescription className='text-center text-base'>To join Map page you should lock the <b>LEASH</b> or <b>SHIBOSHI</b> first.</HeaderDescription>
+                <HeaderDescription className='text-center text-base'>In order to join the interactive map during the early access events, you must first Lock your <b>LEASH</b> or Lock your <b>SHIBOSHI</b> via the Locking System.</HeaderDescription>
                 <HeaderDescription className='text-center text-base'>Click <NavLink exact strict to="/" className={'color-primary'}>here</NavLink> to go to <b>LOCK</b> Page.</HeaderDescription>
             </>
         </NotificationPage>

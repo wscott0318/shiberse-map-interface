@@ -1,23 +1,22 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import etherIcon from 'assets/images/profile/ether.svg'
 import { ModalToggleButton, PrimaryButton } from 'theme'
 import BidHistoryModal from 'components/BidHistoryModal'
-import thumbnail from 'assets/images/map/thumbnail.png'
 import locationImg from 'assets/images/map/location.svg'
 import MintModal from './mintModal'
 import { useWeb3React } from '@web3-react/core'
 import { useETHBalances } from 'state/wallet/hooks'
 import { NETWORK_LABEL } from 'constants/networks'
-import { shortenDouble } from 'utils'
+import { formatFromBalance, shortenDouble } from 'utils'
 import useShiberseLandAuction from 'hooks/useShiberseLandAuction'
 import { Events } from 'constants/map'
 import useShiberseStakeToken from 'hooks/useShiberseStakeToken'
 import useShiberseStakeNFT from 'hooks/useShiberseStakeNFT'
 import BidModal from 'components/Map/bidModal'
-import { mapLandDataUrl } from 'constants/map'
 import useLandMap from 'hooks/useLandMap'
 import { getLandImage, getLandName } from 'utils/mapHelper'
+import ShiberseLoader from 'components/Loader/loader'
 
 const ProfileWrapper = styled.div`
     position: relative;
@@ -198,7 +197,7 @@ export const Profile = () => {
     const currentBalance = parseFloat(userEthBalance?.toSignificant() as any)
     const chainLabel = NETWORK_LABEL[(chainId as keyof typeof NETWORK_LABEL)]
 
-    const { allPlacedBids, winningBids, currentStage } = useShiberseLandAuction({})
+    const { allPlacedBids, winningBids, currentStage, loadingBidsInfo } = useShiberseLandAuction({})
 
     const { landData, landPriceData, accountBidsInfo, isLandDataLoaded } = useLandMap()
 
@@ -207,7 +206,8 @@ export const Profile = () => {
 
         return {
             ...(landData[index] as any),
-            ...landPriceData[ landData[index]['id'] ]
+            ...landPriceData[ landData[index]['id'] ],
+            price: Number( formatFromBalance(bidPos[2], 18) )
         }
     }): []
 
@@ -216,7 +216,8 @@ export const Profile = () => {
 
         return {
             ...(landData[index] as any),
-            ...landPriceData[ landData[index]['id'] ]
+            ...landPriceData[ landData[index]['id'] ],
+            price: Number( formatFromBalance(bidPos[2], 18) )
         }
     }): []
 
@@ -259,7 +260,11 @@ export const Profile = () => {
                     <span className='ml-4 text-sm font-normal normal-case'>You can bid again on the lost bids</span>
                 </SubTitle>
 
-                { !lostBids.length ? (
+                { loadingBidsInfo ? (
+                    <NoneContentWrapper className='flex justify-center'>
+                        <ShiberseLoader size='36px'/>
+                    </NoneContentWrapper>
+                ): !lostBids.length ? (
                     <NoneContentWrapper>
                         <div className='text-base' style={{ color: 'rgb(255, 255, 255, 0.5)' }}>None</div>
                     </NoneContentWrapper>
@@ -275,10 +280,12 @@ export const Profile = () => {
                                     <DetailInfo>
                                         <LandName>Land</LandName>
                                         <LandType>{ getLandName(item.tierName, item) }</LandType>
-                                        <LandCoordinates className='flex items-center mb-2'>
-                                            <img src={locationImg}></img>
-                                            { item.coordinates.x }, { item.coordinates.y }
-                                        </LandCoordinates>
+                                        <a target={'_blank'} rel="noreferrer" href={`/#/map?x=${item.coordinates.x}&y=${item.coordinates.y}`}>
+                                            <LandCoordinates className='flex items-center mb-2'>
+                                                <img src={locationImg}></img>
+                                                { item.coordinates.x }, { item.coordinates.y }
+                                            </LandCoordinates>
+                                        </a>
                                     </DetailInfo>
                                 </LandInfo>
 
@@ -315,7 +322,11 @@ export const Profile = () => {
                     </ViewBidHistoryButton>
                 </SubTitle>
 
-                { !winBids.length ? (
+                { loadingBidsInfo ? (
+                    <NoneContentWrapper className='flex justify-center'>
+                        <ShiberseLoader size='36px'/>
+                    </NoneContentWrapper>
+                ): !winBids.length ? (
                     <NoneContentWrapper>
                         <div className='text-base' style={{ color: 'rgb(255, 255, 255, 0.5)' }}>None</div>
                     </NoneContentWrapper>
@@ -331,10 +342,12 @@ export const Profile = () => {
                                     <DetailInfo>
                                         <LandName>Land</LandName>
                                         <LandType>{ getLandName(item.tierName, item) }</LandType>
-                                        <LandCoordinates className='flex items-center'>
-                                            <img src={locationImg}></img>
-                                            { item.coordinates.x }, { item.coordinates.y }
-                                        </LandCoordinates>
+                                        <a target={'_blank'} rel="noreferrer" href={`/#/map?x=${item.coordinates.x}&y=${item.coordinates.y}`}>
+                                            <LandCoordinates className='flex items-center'>
+                                                <img src={locationImg}></img>
+                                                { item.coordinates.x }, { item.coordinates.y }
+                                            </LandCoordinates>
+                                        </a>
                                     </DetailInfo>
                                 </LandInfo>
 
@@ -360,7 +373,11 @@ export const Profile = () => {
                     <ViewBidHistoryButton onClick={() => setShowBidHistoryModal(prev => !prev)}>View Bidding History</ViewBidHistoryButton>
                 </SubTitle>
 
-                { !allBids.length ? (
+                { loadingBidsInfo ? (
+                    <NoneContentWrapper className='flex justify-center'>
+                        <ShiberseLoader size='36px'/>
+                    </NoneContentWrapper>
+                ): !allBids.length ? (
                     <NoneContentWrapper>
                         <div className='text-base' style={{ color: 'rgb(255, 255, 255, 0.5)' }}>None</div>
                     </NoneContentWrapper>
@@ -376,10 +393,12 @@ export const Profile = () => {
                                     <DetailInfo>
                                         <LandName>Land</LandName>
                                         <LandType>{ getLandName(item.tierName, item) }</LandType>
-                                        <LandCoordinates className='flex items-center mb-2'>
-                                            <img src={locationImg}></img>
-                                            { item.coordinates.x }, { item.coordinates.y }
-                                        </LandCoordinates>
+                                        <a target={'_blank'} rel="noreferrer" href={`/#/map?x=${item.coordinates.x}&y=${item.coordinates.y}`}>
+                                            <LandCoordinates className='flex items-center mb-2'>
+                                                <img src={locationImg}></img>
+                                                { item.coordinates.x }, { item.coordinates.y }
+                                            </LandCoordinates>
+                                        </a>
                                     </DetailInfo>
                                 </LandInfo>
 

@@ -152,7 +152,7 @@ export const LandDetail = () => {
 
     const [isLoading, setIsLoading] = useState(true)
 
-    const { currentStage, currentBidCount, isShiboshiHolder, fetchLandPrice } = useShiberseLandAuction({})
+    const { currentStage, currentBidCount, isShiboshiHolder, fetchLandPrice, fetchLandCurrentWinner } = useShiberseLandAuction({})
 
     const canShowButton = useCallback(() => {
         if( currentStage === Events['Public'] )
@@ -196,6 +196,9 @@ export const LandDetail = () => {
             if( selectedInfo?.tierName && selectedInfo?.tierName !== 'hub' && selectedInfo?.tierName !== 'road' && !selectedInfo?.reserved ) {
                 const price = await fetchLandPrice({ x: selectedInfo.coordinates.x, y: selectedInfo.coordinates.y })
                 newInfo.price = Number( formatFromBalance(price, 18) )
+
+                const currentBidWinner = await fetchLandCurrentWinner({ x: selectedInfo.coordinates.x, y: selectedInfo.coordinates.y })
+                newInfo.currentBidWinner = currentBidWinner
             }
     
             setCurrentLandInfo( newInfo )
@@ -254,7 +257,7 @@ export const LandDetail = () => {
                                 <NormalButton 
                                     className={`px-8 font-bold`}
                                 >
-                                    Contact us
+                                    For Leasing Contact us
                                 </NormalButton>
                             </a>
                         </div>
@@ -264,9 +267,9 @@ export const LandDetail = () => {
                         <>
                             <LandType className='mb-2'>
                                 Highest Bid By:
-                                { currentLandInfo?.currentBidWinner 
+                                { Number(currentLandInfo?.currentBidWinner)
                                     ? <a className='font-normal ml-1' target='_blank' rel="noreferrer" href={`https://etherscan.io/address/${ currentLandInfo?.currentBidWinner }`} >{shortenAddress(currentLandInfo?.currentBidWinner, 8)}</a> 
-                                    : ' none' }
+                                    : ' None' }
                             </LandType>
 
                             <BidHistory className='mb-4' onClick={() => setShowBidHistoryModal(prev => !prev)}>Bid history</BidHistory>

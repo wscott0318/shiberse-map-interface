@@ -191,7 +191,7 @@ const filterData = [
         searchOption: 'privatehub'
     }, {
         color: '#DFB850',
-        text: 'Diamond Woof',
+        text: 'Diamond Teeth',
         searchOption: 'diamond'
     }, {
         color: '#5B5E6B',

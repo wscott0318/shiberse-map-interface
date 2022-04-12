@@ -430,7 +430,7 @@ export const shiboshiZonePos = [
 ]
 
 export const landNames = {
-    tier1: 'Diamond Woof',
+    tier1: 'Diamond Teeth',
     tier2: 'Platinum Paw',
     tier3: 'Golden Tail',
     tier4: 'Silver Fur',

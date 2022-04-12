@@ -173,8 +173,11 @@ export const BidModal = (props: any) => {
 
     const [bidPrice, setBidPrice] = useState(Number(props.selectedInfo.price))
     useEffect(() => {
-        if (props.selectedInfo.price !== bidPrice) {
-            setBidPrice(props.selectedInfo.price);
+        if (props.selectedInfo.price) {
+            let price = props.selectedInfo.price
+            price += 0.00001
+
+            setBidPrice(price);
         }
       }, [props.selectedInfo]);
     const [validateText, setValidateText] = useState(null) as any

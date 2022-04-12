@@ -20,6 +20,7 @@ const useShiberseLandAuction = (props: any) => {
     const [allPlacedBids, setAllPlacedBids] = useState([])
     const [winningBids, setWinningBids] = useState([])
     const [isShiboshiHolder, setIsShiboshiHolder] = useState(null) as any
+    const [loadingBidsInfo, setLoadingBidsInfo] = useState(true)
 
     // fetch current event stage
     const fetchCurrentStage = useCallback(async () => {
@@ -48,14 +49,14 @@ const useShiberseLandAuction = (props: any) => {
         }
     }, [account, landContract])
 
-    // useEffect(() => {
-    //     if (account && landContract && chainId === mainNetworkChainId) {
-    //         fetchLandPrice()
-    //     }
-
-    //     const refreshInterval = setInterval(fetchLandPrice, 10000)
-    //     return () => clearInterval(refreshInterval)
-    // }, [fetchLandPrice, account, landContract])
+    const fetchLandCurrentWinner = useCallback(async({ x: posX, y: posY }) => {
+        if(account && landContract && chainId === mainNetworkChainId) {
+            if( (posX === 0 || posX) && (posY === 0 || posY) ) {
+                const currentBid = await landContract?.getCurrentBid( posX, posY )
+                return currentBid.bidder
+            }
+        }
+    }, [account, landContract])
 
     const fetchIfShiboshiHolder = useCallback(async () => {
         try {
@@ -99,11 +100,24 @@ const useShiberseLandAuction = (props: any) => {
             const allBids = await landContract?.allBidInfoOf( account )
             const result = allBids[0].map((item: any, index: number) => [ item, allBids[1][index] ])
 
+            for( let i = 0; i < result.length; i++ ) {
+                const price = await fetchLandPrice({ x: result[i][0], y: result[i][1] })
+                result[i].push(price)
+            }
+
             setAllPlacedBids( result )
 
             const winning = await landContract?.bidInfoOf( account )
             const win_result = winning[0].map((item: any, index: number) => [ item, winning[1][index] ])
+
+            for( let i = 0; i < win_result.length; i++ ) {
+                const price = await fetchLandPrice({ x: win_result[i][0], y: win_result[i][1] })
+                win_result[i].push(price)
+            }
+
             setWinningBids( win_result )
+
+            setLoadingBidsInfo(false)
         } catch(e) {
             console.error('fetchbidsInfo: ', e)
         }
@@ -115,15 +129,13 @@ const useShiberseLandAuction = (props: any) => {
         }
     }, [account, fetchBidsInfo, landContract, currentBlockNumber])
 
-    const exceptionValue = 0.3000000000000001
-
     const bidOne = useCallback(
         async ( input: any ) => {
             if( input?.value && input?.x && input?.y ) {
                 try {
                     const tx = await landContract?.bidOne(input?.x, input?.y, {
                         from: account,
-                        value: formatToBalance(input?.value === 0.3 ? exceptionValue : input?.value).value
+                        value: formatToBalance(input?.value).value
                     })
                     addTransaction(tx, { summary: `Bid placed!` })
                     return tx
@@ -143,7 +155,7 @@ const useShiberseLandAuction = (props: any) => {
                 try {
                     const tx = await landContract?.bidShiboshiZoneOne(input?.x, input?.y, signature, {
                         from: account,
-                        value: formatToBalance(input?.value === 0.3 ? exceptionValue : input?.value).value
+                        value: formatToBalance(input?.value).value
                     })
                     addTransaction(tx, { summary: `Bid placed on Shiboshi Zone!` })
                     return tx
@@ -243,7 +255,7 @@ const useShiberseLandAuction = (props: any) => {
     // const signMsg = await signMessage(library, account, 'Test Sign Message')
     // console.error(signMsg)
 
-    return { currentBidCount, currentStage, allPlacedBids, winningBids, isShiboshiHolder, bidOne, bidShiboshiZone, mintPrivate, mintPrivateShiboshiZone, mintPublic, mintWinningBid, fetchLandPrice }
+    return { currentBidCount, currentStage, allPlacedBids, winningBids, isShiboshiHolder, bidOne, bidShiboshiZone, mintPrivate, mintPrivateShiboshiZone, mintPublic, mintWinningBid, fetchLandPrice, loadingBidsInfo, fetchLandCurrentWinner }
 
 }
 

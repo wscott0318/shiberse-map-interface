@@ -80,12 +80,14 @@ export const MapScene = () => {
 
 		const zoomLevel = query.get('zoom')
 
-		if( centerPos.x && centerPos.y && zoomLevel ) {
+		if( centerPos.x && centerPos.y ) {
 			setMapCenterPos( {
 				...centerPos,
 				y: -(centerPos.y)
 			} )
-			setMapZoomLevel( Number(zoomLevel) )
+
+			if( zoomLevel )
+				setMapZoomLevel( Number(zoomLevel) )
 
 			setSelectedInfo({
 				coordinates: {

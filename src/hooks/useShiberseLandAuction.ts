@@ -33,7 +33,7 @@ const useShiberseLandAuction = (props: any) => {
     }, [account, landContract])
 
     const getSignature = async () => {
-        const response = (await axios.get(`${apiServer}/shiboshis?address=${account}`)).data
+        const response = (await axios.get(`${apiServer}/shiboshis?address=${account?.toLowerCase()}`)).data
         if( response.data.length > 0 ) {
             return response.data[0].signature
         }

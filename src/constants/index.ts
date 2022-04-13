@@ -1112,10 +1112,10 @@ export const shiberseContractAddresses = {
 }
 
 /* For development network : Rinkby */
-export const mainNetworkChainId = ChainId.RINKEBY
+// export const mainNetworkChainId = ChainId.RINKEBY
 
 /* For product network : Main net */
-// export const mainNetworkChainId = ChainId.MAINNET
+export const mainNetworkChainId = ChainId.MAINNET
 
 export const alchemyApi = {
     [ChainId.MAINNET]: {

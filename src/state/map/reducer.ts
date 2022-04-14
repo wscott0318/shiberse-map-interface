@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { range, zoomRange } from 'constants/map'
-import { setSelectedLandInfo, updateLandData, updateMapCenterPos, updateMapZoomLevel, updateSearchOptions } from './actions'
+import { setSelectedLandInfo, updateLandData, updateMapCenterPos, updateMapZoomLevel, updateSearchOptions, updateMultiSelect } from './actions'
 
 export interface MapState {
     readonly selectedLandInfo: any
@@ -11,6 +11,7 @@ export interface MapState {
     readonly mapZoomLevel: number
     readonly landData: any
     readonly searchOptions: any
+    readonly multiSelect: boolean
 }
 
 const initialState: MapState = {
@@ -46,7 +47,8 @@ const initialState: MapState = {
         },
 
         walletAddress: '',
-    }
+    },
+    multiSelect: false,
 }
 
 export default createReducer<MapState>(initialState, builder =>
@@ -70,5 +72,8 @@ export default createReducer<MapState>(initialState, builder =>
         })
         .addCase( updateSearchOptions, (state, { payload: { newOptions } }) => {
             state.searchOptions = { ...state.searchOptions, ...newOptions }
+        })
+        .addCase( updateMultiSelect, (state, { payload: { newValue } }) => {
+            state.multiSelect = newValue
         })
 )

@@ -30,7 +30,7 @@ const LandDetailPanel = styled.div<{ show: boolean }>`
     transition: all 1s ease;
 
     position: absolute;
-    top: 5rem;
+    top: 8rem;
     right: 2rem;
 
     padding: 1.5rem;

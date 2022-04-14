@@ -15,6 +15,7 @@ type MapViewProps = {
     clearFilter: any,
     setClearFilter: any,
     landPriceData: any,
+    multiSelect: boolean,
 }
 
 export default class Map extends Component<MapViewProps> {
@@ -367,7 +368,7 @@ export default class Map extends Component<MapViewProps> {
             })
 
             if( targetIndex !== -1 ) {
-                if( !this.props.selectedInfo.length || (this.props.selectedInfo.length > 0 && this.props.selectedInfo[0]?.isRoad || this.props.selectedInfo[0]?.tierName === 'hub' || this.props.selectedInfo[0]?.reserved) ) {
+                if( !this.props.multiSelect || !this.props.selectedInfo.length || (this.props.selectedInfo.length > 0 && this.props.selectedInfo[0]?.isRoad || this.props.selectedInfo[0]?.tierName === 'hub' || this.props.selectedInfo[0]?.reserved) ) {
                     this.props.setSelectedInfo( [{ 
                         index: targetIndex,
                         show: true,

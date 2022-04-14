@@ -12,6 +12,7 @@ import { Dots } from 'pages/Pool/styleds'
 import ShiberseLoader from 'components/Loader/loader'
 import { PrimaryButton } from 'theme'
 import useLandMap from 'hooks/useLandMap'
+import { ToggleMultiSelect } from 'components/Map/ToggleMultiSelect'
 
 const useQuery = () => {
 	const { search } = useLocation();
@@ -43,6 +44,7 @@ export const MapScene = () => {
     const mapZoomLevel = useSelector<AppState, AppState['map']['mapZoomLevel']>(state => state.map.mapZoomLevel)
     const selectedInfo = useSelector<AppState, AppState['map']['selectedLandInfo']>(state => state.map.selectedLandInfo)
 	const searchOptions = useSelector<AppState, AppState['map']['searchOptions']>(state => state.map.searchOptions)
+	const multiSelect = useSelector<AppState, AppState['map']['multiSelect']>(state => state.map.multiSelect)
 
     const dispatch = useDispatch<AppDispatch>()
 
@@ -149,6 +151,7 @@ export const MapScene = () => {
 								searchOptions={searchOptions}
 								clearFilter={ showClearFilter }
 								setClearFilter={() => setShowClearFilter(prev => !prev)}
+								multiSelect={multiSelect}
 							/>
 						) : (
 							<LoadingWrapper>
@@ -171,6 +174,9 @@ export const MapScene = () => {
 							</LoadingWrapper>
 						) : null }
 					</div>
+
+					<ToggleMultiSelect />
+
 					<LandDetail />
 				</div>
 			</div>

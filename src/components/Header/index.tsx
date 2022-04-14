@@ -6,6 +6,7 @@ import { MenuButton } from 'theme'
 import styled from 'styled-components'
 import { useLocation } from 'react-router-dom'
 import { useActiveWeb3React } from 'hooks'
+import { endTime } from 'constants/map'
 
 const LogoText = styled.div`
     letter-spacing: 0.15em;
@@ -42,10 +43,24 @@ const SubLogoText = styled.span`
     }
 `
 
+const TimerWrapper = styled.div`
+    background: linear-gradient(270deg, rgba(31, 31, 50, 0.4) 0%, rgba(31, 32, 49, 0.4) 34.37%);
+    border: 2px solid #FFFFFF;
+    box-sizing: border-box;
+    border-radius: 22px;
+
+    font-size: 18px;
+    line-height: 27px;
+    color: white;
+    padding: 0.3rem 1rem;
+`
+
 export default function Header(): JSX.Element {
     const { account } = useActiveWeb3React()
     const [active, setActive] = useState('active')
     const [lastScroll, setLastScroll] = useState(0)
+    const [currentTime, setCurrentTime] = useState({}) as any
+    const [isFirst, setIsFirst] = useState(true)
 
     const { pathname } = useLocation()
 
@@ -63,11 +78,35 @@ export default function Header(): JSX.Element {
 
     useEffect(() => {
         window.addEventListener('scroll', handleScroll)
-
         return () => {
             window.removeEventListener('scroll', handleScroll)
         }
     })
+
+    useEffect(() => {
+        if( isFirst ) {
+            setIsFirst(false)
+            setInterval(() => {
+                getRemainingTime()
+            }, 500)
+        }
+    })
+
+    const getRemainingTime = () => {
+        const info = {} as any
+
+        let diffTime = (endTime - new Date().getTime()) / 1000
+
+        info.days = Math.floor( diffTime / (24 * 60 * 60) )
+        diffTime = diffTime % (24 * 60 * 60)
+        info.hours = Math.floor( diffTime / (60 * 60) )
+        diffTime = diffTime % (60 * 60)
+        info.minutes = Math.floor( diffTime / 60 )
+        diffTime = diffTime % (60)
+        info.seconds = Math.floor( diffTime )
+
+        setCurrentTime(info)
+    }
 
     return (
         <Disclosure as="nav" className={`w-screen z-50 header-wrapper ${ active }`}>
@@ -80,6 +119,14 @@ export default function Header(): JSX.Element {
                             </LogoText>
                         </NavLink>
                     </div>
+
+                    { isOnMapPage() ? (
+                        <div>
+                            <TimerWrapper>
+                                <b>Bid Event Countdown: </b> {`${currentTime.days} days, ${currentTime.hours}h, ${currentTime.minutes}m, ${currentTime.seconds}s`}
+                            </TimerWrapper>
+                        </div>
+                    ): null }
 
                     <div className="flex items-center">
                         <NavLink exact strict to="/map" className={''}>

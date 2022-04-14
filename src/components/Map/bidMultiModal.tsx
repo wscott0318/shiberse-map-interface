@@ -6,7 +6,7 @@ import { NormalButton } from 'theme'
 import confirmIcon from '../../assets/images/map/confirmIcon.svg'
 import { useWeb3React } from '@web3-react/core'
 import { useETHBalances } from 'state/wallet/hooks'
-import { formatFromBalance, shortenDouble } from 'utils'
+import { formatFromBalance, formatToBalance, shortenDouble } from 'utils'
 import useShiberseLandAuction from 'hooks/useShiberseLandAuction'
 import { useIsTransactionPending } from 'state/transactions/hooks'
 import ShiberseLoader from 'components/Loader/loader'
@@ -159,8 +159,9 @@ export const BidMultiModal = (props: any) => {
                     const price = await fetchLandPrice({ x: props.selectedInfo[i].coordinates.x, y: props.selectedInfo[i].coordinates.y })
                     totalPrice += Number( formatFromBalance(price, 18) )
 
-                    pArray.push(price)
+                    pArray.push( formatToBalance( (Number( formatFromBalance(price, 18) ) + 0.00001).toString() ).value )
                 }
+
                 totalPrice += 0.00001
     
                 setBidPrice(totalPrice)

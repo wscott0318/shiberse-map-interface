@@ -262,7 +262,7 @@ export const BidModal = (props: any) => {
                                 <BidInput 
                                         type='number' 
                                         min={ Number( props.selectedInfo?.price ) } 
-                                        value={ bidPrice } 
+                                        value={ shortenDouble(bidPrice, 2) } 
                                         onChange={(e) => setBidPrice(Number(e.target.value))} 
                                     />
                                 <ScaleText>ETH</ScaleText>

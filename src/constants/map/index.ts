@@ -10,6 +10,11 @@ export const pixel = {
     y: 1
 }
 
+export const range = {
+    x: 188,
+    y: 189,
+};
+
 export const stageProps = {
     height: window.innerHeight - 5,
     width: window.innerWidth,

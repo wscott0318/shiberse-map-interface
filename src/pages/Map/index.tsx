@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import MapFilter from '../../components/Map/Filter'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, AppState } from '../../state'
@@ -6,14 +6,13 @@ import { setSelectedLandInfo, updateMapCenterPos, updateMapZoomLevel, updateSear
 import Map from './MapView'
 import LandDetail from '../../components/Map/LandDetail';
 // import { socket } from 'feathers'
-import { mapLandDataUrl } from 'constants/map'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { Dots } from 'pages/Pool/styleds'
 import ShiberseLoader from 'components/Loader/loader'
 import { PrimaryButton } from 'theme'
-import axios from 'axios'
 import useLandMap from 'hooks/useLandMap'
+import { ToggleMultiSelect } from 'components/Map/ToggleMultiSelect'
 
 const useQuery = () => {
 	const { search } = useLocation();
@@ -45,6 +44,7 @@ export const MapScene = () => {
     const mapZoomLevel = useSelector<AppState, AppState['map']['mapZoomLevel']>(state => state.map.mapZoomLevel)
     const selectedInfo = useSelector<AppState, AppState['map']['selectedLandInfo']>(state => state.map.selectedLandInfo)
 	const searchOptions = useSelector<AppState, AppState['map']['searchOptions']>(state => state.map.searchOptions)
+	const multiSelect = useSelector<AppState, AppState['map']['multiSelect']>(state => state.map.multiSelect)
 
     const dispatch = useDispatch<AppDispatch>()
 
@@ -89,13 +89,13 @@ export const MapScene = () => {
 			if( zoomLevel )
 				setMapZoomLevel( Number(zoomLevel) )
 
-			setSelectedInfo({
+			setSelectedInfo([{
 				coordinates: {
 					x: Number(centerPos.x),
 					y: Number(centerPos.y),
 				},
 				show: false
-			})
+			}])
 		}
 	}, [ query ])
 	
@@ -151,6 +151,7 @@ export const MapScene = () => {
 								searchOptions={searchOptions}
 								clearFilter={ showClearFilter }
 								setClearFilter={() => setShowClearFilter(prev => !prev)}
+								multiSelect={multiSelect}
 							/>
 						) : (
 							<LoadingWrapper>
@@ -173,6 +174,9 @@ export const MapScene = () => {
 							</LoadingWrapper>
 						) : null }
 					</div>
+
+					<ToggleMultiSelect />
+
 					<LandDetail />
 				</div>
 			</div>

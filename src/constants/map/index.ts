@@ -8,7 +8,7 @@ import Silver_Fur from 'assets/images/map/land/Silver_Fur.svg'
 export const pixel = {
     x: 1,
     y: 1
-};
+}
 
 export const range = {
     x: 188,
@@ -105,7 +105,7 @@ export const mapLandDataUrl = 'https://shiboshis.mypinata.cloud/ipfs/QmQW8ySF6tu
 
 export const endTime = 1650081599000
 
-export const apiServer = 'https://sbmv.herokuapp.com'
+export const apiServer = 'https://blabla-dev.herokuapp.com'
 
 export const mapLandPriceDataUrl = apiServer + '/yards?$select[]=price&$select[]=id&$select[]=currentBidWinner&$select[]=bidCount'
 

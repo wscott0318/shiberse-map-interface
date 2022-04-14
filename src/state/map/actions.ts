@@ -9,3 +9,5 @@ export const updateMapZoomLevel = createAction<{ newLevel: number }>('map/update
 export const updateLandData = createAction<{ newLand: object[] }>('map/updateLandData')
 
 export const updateSearchOptions = createAction<({ newOptions: any })>('map/updateSearchOptions')
+
+export const updateMultiSelect = createAction<({ newValue: boolean })>('map/updateMultiSelect')

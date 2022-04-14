@@ -7,6 +7,8 @@ import { useBlockNumber } from 'state/application/hooks'
 import { formatFromBalance, formatToBalance } from 'utils'
 import axios from 'axios'
 import { apiServer } from 'constants/map'
+import { ethers } from 'ethers'
+import { getFixedValue } from 'utils/mapHelper'
 
 const useShiberseLandAuction = (props: any) => {
     const { account, chainId } = useActiveWeb3React()
@@ -167,6 +169,44 @@ const useShiberseLandAuction = (props: any) => {
         [addTransaction, landContract]
     )
 
+    const bidMulti = useCallback(
+        async ( input: any ) => {
+            if( input ) {
+                try {
+                    const tx = await landContract?.bidMulti(input?.xArray, input?.yArray, input?.priceArray, {
+                        from: account,
+                        value: input?.totalAmount
+                    })
+                    addTransaction(tx, { summary: `Bid placed!` })
+                    return tx
+                } catch(e) {
+                    return e
+                }
+            }
+        },
+        [addTransaction, landContract]
+    )
+    
+    const bidShiboshiZoneMulti = useCallback(
+        async( input: any ) => {
+            const signature = await getSignature()
+
+            if( input && signature ) {
+                try {
+                    const tx = await landContract?.bidShiboshiZoneMulti(input?.xArray, input?.yArray, input?.priceArray, signature, {
+                        from: account,
+                        value: input?.totalAmount
+                    })
+                    addTransaction(tx, { summary: `Bid placed on Shiboshi Zone!` })
+                    return tx
+                } catch(e) {
+                    return e
+                }
+            }
+        },
+        [addTransaction, landContract]
+    )
+
     const mintPrivate = useCallback(
         async( input: any ) => {
             if( input?.value && input?.x && input?.y ) {
@@ -255,7 +295,7 @@ const useShiberseLandAuction = (props: any) => {
     // const signMsg = await signMessage(library, account, 'Test Sign Message')
     // console.error(signMsg)
 
-    return { currentBidCount, currentStage, allPlacedBids, winningBids, isShiboshiHolder, bidOne, bidShiboshiZone, mintPrivate, mintPrivateShiboshiZone, mintPublic, mintWinningBid, fetchLandPrice, loadingBidsInfo, fetchLandCurrentWinner }
+    return { currentBidCount, currentStage, allPlacedBids, winningBids, isShiboshiHolder, bidOne, bidShiboshiZone, bidMulti, bidShiboshiZoneMulti, mintPrivate, mintPrivateShiboshiZone, mintPublic, mintWinningBid, fetchLandPrice, loadingBidsInfo, fetchLandCurrentWinner }
 
 }
 

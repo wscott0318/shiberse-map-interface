@@ -15,6 +15,7 @@ type MapViewProps = {
     clearFilter: any,
     setClearFilter: any,
     landPriceData: any,
+    multiSelect: boolean,
 }
 
 export default class Map extends Component<MapViewProps> {
@@ -188,7 +189,9 @@ export default class Map extends Component<MapViewProps> {
                     spritesArray[i].x = Math.ceil((mapLandInfo.coordinates.x - this.props.mapCenterPos.x) * this.props.mapZoomLevel + this.app.screen.width / 2)
                     spritesArray[i].y = Math.ceil((-mapLandInfo.coordinates.y - this.props.mapCenterPos.y) * this.props.mapZoomLevel + this.app.screen.height / 2)
 
-                    if( mapLandInfo.coordinates.x === this.props.selectedInfo?.coordinates?.x && mapLandInfo.coordinates.y === this.props.selectedInfo?.coordinates?.y )
+                    const selectIndex = this.props.selectedInfo.findIndex((item: any) => mapLandInfo.coordinates.x === item?.coordinates?.x && mapLandInfo.coordinates.y === item?.coordinates?.y)
+
+                    if( selectIndex !== -1 )
                         spritesArray[i].tint = 0x49ad4e
                     else {
                         spritesArray[i].tint = TileColors[ mapLandInfo.tierName as keyof typeof TileColors ]
@@ -363,15 +366,33 @@ export default class Map extends Component<MapViewProps> {
             const targetIndex = this.mapInfo.findIndex((item: any) => {
                 return isConsistsPointer( item, this.props.mapZoomLevel, this.props.mapCenterPos, clickPosition, this.app.screen )
             })
-    
-            if( targetIndex !== -1 )
-                this.props.setSelectedInfo( { 
-                    index: targetIndex,
-                    show: true,
-                    ...this.mapInfo[targetIndex]
-                } )
+
+            if( targetIndex !== -1 ) {
+                if( !this.props.multiSelect || !this.props.selectedInfo.length || (this.props.selectedInfo.length > 0 && this.props.selectedInfo[0]?.isRoad || this.props.selectedInfo[0]?.tierName === 'hub' || this.props.selectedInfo[0]?.reserved) ) {
+                    this.props.setSelectedInfo( [{ 
+                        index: targetIndex,
+                        show: true,
+                        ...this.mapInfo[targetIndex]
+                    }] )
+                } else {
+                    if( !this.mapInfo[targetIndex]?.isRoad && this.mapInfo[targetIndex]?.tierName !== 'hub' && !this.mapInfo[targetIndex]?.reserved ) {
+                        const curSelectedInfo = [ ...this.props.selectedInfo ]
+                        const curIndex = curSelectedInfo.findIndex((item: any) => item.coordinates.x === this.mapInfo[targetIndex].coordinates.x && item.coordinates.y === this.mapInfo[targetIndex].coordinates.y )
+                        if( curIndex !== -1 ) {
+                            curSelectedInfo.splice(curIndex, 1)
+                        } else {
+                            curSelectedInfo.push({
+                                index: targetIndex,
+                                show: true,
+                                ...this.mapInfo[targetIndex]
+                            })
+                        }
+                        this.props.setSelectedInfo( curSelectedInfo )
+                    }
+                }
+            }
             else
-                this.props.setSelectedInfo( {} )
+                this.props.setSelectedInfo( [] )
         }
 
         this.pointDownPos = null
@@ -446,16 +467,32 @@ export default class Map extends Component<MapViewProps> {
                 return isConsistsPointer( item, this.props.mapZoomLevel, this.props.mapCenterPos, clickPosition, this.app.screen )
             })
 
-            if( targetIndex !== -1 )
-                this.props.setSelectedInfo( { 
-                    index: targetIndex, 
-                    x: this.mapInfo[targetIndex].coordinates.x, 
-                    y: this.mapInfo[targetIndex].coordinates.y, 
-                    size: 1,
-                    show: true,
-                } )
+            if( targetIndex !== -1 ) {
+                if( !this.props.selectedInfo.length || (this.props.selectedInfo.length > 0 && this.props.selectedInfo[0]?.isRoad || this.props.selectedInfo[0]?.tierName === 'hub' || this.props.selectedInfo[0]?.reserved) ) {
+                    this.props.setSelectedInfo( [{ 
+                        index: targetIndex,
+                        show: true,
+                        ...this.mapInfo[targetIndex]
+                    }] )
+                } else {
+                    if( !this.mapInfo[targetIndex]?.isRoad && this.mapInfo[targetIndex]?.tierName !== 'hub' && !this.mapInfo[targetIndex]?.reserved ) {
+                        const curSelectedInfo = [ ...this.props.selectedInfo ]
+                        const curIndex = curSelectedInfo.findIndex((item: any) => item.coordinates.x === this.mapInfo[targetIndex].coordinates.x && item.coordinates.y === this.mapInfo[targetIndex].coordinates.y )
+                        if( curIndex !== -1 ) {
+                            curSelectedInfo.splice(curIndex, 1)
+                        } else {
+                            curSelectedInfo.push({
+                                index: targetIndex,
+                                show: true,
+                                ...this.mapInfo[targetIndex]
+                            })
+                        }
+                        this.props.setSelectedInfo( curSelectedInfo )
+                    }
+                }
+            }
             else
-                this.props.setSelectedInfo( {} )
+                this.props.setSelectedInfo( [] )
         }
 
         this.pointDownPos = null

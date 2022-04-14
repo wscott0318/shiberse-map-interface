@@ -26,7 +26,7 @@ export const stageProps = {
 }
 
 export const zoomRange = {
-    min: 10,
+    min: 5,
     max: 80,
 }
 
@@ -102,6 +102,8 @@ export const DarkRoadColors = {
 
 export const mapLandDataUrl = 'https://shiboshis.mypinata.cloud/ipfs/QmQW8ySF6tuCjQ7856vMpJHdYs4JZKKbS4zyiKDewLbpw8';
     // 'https://shiboshis.mypinata.cloud/ipfs/QmZ1U5PV21F3VzTw7791epzVmQ3RpeFbVhMQyZrZhDatVw'
+
+export const endTime = 1650081599000
 
 export const apiServer = 'https://sbmv.herokuapp.com'
 

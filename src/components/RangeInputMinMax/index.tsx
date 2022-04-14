@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Range, getTrackBackground } from "react-range";
+import { shortenDouble } from 'utils';
 
 const Wrapper = styled.div`
     &.disable {
@@ -23,7 +24,7 @@ export const RangeInputMinMax = ( { min, max, values, setValues, step = 1, disab
     return (
         <Wrapper className={ disable ? 'disable' : '' }>
             <MinMaxWrapper>
-                Price range: { values[0] } ETH - { values[1] } ETH
+                Price range: { values[0] } ETH - { step === 0.1 ? shortenDouble(values[1], 2) : values[1] } ETH
             </MinMaxWrapper>
 {/*
  // @ts-ignore */}

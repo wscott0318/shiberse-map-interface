@@ -271,7 +271,10 @@ export default class Map extends Component<MapViewProps> {
 
         if( searchOptions.walletAddress !== '' && (priceData.currentBidWinner?.toUpperCase() !== searchOptions.walletAddress.toUpperCase()) )
             return false
-            
+
+        if( searchOptions.openforbid && Number(priceData.bidCount) > 0 )
+            return false
+
         if( searchOptions.shiboshiZone && item.isShiboshiZone )
             return true
         if( searchOptions.privatehub && item.tierName === 'hub' )
@@ -285,9 +288,7 @@ export default class Map extends Component<MapViewProps> {
         if( searchOptions.silver && item.tierName === 'tier4' )
             return true
 
-        if( searchOptions.openforbid && !Number(priceData.bidCount) )
-            return true
-        if( !searchOptions.shiboshiZone && !searchOptions.privatehub && !searchOptions.diamond && !searchOptions.platinum && !searchOptions.gold && !searchOptions.silver && !searchOptions.openforbid )
+        if( !searchOptions.shiboshiZone && !searchOptions.privatehub && !searchOptions.diamond && !searchOptions.platinum && !searchOptions.gold && !searchOptions.silver )
             return true
 
         return false

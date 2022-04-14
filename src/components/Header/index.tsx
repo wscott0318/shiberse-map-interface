@@ -105,6 +105,13 @@ export default function Header(): JSX.Element {
         diffTime = diffTime % (60)
         info.seconds = Math.floor( diffTime )
 
+        if( diffTime < 0 ) {
+            info.days = 0
+            info.hours = 0
+            info.minutes = 0
+            info.seconds = 0
+        }
+
         setCurrentTime(info)
     }
 
@@ -120,13 +127,11 @@ export default function Header(): JSX.Element {
                         </NavLink>
                     </div>
 
-                    { isOnMapPage() ? (
-                        <div>
-                            <TimerWrapper>
-                                <b>Bid Event Countdown: </b> {`${currentTime.days} days, ${currentTime.hours}h, ${currentTime.minutes}m, ${currentTime.seconds}s`}
-                            </TimerWrapper>
-                        </div>
-                    ): null }
+                    <div>
+                        <TimerWrapper>
+                            <b>Bid Event Countdown: </b> {`${currentTime.days} day${ currentTime.days > 1 ? 's' : '' }, ${currentTime.hours}h, ${currentTime.minutes}m, ${currentTime.seconds}s`}
+                        </TimerWrapper>
+                    </div>
 
                     <div className="flex items-center">
                         <NavLink exact strict to="/map" className={''}>

@@ -175,7 +175,7 @@ export const BidModal = (props: any) => {
     useEffect(() => {
         if (props.selectedInfo.price) {
             let price = props.selectedInfo.price
-            price += 0.00001
+            price = Number( shortenDouble(price, 2) )
 
             setBidPrice(price);
         }
@@ -198,7 +198,7 @@ export const BidModal = (props: any) => {
             setValidateText(null)
 
             const inputData = {
-                value: bidPrice, 
+                value: bidPrice + 0.00001, 
                 x: props.selectedInfo?.coordinates?.x,
                 y: props.selectedInfo?.coordinates?.y
             }
@@ -223,7 +223,6 @@ export const BidModal = (props: any) => {
     }
 
     const handleOnDismiss = () => {
-        // setBidPrice(0.1)
         setValidateText(null)
         setPendingTx(null)
 

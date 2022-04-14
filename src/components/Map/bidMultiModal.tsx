@@ -159,10 +159,8 @@ export const BidMultiModal = (props: any) => {
                     const price = await fetchLandPrice({ x: props.selectedInfo[i].coordinates.x, y: props.selectedInfo[i].coordinates.y })
                     totalPrice += Number( formatFromBalance(price, 18) )
 
-                    pArray.push( formatToBalance( (Number( formatFromBalance(price, 18) ) + 0.00001).toString() ).value )
+                    pArray.push( price )
                 }
-
-                totalPrice += 0.00001
     
                 setBidPrice(totalPrice)
                 setPriceArray( [ ...pArray ] )
@@ -194,6 +192,8 @@ export const BidMultiModal = (props: any) => {
                 yArray: [],
                 priceArray: priceArray
             } as any
+
+            console.error(inputData.totalAmount)
 
             for( let i = 0; i < props.selectedInfo.length; i++ ) {
                 inputData.xArray.push( props.selectedInfo[i].coordinates.x )

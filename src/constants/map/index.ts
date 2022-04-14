@@ -8,12 +8,7 @@ import Silver_Fur from 'assets/images/map/land/Silver_Fur.svg'
 export const pixel = {
     x: 1,
     y: 1
-};
-
-export const range = {
-    x: 188,
-    y: 189,
-};
+}
 
 export const stageProps = {
     height: window.innerHeight - 5,

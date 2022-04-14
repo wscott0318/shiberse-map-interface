@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { range, zoomRange } from 'constants/map'
+import { zoomRange } from 'constants/map'
 import { setSelectedLandInfo, updateLandData, updateMapCenterPos, updateMapZoomLevel, updateSearchOptions, updateMultiSelect } from './actions'
 
 export interface MapState {

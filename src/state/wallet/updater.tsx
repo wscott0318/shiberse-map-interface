@@ -12,7 +12,6 @@ export default function Updater(): null {
         });
     }, [library, chainId])
 
-    // keep dark mode in sync with the system
     useEffect(() => {
         if( active && chainId !== mainNetworkChainId ) {
            switchNetwork() 

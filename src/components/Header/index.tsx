@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import { useLocation } from 'react-router-dom'
 import { useActiveWeb3React } from 'hooks'
 import { endTime } from 'constants/map'
+import { isMobile } from 'react-device-detect'
 
 const LogoText = styled.div`
     letter-spacing: 0.15em;
@@ -127,11 +128,14 @@ export default function Header(): JSX.Element {
                         </NavLink>
                     </div>
 
-                    <div>
-                        <TimerWrapper>
-                            <b>Bid Event Countdown: </b> {`${currentTime.days} day${ currentTime.days > 1 ? 's' : '' }, ${currentTime.hours}h, ${currentTime.minutes}m, ${currentTime.seconds}s`}
-                        </TimerWrapper>
-                    </div>
+                    { !isMobile ? (
+                        <div>
+                            <TimerWrapper>
+                                <b>Bid Event Countdown: </b> {`${currentTime.days} day${ currentTime.days > 1 ? 's' : '' }, ${currentTime.hours}h, ${currentTime.minutes}m, ${currentTime.seconds}s`}
+                            </TimerWrapper>
+                        </div>
+                    ) : null }
+
 
                     <div className="flex items-center">
                         <NavLink exact strict to="/map" className={''}>

@@ -19,6 +19,7 @@ import LandBidHistoryModal from 'components/BidHistoryModal/landHistory';
 import { getLandName, getLandImage } from 'utils/mapHelper';
 import { ReactComponent as Close } from 'assets/images/x.svg'
 import ShiberseLoader from 'components/Loader/loader'
+import BidMultiModal from '../bidMultiModal';
 
 const LandDetailPanel = styled.div<{ show: boolean }>`
     display: ${({ show }) => (show ? 'block' : 'none')};
@@ -136,8 +137,6 @@ export const LandDetail = () => {
     const { stakedBalance: leashStakedBalance } = useShiberseStakeToken({ tokenType: 'leash' })
     const { stakedBalance: shiboshiStakedBalance } = useShiberseStakeNFT({ tokenType: 'shiboshi' })
 
-    const currentBlockNumber = useBlockNumber()
-
     const isShiberseLocker = (Number(leashStakedBalance) > 0 || Number(shiboshiStakedBalance) > 0)
 
     const selectedInfo = useSelector<AppState, AppState['map']['selectedLandInfo']>(state => state.map.selectedLandInfo)
@@ -187,22 +186,23 @@ export const LandDetail = () => {
 
     useEffect(() => {
         const getLandPrice = async () => {
-            setIsLoading(true)
-
-            const response = await axios.get(`${apiServer}/yards?id=${selectedInfo.id}`)
-            const data = response.data
-
-            const newInfo = data.length > 0 ? { ...data[0] } : {}
-            if( selectedInfo?.tierName && selectedInfo?.tierName !== 'hub' && selectedInfo?.tierName !== 'road' && !selectedInfo?.reserved ) {
-                const price = await fetchLandPrice({ x: selectedInfo.coordinates.x, y: selectedInfo.coordinates.y })
-                newInfo.price = Number( formatFromBalance(price, 18) )
-
-                const currentBidWinner = await fetchLandCurrentWinner({ x: selectedInfo.coordinates.x, y: selectedInfo.coordinates.y })
-                newInfo.currentBidWinner = currentBidWinner
-            }
+            if( selectedInfo.length === 1 ) {   // single select
+                const selected = selectedInfo[0]
+                setIsLoading(true)
+                const response = await axios.get(`${apiServer}/yards?id=${selected.id}`)
+                const data = response.data
     
-            setCurrentLandInfo( newInfo )
-
+                const newInfo = data.length > 0 ? { ...data[0] } : {}
+                if( selected?.tierName && selected?.tierName !== 'hub' && selected?.tierName !== 'road' && !selected?.reserved ) {
+                    const price = await fetchLandPrice({ x: selected.coordinates.x, y: selected.coordinates.y })
+                    newInfo.price = Number( formatFromBalance(price, 18) )
+    
+                    const currentBidWinner = await fetchLandCurrentWinner({ x: selected.coordinates.x, y: selected.coordinates.y })
+                    newInfo.currentBidWinner = currentBidWinner
+                }
+        
+                setCurrentLandInfo( newInfo )
+            }
             setIsLoading(false)
         }
 
@@ -212,17 +212,25 @@ export const LandDetail = () => {
     const isCurrentOwner = account?.toUpperCase() === currentLandInfo?.currentBidWinner?.toUpperCase()
 
     const handleClose = () => {
-        const newInfo = { ...selectedInfo }
-        newInfo.show = false
-        setSelectedInfo(newInfo)
+        setSelectedInfo([])
 
         setShowBidModal(false)
     }
 
     const hideDetail = (info: any) => info?.tierName === 'road' || info?.tierName === 'hub' || info?.reserved
 
+    const isMultiplePossible = () => {
+        if( selectedInfo.findIndex((item: any) => item.isShiboshiZone) !== -1 && selectedInfo.length > currentBidCount )
+            return false
+
+        if( selectedInfo.findIndex((item: any) => item.isShiboshiZone) !== -1 && selectedInfo.findIndex((item: any) => !item.isShiboshiZone) !== -1 )
+            return false
+
+        return true
+    }
+
     return (
-        <LandDetailPanel show={ selectedInfo?.show }>
+        <LandDetailPanel show={ ( selectedInfo.length === 1 && selectedInfo[0].show ) || (selectedInfo.length > 1) }>
             <CloseIcon onClick={handleClose}>
                 <CloseColor />
             </CloseIcon>
@@ -231,7 +239,7 @@ export const LandDetail = () => {
                 <div className='flex justify-center py-24'>
                     <ShiberseLoader size='50px'/>
                 </div>
-            ): (
+            ) : selectedInfo.length === 1 ? (
                 <>
                     <LandInfo className='flex'>
                         <LandImage>
@@ -289,23 +297,14 @@ export const LandDetail = () => {
                                     { currentStage === Events['Bid'] ? (
                                         <NormalButton 
                                             disabled={ !currentLandInfo?.isShiboshiZone && currentBidCount === 0 ? true : false }
-                                            className={`px-10 font-bold ${ currentLandInfo?.noBidAllowedOnLand || isCurrentOwner ? 'hidden' : '' }`}
+                                            className={`px-10 font-bold ${ isCurrentOwner ? 'hidden' : '' }`}
                                             onClick={toggleBidModal}
                                         >
                                             Bid
                                         </NormalButton>
-                                    ) : (
-                                        <NormalButton 
-                                            disabled={ !currentLandInfo?.isShiboshiZone && currentBidCount === 0 ? true : false }
-                                            className={`px-10 font-bold ${ currentLandInfo?.noBidAllowedOnLand ? 'hidden' : '' }`}
-                                            // onClick={toggleBidModal}
-                                        >
-                                            Mint
-                                        </NormalButton>
-                                    ) }
+                                    ) : null }
                                 </div>
                             ) : ''}
-
 
                             <BidModal 
                                 isOpen={ showBidModal }
@@ -316,6 +315,27 @@ export const LandDetail = () => {
                         </>
                     )}
                 </>
+            ) : (
+                <div className='text-center'>
+                    { currentStage === Events['Bid'] ? (
+                        <>
+                            <NormalButton 
+                                className={`px-10 font-bold ${ '' }`}
+                                disabled={ !isMultiplePossible() ? true : false }
+                                onClick={toggleBidModal}
+                            >
+                                Submit Multibid({ selectedInfo.length })
+                            </NormalButton>
+
+                            <BidMultiModal 
+                                isOpen={ showBidModal }
+                                onDismiss={ toggleBidModal }
+                                selectedInfo={ selectedInfo }
+                                handleCloseAction={ handleClose }
+                            />
+                        </>
+                    ) : null }
+                </div>
             ) }
 
         </LandDetailPanel>

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import MapFilter from '../../components/Map/Filter'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, AppState } from '../../state'
@@ -6,13 +6,11 @@ import { setSelectedLandInfo, updateMapCenterPos, updateMapZoomLevel, updateSear
 import Map from './MapView'
 import LandDetail from '../../components/Map/LandDetail';
 // import { socket } from 'feathers'
-import { mapLandDataUrl } from 'constants/map'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { Dots } from 'pages/Pool/styleds'
 import ShiberseLoader from 'components/Loader/loader'
 import { PrimaryButton } from 'theme'
-import axios from 'axios'
 import useLandMap from 'hooks/useLandMap'
 
 const useQuery = () => {
@@ -89,13 +87,13 @@ export const MapScene = () => {
 			if( zoomLevel )
 				setMapZoomLevel( Number(zoomLevel) )
 
-			setSelectedInfo({
+			setSelectedInfo([{
 				coordinates: {
 					x: Number(centerPos.x),
 					y: Number(centerPos.y),
 				},
 				show: false
-			})
+			}])
 		}
 	}, [ query ])
 	

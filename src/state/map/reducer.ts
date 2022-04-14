@@ -14,13 +14,7 @@ export interface MapState {
 }
 
 const initialState: MapState = {
-    selectedLandInfo: {
-        // show: false,
-        // coordinates: {
-        //     x: 0,
-        //     y: 0,
-        // }
-    },
+    selectedLandInfo: [],
     mapCenterPos: {
         x: 0,
         y: 0,

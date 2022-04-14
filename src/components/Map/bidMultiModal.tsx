@@ -6,11 +6,12 @@ import { NormalButton } from 'theme'
 import confirmIcon from '../../assets/images/map/confirmIcon.svg'
 import { useWeb3React } from '@web3-react/core'
 import { useETHBalances } from 'state/wallet/hooks'
-import { formatFromBalance, formatToBalance, shortenDouble } from 'utils'
+import { formatBalance, formatFromBalance, formatToBalance, parseBalance, shortenDouble } from 'utils'
 import useShiberseLandAuction from 'hooks/useShiberseLandAuction'
 import { useIsTransactionPending } from 'state/transactions/hooks'
 import ShiberseLoader from 'components/Loader/loader'
 import Loader from 'components/Loader'
+import { ethers } from 'ethers'
 
 const UpperSection = styled.div`
     position: relative;
@@ -143,6 +144,7 @@ export const BidMultiModal = (props: any) => {
     const { bidMulti, bidShiboshiZoneMulti, fetchLandPrice } = useShiberseLandAuction({})
 
     const [bidPrice, setBidPrice] = useState(Number(props.selectedInfo.price))
+    const [totalPrice, setTotalPrice] = useState()
 
     const [isLoading, setIsLoading] = useState(true)
 
@@ -153,18 +155,21 @@ export const BidMultiModal = (props: any) => {
             if (props.isOpen && props.selectedInfo.length > 0) {
                 setIsLoading(true)
 
-                let totalPrice = 0
+                let totalPrice
                 const pArray = [] as any
                 for( let i = 0; i < props.selectedInfo.length; i++ ) {
                     const price = await fetchLandPrice({ x: props.selectedInfo[i].coordinates.x, y: props.selectedInfo[i].coordinates.y })
-                    totalPrice += Number( formatFromBalance(price, 18) )
+                    if( !totalPrice )
+                        totalPrice = price
+                    else
+                        totalPrice = totalPrice.add(price)
 
                     pArray.push( price )
                 }
     
-                setBidPrice(totalPrice)
+                setBidPrice( Number( formatFromBalance(totalPrice, 18) ) )
+                setTotalPrice( totalPrice )
                 setPriceArray( [ ...pArray ] )
-
                 setIsLoading(false)
             }
         }
@@ -187,13 +192,11 @@ export const BidMultiModal = (props: any) => {
             setValidateText(null)
 
             const inputData = {
-                totalAmount: bidPrice, 
+                totalAmount: totalPrice, 
                 xArray: [],
                 yArray: [],
                 priceArray: priceArray
             } as any
-
-            console.error(inputData.totalAmount)
 
             for( let i = 0; i < props.selectedInfo.length; i++ ) {
                 inputData.xArray.push( props.selectedInfo[i].coordinates.x )
@@ -214,6 +217,8 @@ export const BidMultiModal = (props: any) => {
             if( !tx.hash ) {
                 if( JSON.stringify(tx.message).includes('ERR_INSUFFICIENT_AMOUNT_SENT') ) {
                     setValidateText('Minimum bid amount not met, try some higher amount')
+                } else if( JSON.stringify(tx.message).includes('ERR_CANNOT_OUTBID_YOURSELF') ) {
+                    setValidateText('You cannot outbid yourself')
                 }
             }
         }

@@ -7,6 +7,8 @@ import { useBlockNumber } from 'state/application/hooks'
 import { formatFromBalance, formatToBalance } from 'utils'
 import axios from 'axios'
 import { apiServer } from 'constants/map'
+import { ethers } from 'ethers'
+import { getFixedValue } from 'utils/mapHelper'
 
 const useShiberseLandAuction = (props: any) => {
     const { account, chainId } = useActiveWeb3React()
@@ -173,7 +175,7 @@ const useShiberseLandAuction = (props: any) => {
                 try {
                     const tx = await landContract?.bidMulti(input?.xArray, input?.yArray, input?.priceArray, {
                         from: account,
-                        value: formatToBalance(input?.totalAmount).value
+                        value: input?.totalAmount
                     })
                     addTransaction(tx, { summary: `Bid placed!` })
                     return tx
@@ -193,7 +195,7 @@ const useShiberseLandAuction = (props: any) => {
                 try {
                     const tx = await landContract?.bidShiboshiZoneMulti(input?.xArray, input?.yArray, input?.priceArray, signature, {
                         from: account,
-                        value: formatToBalance(input?.totalAmount).value
+                        value: input?.totalAmount
                     })
                     addTransaction(tx, { summary: `Bid placed on Shiboshi Zone!` })
                     return tx

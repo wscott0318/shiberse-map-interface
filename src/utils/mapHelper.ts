@@ -44,3 +44,13 @@ export const getLandName = (name: any, info: any) => {
     }
 } 
 export const getLandImage = (name: any) => landImages[name as keyof typeof landImages] ? landImages[name as keyof typeof landImages] : name
+
+export const getFixedValue = ( val: string, decimals: number ) => {
+    const temp = val.split('.')
+    const count = temp.length === 1 ? 0 : temp[1].length
+
+    for(let i = 0; i < decimals - count; i++)
+        val += '0'
+
+    return val
+}

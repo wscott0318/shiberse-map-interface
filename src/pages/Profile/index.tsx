@@ -229,7 +229,7 @@ export const Profile = () => {
     const { stakedBalance: leashStakedBalance, unlockAt: leashUnlockAt } = useShiberseStakeToken({ tokenType: 'leash' })
     const { stakedBalance: shiboshiStakedBalance, unlockAt: shiboshiUnlockAt } = useShiberseStakeNFT({ tokenType: 'shiboshi' })
 
-    const getRemainingDays = ( timestamp: any ) => (Number( timestamp ) - (new Date().getTime()) < 0 ? 0 : Math.ceil( Number( timestamp ) - (new Date().getTime()) / 60 / 60 / 24))
+    const getRemainingDays = ( timestamp: any ) => (Number( timestamp )*1000 - (new Date().getTime()) < 0 ? 0 : Math.ceil( Number( timestamp )*1000 - (new Date().getTime()) / 60 / 60 / 24))
 
     const toggleBidModal = () => setShowBidModal(prev => !prev)
 

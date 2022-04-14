@@ -10,11 +10,9 @@ import { apiServer, Events, EventsText } from 'constants/map';
 import BidModal from '../bidModal';
 import useShiberseStakeToken from 'hooks/useShiberseStakeToken';
 import useShiberseStakeNFT from 'hooks/useShiberseStakeNFT';
-import useLandMap from 'hooks/useLandMap';
 import axios from 'axios';
 import { useWeb3React } from '@web3-react/core';
-import { formatFromBalance, shortenAddress } from 'utils';
-import { useBlockNumber } from 'state/application/hooks';
+import { formatFromBalance, shortenAddress, shortenDouble } from 'utils';
 import LandBidHistoryModal from 'components/BidHistoryModal/landHistory';
 import { getLandName, getLandImage } from 'utils/mapHelper';
 import { ReactComponent as Close } from 'assets/images/x.svg'
@@ -220,7 +218,7 @@ export const LandDetail = () => {
     const hideDetail = (info: any) => info?.tierName === 'road' || info?.tierName === 'hub' || info?.reserved
 
     const isMultiplePossible = () => {
-        if( selectedInfo.findIndex((item: any) => item.isShiboshiZone) !== -1 && selectedInfo.length > currentBidCount )
+        if( selectedInfo.findIndex((item: any) => !item.isShiboshiZone) !== -1 && selectedInfo.length > currentBidCount )
             return false
 
         if( selectedInfo.findIndex((item: any) => item.isShiboshiZone) !== -1 && selectedInfo.findIndex((item: any) => !item.isShiboshiZone) !== -1 )
@@ -289,7 +287,7 @@ export const LandDetail = () => {
                             />
 
                             <LandName className='mb-1'>Current price</LandName>
-                            <BidBalance className='mb-2'>{ currentLandInfo?.price } ETH</BidBalance>
+                            <BidBalance className='mb-2'>{ shortenDouble(Number(currentLandInfo?.price), 2) } ETH</BidBalance>
                             <OpenType className='mb-4'>{ EventsText[ currentStage ] }</OpenType>
 
                             { canShowButton() ? (

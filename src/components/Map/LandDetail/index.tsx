@@ -18,6 +18,7 @@ import { getLandName, getLandImage } from 'utils/mapHelper';
 import { ReactComponent as Close } from 'assets/images/x.svg'
 import ShiberseLoader from 'components/Loader/loader'
 import BidMultiModal from '../bidMultiModal';
+import MintModal from '../mintModal';
 
 const LandDetailPanel = styled.div<{ show: boolean }>`
     display: ${({ show }) => (show ? 'block' : 'none')};
@@ -128,6 +129,7 @@ const CloseColor = styled(Close)`
 
 export const LandDetail = () => {
     const [ showBidModal, setShowBidModal ] = useState(false)
+    const [ showMintModal, setShowMintModal ] = useState(false)
     const [ currentLandInfo, setCurrentLandInfo ] = useState({}) as any
     
     const { account } = useWeb3React()
@@ -144,6 +146,8 @@ export const LandDetail = () => {
     const setSelectedInfo = (newLandInfo: object): any => dispatch( setSelectedLandInfo( { newLandInfo } ) )
 
     const toggleBidModal = () => setShowBidModal(prev => !prev)
+
+    const toggleMintModal = () => setShowMintModal(prev => !prev)
 
     const [showBidHistoryModal, setShowBidHistoryModal] = useState(false)
 
@@ -194,6 +198,7 @@ export const LandDetail = () => {
                 if( selected?.tierName && selected?.tierName !== 'hub' && selected?.tierName !== 'road' && !selected?.reserved ) {
                     const price = await fetchLandPrice({ x: selected.coordinates.x, y: selected.coordinates.y })
                     newInfo.price = Number( formatFromBalance(price, 18) )
+                    newInfo.bigNumPrice = price
     
                     const currentBidWinner = await fetchLandCurrentWinner({ x: selected.coordinates.x, y: selected.coordinates.y })
                     newInfo.currentBidWinner = currentBidWinner
@@ -300,6 +305,14 @@ export const LandDetail = () => {
                                         >
                                             Bid
                                         </NormalButton>
+                                    ) : currentStage === Events['Holder'] ? (
+                                        <NormalButton 
+                                            disabled={ !currentLandInfo?.isShiboshiZone && currentBidCount === 0 ? true : false }
+                                            className={`px-10 font-bold ${ Number(currentLandInfo?.currentBidWinner) ? 'hidden' : '' }`}
+                                            onClick={toggleMintModal}
+                                        >
+                                            Mint
+                                        </NormalButton>
                                     ) : null }
                                 </div>
                             ) : ''}
@@ -309,6 +322,12 @@ export const LandDetail = () => {
                                 onDismiss={ toggleBidModal }
                                 selectedInfo={ currentLandInfo }
                                 handleCloseAction={ handleClose }
+                            />
+
+                            <MintModal 
+                                isOpen={ showMintModal }
+                                onDismiss={ toggleMintModal }
+                                landInfo={ currentLandInfo }
                             />
                         </>
                     )}

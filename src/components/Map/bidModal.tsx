@@ -198,7 +198,7 @@ export const BidModal = (props: any) => {
             setValidateText(null)
 
             const inputData = {
-                value: bidPrice + 0.00001, 
+                value: props.selectedInfo?.bigNumPrice, 
                 x: props.selectedInfo?.coordinates?.x,
                 y: props.selectedInfo?.coordinates?.y
             }

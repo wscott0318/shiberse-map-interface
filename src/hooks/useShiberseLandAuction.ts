@@ -140,7 +140,7 @@ const useShiberseLandAuction = (props: any) => {
                 try {
                     const tx = await landContract?.bidOne(input?.x, input?.y, {
                         from: account,
-                        value: formatToBalance(input?.value).value
+                        value: input?.value
                     })
                     addTransaction(tx, { summary: `Bid placed!` })
                     return tx
@@ -160,7 +160,7 @@ const useShiberseLandAuction = (props: any) => {
                 try {
                     const tx = await landContract?.bidShiboshiZoneOne(input?.x, input?.y, signature, {
                         from: account,
-                        value: formatToBalance(input?.value).value
+                        value: input?.value
                     })
                     addTransaction(tx, { summary: `Bid placed on Shiboshi Zone!` })
                     return tx
@@ -216,7 +216,7 @@ const useShiberseLandAuction = (props: any) => {
                 try {
                     const tx = await landContract?.mintPrivate(input?.x, input?.y, {
                         from: account,
-                        value: formatToBalance(input?.value).value
+                        value: input?.amount
                     })
                     addTransaction(tx, { summary: `Mint succeed!` })
                     return tx
@@ -236,7 +236,7 @@ const useShiberseLandAuction = (props: any) => {
                 try {
                     const tx = await landContract?.mintPrivateShiboshiZone(input?.x, input?.y, signature, {
                         from: account,
-                        value: formatToBalance(input?.value).value
+                        value: input?.amount
                     })
                     addTransaction(tx, { summary: `Mint succeed on Shiboshi Zone!` })
                     return tx

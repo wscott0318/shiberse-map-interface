@@ -4,7 +4,7 @@ import etherIcon from 'assets/images/profile/ether.svg'
 import { ModalToggleButton, PrimaryButton } from 'theme'
 import BidHistoryModal from 'components/BidHistoryModal'
 import locationImg from 'assets/images/map/location.svg'
-import MintModal from './mintModal'
+import {MintWinningModal, MintWinningMultiModal} from './mintWinningModal'
 import { useWeb3React } from '@web3-react/core'
 import { useETHBalances } from 'state/wallet/hooks'
 import { NETWORK_LABEL } from 'constants/networks'
@@ -188,6 +188,7 @@ const LockRewards = styled.div`
 export const Profile = () => {
     const [showBidHistoryModal, setShowBidHistoryModal] = useState(false)
     const [showMintModal, setShowMintModal] = useState(false)
+    const [showMintMultiModal, setShowMintMultiModal] = useState(false)
     const [showBidModal, setShowBidModal] = useState(false)
     const [landInfo, setLandInfo] = useState({})
 
@@ -233,12 +234,24 @@ export const Profile = () => {
 
     const toggleBidModal = () => setShowBidModal(prev => !prev)
 
+    const toggleMintModal = () => setShowMintModal(prev => !prev)
+    const toggleMintMultiModal = () => setShowMintMultiModal(prev => !prev)
+
     const handleBidMore = (item: any) => {
         setLandInfo({
             ...item
         })
         toggleBidModal()
     }
+
+    const handleMintOne = (item: any) => {
+        setLandInfo({
+            ...item
+        })
+        toggleMintModal()
+    }
+
+    const isBidEvent = currentStage === Events['Bid']
 
     return (
         <ProfileWrapper className='container'>
@@ -247,76 +260,79 @@ export const Profile = () => {
                 <WalletStatusWrapper className='flex flex-col'>
                     <DescText className='mb-2'>{chainLabel} Network</DescText>
                     <div className='flex'>
-                        <img src={etherIcon} width='12' className='mr-2'></img>
+                        <img src={etherIcon} width='12' className='mr-2' alt='pic'></img>
                         <span className='text-base'>{ shortenDouble(currentBalance, 2) } ETH</span>
                     </div>
                 </WalletStatusWrapper>
             </div>
 
+            {( isBidEvent ? (
+                <div className='relative mb-12'>
+                    <SubTitle>
+                        lost bids
+
+                        <span className='ml-4 text-sm font-normal normal-case'>You can bid again on the lost bids</span>
+                    </SubTitle>
+
+                    { loadingBidsInfo ? (
+                        <NoneContentWrapper className='flex justify-center'>
+                            <ShiberseLoader size='36px'/>
+                        </NoneContentWrapper>
+                    ): !lostBids.length ? (
+                        <NoneContentWrapper>
+                            <div className='text-base' style={{ color: 'rgb(255, 255, 255, 0.5)' }}>None</div>
+                        </NoneContentWrapper>
+                    ): ( 
+                        <div className='flex flex-wrap'>
+                            { lostBids.map((item: any, index: number) => (
+                                <ItemWrapper key={`allbids${index}`}>
+                                    <LandInfo className='flex'>
+                                        <LandImage>
+                                            <img src={getLandImage(item?.tierName)} alt='pic'></img>
+                                        </LandImage>
+
+                                        <DetailInfo>
+                                            <LandName>Land</LandName>
+                                            <LandType>{ getLandName(item.tierName, item) }</LandType>
+                                            <a target={'_blank'} rel="noreferrer" href={`/#/map?x=${item.coordinates.x}&y=${item.coordinates.y}`}>
+                                                <LandCoordinates className='flex items-center mb-2'>
+                                                    <img src={locationImg}></img>
+                                                    { item.coordinates.x }, { item.coordinates.y }
+                                                </LandCoordinates>
+                                            </a>
+                                        </DetailInfo>
+                                    </LandInfo>
+
+                                    <CurrentBid className='mb-1'>Current bid</CurrentBid>
+                                    <BidBalance className='mb-2'>{Number(item.price).toFixed(2)} ETH</BidBalance>
+                                    {/* <OpenType className='mb-4'>Bid closing in 2 days</OpenType> */}
+
+                                    <MintButton
+                                        className={`mt-2`}
+                                        onClick={() => handleBidMore(item)}
+                                    >
+                                        BID
+                                    </MintButton>
+                                </ItemWrapper>
+                            )) }
+                        </div>
+                    ) }
+
+                    <BidModal 
+                        isOpen={ showBidModal }
+                        onDismiss={ toggleBidModal }
+                        selectedInfo={ landInfo }
+                    />
+                </div>
+            ): null )}
+
             <div className='relative mb-12'>
                 <SubTitle>
-                    lost bids
+                    { isBidEvent ? 'leading bids' : 'won bids' }
 
-                    <span className='ml-4 text-sm font-normal normal-case'>You can bid again on the lost bids</span>
-                </SubTitle>
-
-                { loadingBidsInfo ? (
-                    <NoneContentWrapper className='flex justify-center'>
-                        <ShiberseLoader size='36px'/>
-                    </NoneContentWrapper>
-                ): !lostBids.length ? (
-                    <NoneContentWrapper>
-                        <div className='text-base' style={{ color: 'rgb(255, 255, 255, 0.5)' }}>None</div>
-                    </NoneContentWrapper>
-                ): ( 
-                    <div className='flex flex-wrap'>
-                        { lostBids.map((item: any, index: number) => (
-                            <ItemWrapper key={`allbids${index}`}>
-                                <LandInfo className='flex'>
-                                    <LandImage>
-                                        <img src={getLandImage(item?.tierName)} alt='pic'></img>
-                                    </LandImage>
-
-                                    <DetailInfo>
-                                        <LandName>Land</LandName>
-                                        <LandType>{ getLandName(item.tierName, item) }</LandType>
-                                        <a target={'_blank'} rel="noreferrer" href={`/#/map?x=${item.coordinates.x}&y=${item.coordinates.y}`}>
-                                            <LandCoordinates className='flex items-center mb-2'>
-                                                <img src={locationImg}></img>
-                                                { item.coordinates.x }, { item.coordinates.y }
-                                            </LandCoordinates>
-                                        </a>
-                                    </DetailInfo>
-                                </LandInfo>
-
-                                <CurrentBid className='mb-1'>Current bid</CurrentBid>
-                                <BidBalance className='mb-2'>{Number(item.price).toFixed(2)} ETH</BidBalance>
-                                {/* <OpenType className='mb-4'>Bid closing in 2 days</OpenType> */}
-
-                                <MintButton
-                                    className={`mt-2`}
-                                    onClick={() => handleBidMore(item)}
-                                >
-                                    BID
-                                </MintButton>
-                            </ItemWrapper>
-                        )) }
-                    </div>
-                ) }
-
-                <BidModal 
-                    isOpen={ showBidModal }
-                    onDismiss={ toggleBidModal }
-                    selectedInfo={ landInfo }
-                />
-            </div>
-
-            <div className='relative mb-12'>
-                <SubTitle>
-                    leading bids
                     <ViewBidHistoryButton 
-                        onClick={() => setShowMintModal(prev => !prev)}
-                        className={`${ currentStage === Events['Bid'] ? 'hidden': '' }`}
+                        onClick={() => toggleMintMultiModal()}
+                        className={`${ isBidEvent || loadingBidsInfo || winBids.length < 2 ? 'hidden': '' }`}
                     >
                         Mint all at once
                     </ViewBidHistoryButton>
@@ -344,7 +360,7 @@ export const Profile = () => {
                                         <LandType>{ getLandName(item.tierName, item) }</LandType>
                                         <a target={'_blank'} rel="noreferrer" href={`/#/map?x=${item.coordinates.x}&y=${item.coordinates.y}`}>
                                             <LandCoordinates className='flex items-center'>
-                                                <img src={locationImg}></img>
+                                                <img src={locationImg} alt='pic'></img>
                                                 { item.coordinates.x }, { item.coordinates.y }
                                             </LandCoordinates>
                                         </a>
@@ -352,18 +368,26 @@ export const Profile = () => {
                                 </LandInfo>
 
                                 <MintButton
-                                    className={`mt-2 ${ currentStage === Events['Bid'] ? 'hidden': '' }`}
+                                    className={`mt-2 ${ isBidEvent ? 'hidden': '' }`}
+                                    onClick={ () => handleMintOne(item) }
                                 >
-                                        MINT
+                                    MINT
                                 </MintButton>
                             </ItemWrapper>
                         )) }
                     </div>
                 ) }
 
-                <MintModal 
+                <MintWinningMultiModal 
+                    isOpen={showMintMultiModal}
+                    onDismiss={toggleMintMultiModal}
+                    winBids={winBids}
+                />
+
+                <MintWinningModal 
                     isOpen={showMintModal}
-                    onDismiss={() => setShowMintModal(prev => !prev)}
+                    onDismiss={toggleMintModal}
+                    landInfo={ landInfo }
                 />
             </div>
 

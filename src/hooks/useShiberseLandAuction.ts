@@ -133,7 +133,7 @@ const useShiberseLandAuction = (props: any) => {
 
     const bidOne = useCallback(
         async ( input: any ) => {
-            if( input?.value && input?.x && input?.y ) {
+            if( input ) {
                 try {
                     const tx = await landContract?.bidOne(input?.x, input?.y, {
                         from: account,
@@ -153,7 +153,7 @@ const useShiberseLandAuction = (props: any) => {
         async( input: any ) => {
             const signature = await getSignature()
 
-            if( input?.value && input?.x && input?.y && signature ) {
+            if( input && signature ) {
                 try {
                     const tx = await landContract?.bidShiboshiZoneOne(input?.x, input?.y, signature, {
                         from: account,
@@ -209,7 +209,7 @@ const useShiberseLandAuction = (props: any) => {
 
     const mintPrivate = useCallback(
         async( input: any ) => {
-            if( input?.value && input?.x && input?.y ) {
+            if( input ) {
                 try {
                     const tx = await landContract?.mintPrivate(input?.x, input?.y, {
                         from: account,
@@ -229,7 +229,7 @@ const useShiberseLandAuction = (props: any) => {
         async( input: any ) => {
             const signature = await getSignature()
 
-            if( input?.value && input?.x && input?.y && signature ) {
+            if( input && signature ) {
                 try {
                     const tx = await landContract?.mintPrivateShiboshiZone(input?.x, input?.y, signature, {
                         from: account,
@@ -247,7 +247,7 @@ const useShiberseLandAuction = (props: any) => {
 
     const mintPublic = useCallback(
         async( input: any ) => {
-            if( input?.value && input?.x && input?.y ) {
+            if( input ) {
                 try {
                     const tx = await landContract?.mintPublic(input?.x, input?.y, {
                         from: account,

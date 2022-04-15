@@ -80,7 +80,7 @@ export const MapScene = () => {
 
 		const zoomLevel = query.get('zoom')
 
-		if( centerPos.x && centerPos.y ) {
+		if( (centerPos.x === 0 || centerPos.x) && (centerPos.y === 0 || centerPos.y) ) {
 			setMapCenterPos( {
 				...centerPos,
 				y: -(centerPos.y)

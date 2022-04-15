@@ -198,7 +198,7 @@ export const Profile = () => {
     const currentBalance = parseFloat(userEthBalance?.toSignificant() as any)
     const chainLabel = NETWORK_LABEL[(chainId as keyof typeof NETWORK_LABEL)]
 
-    const { allPlacedBids, winningBids, currentStage, loadingBidsInfo } = useShiberseLandAuction({})
+    const { allPlacedBids, winningBids, currentStage, loadingBidsInfo, landNFTs } = useShiberseLandAuction({})
 
     const { landData, landPriceData, accountBidsInfo, isLandDataLoaded } = useLandMap()
 
@@ -225,6 +225,16 @@ export const Profile = () => {
     const lostBids = allBids.filter((item: any) => {
         const index = winBids.findIndex((wonbid: any) => wonbid.id === item.id)
         return index === -1 ? true : false
+    })
+
+    const toMintLands = winBids.filter((item: any) => {
+        const index = landNFTs.findIndex((land: any) => Number(land.id.tokenId) === Number(item.id))
+        return index === -1 ? true : false
+    })
+
+    const mintedLands = winBids.filter((item: any) => {
+        const index = landNFTs.findIndex((land: any) => Number(land.id.tokenId) === Number(item.id))
+        return index !== -1 ? true : false
     })
 
     const { stakedBalance: leashStakedBalance, unlockAt: leashUnlockAt } = useShiberseStakeToken({ tokenType: 'leash' })
@@ -326,70 +336,162 @@ export const Profile = () => {
                 </div>
             ): null )}
 
-            <div className='relative mb-12'>
-                <SubTitle>
-                    { isBidEvent ? 'leading bids' : 'won bids' }
+            { isBidEvent ? (
+                <div className='relative mb-12'>
+                    <SubTitle>
+                        { isBidEvent ? 'leading bids' : 'won bids' }
+                    </SubTitle>
 
-                    <ViewBidHistoryButton 
-                        onClick={() => toggleMintMultiModal()}
-                        className={`${ isBidEvent || loadingBidsInfo || winBids.length < 2 ? 'hidden': '' }`}
-                    >
-                        Mint all at once
-                    </ViewBidHistoryButton>
-                </SubTitle>
+                    { loadingBidsInfo ? (
+                        <NoneContentWrapper className='flex justify-center'>
+                            <ShiberseLoader size='36px'/>
+                        </NoneContentWrapper>
+                    ): !winBids.length ? (
+                        <NoneContentWrapper>
+                            <div className='text-base' style={{ color: 'rgb(255, 255, 255, 0.5)' }}>None</div>
+                        </NoneContentWrapper>
+                    ): (
+                        <div className='flex flex-wrap'>
+                            { winBids.map((item: any, index: number) => (
+                                <ItemWrapper key={`winBids${index}`}>
+                                    <LandInfo className='flex'>
+                                        <LandImage>
+                                            <img src={getLandImage(item?.tierName)} alt='pic'></img>
+                                        </LandImage>
 
-                { loadingBidsInfo ? (
-                    <NoneContentWrapper className='flex justify-center'>
-                        <ShiberseLoader size='36px'/>
-                    </NoneContentWrapper>
-                ): !winBids.length ? (
-                    <NoneContentWrapper>
-                        <div className='text-base' style={{ color: 'rgb(255, 255, 255, 0.5)' }}>None</div>
-                    </NoneContentWrapper>
-                ): (
-                    <div className='flex flex-wrap'>
-                        { winBids.map((item: any, index: number) => (
-                            <ItemWrapper key={`winBids${index}`}>
-                                <LandInfo className='flex'>
-                                    <LandImage>
-                                        <img src={getLandImage(item?.tierName)} alt='pic'></img>
-                                    </LandImage>
+                                        <DetailInfo>
+                                            <LandName>Land</LandName>
+                                            <LandType>{ getLandName(item.tierName, item) }</LandType>
+                                            <a target={'_blank'} rel="noreferrer" href={`/#/map?x=${item.coordinates.x}&y=${item.coordinates.y}`}>
+                                                <LandCoordinates className='flex items-center'>
+                                                    <img src={locationImg} alt='pic'></img>
+                                                    { item.coordinates.x }, { item.coordinates.y }
+                                                </LandCoordinates>
+                                            </a>
+                                        </DetailInfo>
+                                    </LandInfo>
+                                </ItemWrapper>
+                            )) }
+                        </div>
+                    ) }
+                </div>
+            ): null }
 
-                                    <DetailInfo>
-                                        <LandName>Land</LandName>
-                                        <LandType>{ getLandName(item.tierName, item) }</LandType>
-                                        <a target={'_blank'} rel="noreferrer" href={`/#/map?x=${item.coordinates.x}&y=${item.coordinates.y}`}>
-                                            <LandCoordinates className='flex items-center'>
-                                                <img src={locationImg} alt='pic'></img>
-                                                { item.coordinates.x }, { item.coordinates.y }
-                                            </LandCoordinates>
-                                        </a>
-                                    </DetailInfo>
-                                </LandInfo>
+            { !isBidEvent ? (
+                <>
+                    <div className='relative mb-12'>
+                        <SubTitle>
+                            To Mint Lands
 
-                                <MintButton
-                                    className={`mt-2 ${ isBidEvent ? 'hidden': '' }`}
-                                    onClick={ () => handleMintOne(item) }
-                                >
-                                    MINT
-                                </MintButton>
-                            </ItemWrapper>
-                        )) }
+                            <ViewBidHistoryButton 
+                                onClick={() => toggleMintMultiModal()}
+                                className={`${ loadingBidsInfo || !toMintLands.length ? 'hidden': '' }`}
+                            >
+                                Mint all at once
+                            </ViewBidHistoryButton>
+                        </SubTitle>
+
+                        { loadingBidsInfo ? (
+                            <NoneContentWrapper className='flex justify-center'>
+                                <ShiberseLoader size='36px'/>
+                            </NoneContentWrapper>
+                        ): !toMintLands.length ? (
+                            <NoneContentWrapper>
+                                <div className='text-base' style={{ color: 'rgb(255, 255, 255, 0.5)' }}>None</div>
+                            </NoneContentWrapper>
+                        ): (
+                            <div className='flex flex-wrap'>
+                                { toMintLands.map((item: any, index: number) => (
+                                    <ItemWrapper key={`toMintLands${index}`}>
+                                        <LandInfo className='flex'>
+                                            <LandImage>
+                                                <img src={getLandImage(item?.tierName)} alt='pic'></img>
+                                            </LandImage>
+
+                                            <DetailInfo>
+                                                <LandName>Land</LandName>
+                                                <LandType>{ getLandName(item.tierName, item) }</LandType>
+                                                <a target={'_blank'} rel="noreferrer" href={`/#/map?x=${item.coordinates.x}&y=${item.coordinates.y}`}>
+                                                    <LandCoordinates className='flex items-center'>
+                                                        <img src={locationImg} alt='pic'></img>
+                                                        { item.coordinates.x }, { item.coordinates.y }
+                                                    </LandCoordinates>
+                                                </a>
+                                            </DetailInfo>
+                                        </LandInfo>
+
+                                        <MintButton
+                                            className={`mt-2 ${ isBidEvent ? 'hidden': '' }`}
+                                            onClick={ () => handleMintOne(item) }
+                                        >
+                                            MINT
+                                        </MintButton>
+                                    </ItemWrapper>
+                                )) }
+                            </div>
+                        ) }
+
+                        <MintWinningMultiModal 
+                            isOpen={showMintMultiModal}
+                            onDismiss={toggleMintMultiModal}
+                            winBids={toMintLands}
+                        />
+
+                        <MintWinningModal 
+                            isOpen={showMintModal}
+                            onDismiss={toggleMintModal}
+                            landInfo={ landInfo }
+                        />
                     </div>
-                ) }
 
-                <MintWinningMultiModal 
-                    isOpen={showMintMultiModal}
-                    onDismiss={toggleMintMultiModal}
-                    winBids={winBids}
-                />
+                    <div className='relative mb-12'>
+                        <SubTitle>
+                            Minted Lands
 
-                <MintWinningModal 
-                    isOpen={showMintModal}
-                    onDismiss={toggleMintModal}
-                    landInfo={ landInfo }
-                />
-            </div>
+                            <ViewBidHistoryButton 
+                                onClick={() => toggleMintMultiModal()}
+                                className={`${ loadingBidsInfo || mintedLands.length < 2 ? 'hidden': '' }`}
+                            >
+                                Mint all at once
+                            </ViewBidHistoryButton>
+                        </SubTitle>
+
+                        { loadingBidsInfo ? (
+                            <NoneContentWrapper className='flex justify-center'>
+                                <ShiberseLoader size='36px'/>
+                            </NoneContentWrapper>
+                        ): !mintedLands.length ? (
+                            <NoneContentWrapper>
+                                <div className='text-base' style={{ color: 'rgb(255, 255, 255, 0.5)' }}>None</div>
+                            </NoneContentWrapper>
+                        ): (
+                            <div className='flex flex-wrap'>
+                                { mintedLands.map((item: any, index: number) => (
+                                    <ItemWrapper key={`mintedLands${index}`}>
+                                        <LandInfo className='flex'>
+                                            <LandImage>
+                                                <img src={getLandImage(item?.tierName)} alt='pic'></img>
+                                            </LandImage>
+
+                                            <DetailInfo>
+                                                <LandName>Land</LandName>
+                                                <LandType>{ getLandName(item.tierName, item) }</LandType>
+                                                <a target={'_blank'} rel="noreferrer" href={`/#/map?x=${item.coordinates.x}&y=${item.coordinates.y}`}>
+                                                    <LandCoordinates className='flex items-center'>
+                                                        <img src={locationImg} alt='pic'></img>
+                                                        { item.coordinates.x }, { item.coordinates.y }
+                                                    </LandCoordinates>
+                                                </a>
+                                            </DetailInfo>
+                                        </LandInfo>
+                                    </ItemWrapper>
+                                )) }
+                            </div>
+                        ) }
+                    </div>
+                </>
+            ): null }
+
 
             <div className='relative mb-12'>
                 <SubTitle>

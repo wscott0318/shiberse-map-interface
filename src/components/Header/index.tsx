@@ -6,8 +6,9 @@ import { MenuButton } from 'theme'
 import styled from 'styled-components'
 import { useLocation } from 'react-router-dom'
 import { useActiveWeb3React } from 'hooks'
-import { endTime } from 'constants/map'
+import { timerInfo } from 'constants/map'
 import { isMobile } from 'react-device-detect'
+import useShiberseLandAuction from 'hooks/useShiberseLandAuction'
 
 const LogoText = styled.div`
     letter-spacing: 0.15em;
@@ -62,8 +63,11 @@ export default function Header(): JSX.Element {
     const [lastScroll, setLastScroll] = useState(0)
     const [currentTime, setCurrentTime] = useState({}) as any
     const [isFirst, setIsFirst] = useState(true)
+    const [refreshInterval, setRefreshInterval] = useState() as any
 
     const { pathname } = useLocation()
+
+    const { currentStage } = useShiberseLandAuction({})
 
     const isOnMapPage = () => pathname === '/map'
 
@@ -84,19 +88,19 @@ export default function Header(): JSX.Element {
         }
     })
 
+    const handleTimeInterval = () => {
+        getRemainingTime()
+    }
+
     useEffect(() => {
-        if( isFirst ) {
-            setIsFirst(false)
-            setInterval(() => {
-                getRemainingTime()
-            }, 500)
-        }
-    })
+        clearInterval(refreshInterval)
+        const timeInterval = setInterval(handleTimeInterval, 500)
+        setRefreshInterval(timeInterval)
+    }, [currentStage])
 
     const getRemainingTime = () => {
         const info = {} as any
-
-        let diffTime = (endTime - new Date().getTime()) / 1000
+        let diffTime = (timerInfo[currentStage].endTime - new Date().getTime()) / 1000
 
         info.days = Math.floor( diffTime / (24 * 60 * 60) )
         diffTime = diffTime % (24 * 60 * 60)
@@ -131,7 +135,7 @@ export default function Header(): JSX.Element {
                     { !isMobile ? (
                         <div>
                             <TimerWrapper>
-                                <b>Bid Event Countdown: </b> {`${currentTime.days} day${ currentTime.days > 1 ? 's' : '' }, ${currentTime.hours}h, ${currentTime.minutes}m, ${currentTime.seconds}s`}
+                                <b>{ timerInfo[currentStage].desc }: </b> {`${currentTime.days} day${ currentTime.days > 1 ? 's' : '' }, ${currentTime.hours}h, ${currentTime.minutes}m, ${currentTime.seconds}s`}
                             </TimerWrapper>
                         </div>
                     ) : null }

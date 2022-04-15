@@ -229,7 +229,6 @@ export const MintWinningModal = (props: any) => {
 }
 
 export const MintWinningMultiModal = (props: any) => {
-    const [ mintCount, setMintCount ] = useState(1)
 
     const [ pendingTx, setPendingTx ] = useState<string | null>(null)
 
@@ -241,30 +240,15 @@ export const MintWinningMultiModal = (props: any) => {
 
     useEffect(() => {
         if( props.isOpen ) {
-            setMintCount(1)
             setPendingTx(null)
         }
     }, [props.isOpen])
-
-    const increaseMintCount = () => {
-        if( mintCount >= props.winBids.length )
-            return
-
-        setMintCount(prev => prev + 1)
-    }
-
-    const decreaseMintCount = () => {
-        if( mintCount <= 1 )
-            return
-        
-        setMintCount(prev => prev - 1)
-    }
 
     const totalPrice = () => {
         if( !props.winBids || !props.winBids.length )
             return 0
 
-        const currentSelected = props.winBids.slice(0, mintCount)
+        const currentSelected = props.winBids
 
         let value = 0
         currentSelected.forEach((item: any) => {
@@ -275,7 +259,7 @@ export const MintWinningMultiModal = (props: any) => {
     }
 
     const handleMultiMint = async () => {
-        const currentSelected = props.winBids.slice(0, mintCount)
+        const currentSelected = props.winBids
 
         const inputData = {
             xArray: [],
@@ -303,16 +287,14 @@ export const MintWinningMultiModal = (props: any) => {
                     <ConnectWalletWrapper className='relative flex flex-col items-center'>
                         <>
                             <HeaderText className='text-center text-3xl'>Mint Lands</HeaderText>
-                            <HeaderDescription className='text-center'>Select the amount of Lands you would like to mint.</HeaderDescription>
+                            <HeaderDescription className='text-center'>You are about to mint for all Lands.</HeaderDescription>
                         </>
 
                         <ContentWrapper className='relative'>
                             <MintWrapper className='flex justify-between w-full'>
                                 <div>Mint Lands</div>
                                 <div className='flex justify-center items-center'>
-                                    <ControlButton onClick={increaseMintCount}> + </ControlButton>
-                                    <span className='mx-2'>{mintCount}</span>
-                                    <ControlButton onClick={decreaseMintCount}> - </ControlButton>
+                                    <span className='mx-2'>{props.winBids.length}</span>
                                 </div>
                             </MintWrapper>
                             

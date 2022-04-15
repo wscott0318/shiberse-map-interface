@@ -5,11 +5,12 @@ import { NormalButton } from 'theme'
 import Modal from 'components/Modal'
 import ShiberseLoader from 'components/Loader/loader'
 import confirmIcon from '../../assets/images/map/confirmIcon.svg'
-import { shortenDouble } from 'utils'
+import { formatFromBalance, shortenDouble } from 'utils'
 import useShiberseLandAuction from 'hooks/useShiberseLandAuction'
 import { useIsTransactionPending } from 'state/transactions/hooks'
 import { useWeb3React } from '@web3-react/core'
 import { useETHBalances } from 'state/wallet/hooks'
+import Loader from 'components/Loader'
 
 const UpperSection = styled.div`
     position: relative;
@@ -264,129 +265,161 @@ export const MintModal = (props: any) => {
     )
 }
 
-// export const MintWinningMultiModal = (props: any) => {
-//     const [ mintCount, setMintCount ] = useState(1)
+export const MintMultiModal = (props: any) => {
+    const { account } = useWeb3React()
+    const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
+    const currentBalance = parseFloat(userEthBalance?.toSignificant() as any)
 
-//     const [ pendingTx, setPendingTx ] = useState<string | null>(null)
+    const [validateText, setValidateText] = useState(null) as any
+    const [ pendingTx, setPendingTx ] = useState<string | null>(null)
 
-//     const isPending = useIsTransactionPending(pendingTx ?? undefined)
+    const [formattedTotalPrice, setFormattedTotalPrice] = useState(0)
+    const [totalPrice, setTotalPrice] = useState()
 
-//     const isConfirmedTx = pendingTx !== null && !isPending
+    const [isLoading, setIsLoading] = useState(true)
 
-//     const { mintWinningBid } = useShiberseLandAuction({})
+    const [ priceArray, setPriceArray ] = useState([]) as any
 
-//     useEffect(() => {
-//         if( props.isOpen ) {
-//             setMintCount(1)
-//             setPendingTx(null)
-//         }
-//     }, [props.isOpen])
+    const isPending = useIsTransactionPending(pendingTx ?? undefined)
 
-//     const increaseMintCount = () => {
-//         if( mintCount >= props.winBids.length )
-//             return
+    const isConfirmedTx = pendingTx !== null && !isPending
 
-//         setMintCount(prev => prev + 1)
-//     }
+    const {mintPrivateMulti, mintPrivateShiboshiZoneMulti, fetchLandPrice } = useShiberseLandAuction({})
 
-//     const decreaseMintCount = () => {
-//         if( mintCount <= 1 )
-//             return
-        
-//         setMintCount(prev => prev - 1)
-//     }
+    useEffect(() => {
+        if( props.isOpen ) {
+            setPendingTx(null)
+            setValidateText(null)
+        }
+    }, [props.isOpen])
 
-//     const totalPrice = () => {
-//         if( !props.winBids || !props.winBids.length )
-//             return 0
+    const handleMint = async () => {
 
-//         const currentSelected = props.winBids.slice(0, mintCount)
+        if( Number(currentBalance) < Number(formattedTotalPrice) ) {
+            setValidateText('Insufficient ETH balance!')
+            return
+        }
 
-//         let value = 0
-//         currentSelected.forEach((item: any) => {
-//             value += item.price
-//         })
-        
-//         return shortenDouble(Number(value), 2)
-//     }
+        setValidateText(null)
 
-//     const handleMultiMint = async () => {
-//         const currentSelected = props.winBids.slice(0, mintCount)
+        const inputData = {
+            totalAmount: totalPrice, 
+            xArray: [],
+            yArray: [],
+            priceArray: priceArray
+        } as any
 
-//         const inputData = {
-//             xArray: [],
-//             yArray: []
-//         } as any
+        for( let i = 0; i < props.selectedInfo.length; i++ ) {
+            inputData.xArray.push( props.selectedInfo[i].coordinates.x )
+            inputData.yArray.push( props.selectedInfo[i].coordinates.y )
+        }
 
-//         currentSelected.forEach((item: any) => {
-//             inputData.xArray.push( item.coordinates.x )
-//             inputData.yArray.push( item.coordinates.y )
-//         })
+        let tx
+        if( props.selectedInfo.findIndex((item: any) => item.isShiboshiZone) !== -1 ) { /* Show shiboshizone */
+            tx = await mintPrivateShiboshiZoneMulti(inputData)
+            if( tx.hash )
+                setPendingTx(tx.hash)
+        } else {
+            tx = await mintPrivateMulti(inputData)
+            if( tx.hash )
+                setPendingTx(tx.hash)
+        }
 
-//         const tx = await mintWinningBid( inputData )
-//         if( tx.hash )
-//             setPendingTx(tx.hash)
-//     }
+        if( !tx.hash ) {
+            if( JSON.stringify(tx.message).includes('ERR_INSUFFICIENT_AMOUNT_SENT') ) {
+                setValidateText('Minimum bid amount not met, try some higher amount')
+            } else if( JSON.stringify(tx.message).includes('ERR_CANNOT_OUTBID_YOURSELF') ) {
+                setValidateText('You cannot outbid yourself')
+            }
+        }
+    }
 
-//     return (
-//         <Modal isOpen={ props.isOpen } onDismiss={ props.onDismiss } minHeight={false} maxHeight={80}>
-//             <UpperSection>
-//                 <CloseIcon onClick={ props.onDismiss }>
-//                     <CloseColor />
-//                 </CloseIcon>
+    useEffect(() => {
+        const getPrice = async () => {
+            if (props.isOpen && props.selectedInfo && props.selectedInfo.length > 0) {
+                setIsLoading(true)
 
-//                 { !isConfirmedTx && !isPending ? (
-//                     <ConnectWalletWrapper className='relative flex flex-col items-center'>
-//                         <>
-//                             <HeaderText className='text-center text-3xl'>Mint Lands</HeaderText>
-//                             <HeaderDescription className='text-center'>Select the amount of Lands you would like to mint.</HeaderDescription>
-//                         </>
+                let totalPrice
+                const pArray = [] as any
+                for( let i = 0; i < props.selectedInfo.length; i++ ) {
+                    const price = await fetchLandPrice({ x: props.selectedInfo[i].coordinates.x, y: props.selectedInfo[i].coordinates.y })
+                    if( !totalPrice )
+                        totalPrice = price
+                    else
+                        totalPrice = totalPrice.add(price)
 
-//                         <ContentWrapper className='relative'>
-//                             <MintWrapper className='flex justify-between w-full'>
-//                                 <div>Mint Lands</div>
-//                                 <div className='flex justify-center items-center'>
-//                                     <ControlButton onClick={increaseMintCount}> + </ControlButton>
-//                                     <span className='mx-2'>{mintCount}</span>
-//                                     <ControlButton onClick={decreaseMintCount}> - </ControlButton>
-//                                 </div>
-//                             </MintWrapper>
+                    pArray.push( price )
+                }
+    
+                setFormattedTotalPrice( Number( formatFromBalance(totalPrice, 18) ) )
+                setTotalPrice( totalPrice )
+                setPriceArray( [ ...pArray ] )
+                setIsLoading(false)
+            }
+        }
+
+        getPrice()
+    }, [props.isOpen]);
+
+    return (
+        <Modal isOpen={ props.isOpen } onDismiss={ props.onDismiss } minHeight={false} maxHeight={80}>
+            <UpperSection>
+                <CloseIcon onClick={ props.onDismiss }>
+                    <CloseColor />
+                </CloseIcon>
+
+                { !isConfirmedTx && !isPending ? (
+                    <ConnectWalletWrapper className='relative flex flex-col items-center'>
+                        <>
+                            <HeaderText className='text-center text-3xl'>Mint Lands</HeaderText>
+                            <HeaderDescription className='text-center'>You are about to mint for Lands.</HeaderDescription>
+                        </>
+
+                        <ContentWrapper className='relative'>
+                            <MintWrapper className='flex justify-between w-full'>
+                                <div>Mint Lands</div>
+                            </MintWrapper>
+
+                            <div className='text-left mt-2'>
+                                { props.selectedInfo && props.selectedInfo.map((item: any) => `(${ item.coordinates.x }, ${ item.coordinates.y }) `) }
+                            </div>
                             
-//                             <BalanceWrapper className='flex justify-between w-full'>
-//                                 <span>{ totalPrice() } ETH</span>
-//                                 <div>Owned lands: { props.winBids.length } Lands <span>MAX</span></div>
-//                             </BalanceWrapper>
-//                         </ContentWrapper>
+                            <BalanceWrapper className='flex justify-between w-full'>
+                                <span>{ isLoading ? <Loader stroke="white" /> : `Total Price: ${shortenDouble( Number(formattedTotalPrice), 2 )} ETH` }</span>
+                                <span>Current Balance: { shortenDouble( Number(currentBalance), 2 ) } ETH</span>
+                            </BalanceWrapper>
 
-//                         <NormalButton className='px-12' onClick={ handleMultiMint }>
-//                             MINT
-//                         </NormalButton>
-//                     </ConnectWalletWrapper>
-//                 ) : isPending ? (
-//                     <ConnectWalletWrapper className='relative flex flex-col items-center'>
-//                         <div className='my-4 mt-8'>
-//                             <ShiberseLoader size='30px' />
-//                         </div>
-//                         <>
-//                             <HeaderText className='text-center text-3xl'>Minting in progress</HeaderText>
-//                             <HeaderDescription className='text-center'>This process can take few minutes.</HeaderDescription>
-//                             <HeaderDescription className='text-center mb-8'>Once transaction is over, it will be added to your wallet.</HeaderDescription>
-//                         </>
-//                     </ConnectWalletWrapper>    
-//                 ): (
-//                     <ConnectWalletWrapper className='relative flex flex-col items-center'>
-//                         <>
-//                             <HeaderIcon><img src={confirmIcon}/></HeaderIcon>
-//                             <HeaderText className='text-center text-3xl'>Minting succesful</HeaderText>
-//                             <HeaderDescription className='text-center'>WOOF!</HeaderDescription>
-//                             <HeaderDescription className='text-center mb-8'>Your lands have been minted and they are available in your wallet.</HeaderDescription>
-//                         </>
-//                     </ConnectWalletWrapper>
-//                 ) }
-                
-//             </UpperSection>
-//         </Modal>
-//     )
-// }
+                            <ValidationText className={`text-red ${!validateText ? 'hidden' : ''}`}>{ validateText }</ValidationText>
+                        </ContentWrapper>
+
+                        <NormalButton className='px-12' onClick={ handleMint }>
+                            MINT
+                        </NormalButton>
+                    </ConnectWalletWrapper>
+                ) : isPending ? (
+                    <ConnectWalletWrapper className='relative flex flex-col items-center'>
+                        <div className='my-4 mt-8'>
+                            <ShiberseLoader size='30px' />
+                        </div>
+                        <>
+                            <HeaderText className='text-center text-3xl'>Minting in progress</HeaderText>
+                            <HeaderDescription className='text-center'>This process can take few minutes.</HeaderDescription>
+                            <HeaderDescription className='text-center mb-8'>Once transaction is over, it will be added to your wallet.</HeaderDescription>
+                        </>
+                    </ConnectWalletWrapper>
+                ) : (
+                    <ConnectWalletWrapper className='relative flex flex-col items-center'>
+                        <>
+                            <HeaderIcon><img src={confirmIcon}/></HeaderIcon>
+                            <HeaderText className='text-center text-3xl'>Minting succesful</HeaderText>
+                            <HeaderDescription className='text-center'>WOOF!</HeaderDescription>
+                            <HeaderDescription className='text-center mb-8'>Your lands have been minted and they are available in your wallet.</HeaderDescription>
+                        </>
+                    </ConnectWalletWrapper>
+                ) }
+            </UpperSection>
+        </Modal>
+    )
+}
 
 export default MintModal

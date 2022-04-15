@@ -1,14 +1,15 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useActiveWeb3React } from '.'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { useShiberseLandAuctionContract } from './useContract'
-import { mainNetworkChainId } from '../constants'
+import { useShiberseLandAuctionContract, useShiberseLandAuctionV2Contract } from './useContract'
+import { alchemyApi, mainNetworkChainId, shiberseContractAddresses } from '../constants'
 import { useBlockNumber } from 'state/application/hooks'
 import { formatFromBalance, formatToBalance } from 'utils'
 import axios from 'axios'
 import { apiServer } from 'constants/map'
 import { ethers } from 'ethers'
 import { getFixedValue } from 'utils/mapHelper'
+import { createAlchemyWeb3 } from "@alch/alchemy-web3";
 
 const useShiberseLandAuction = (props: any) => {
     const { account, chainId } = useActiveWeb3React()
@@ -16,6 +17,7 @@ const useShiberseLandAuction = (props: any) => {
     const currentBlockNumber = useBlockNumber()
 
     const landContract = useShiberseLandAuctionContract(true)
+    const landV2Contract = useShiberseLandAuctionV2Contract(true)
 
     const [currentStage, setCurrentStage] = useState(1)
     const [currentBidCount, setCurrentBidCount] = useState(0)
@@ -23,11 +25,12 @@ const useShiberseLandAuction = (props: any) => {
     const [winningBids, setWinningBids] = useState([])
     const [isShiboshiHolder, setIsShiboshiHolder] = useState(null) as any
     const [loadingBidsInfo, setLoadingBidsInfo] = useState(true)
+    const [landNFTs, setLandNFTs] = useState([]) as any
 
     // fetch current event stage
     const fetchCurrentStage = useCallback(async () => {
         try {
-            const current = await landContract?.currentStage()
+            const current = await landV2Contract?.currentStage()
 
             // setCurrentStage(2)
             
@@ -35,7 +38,7 @@ const useShiberseLandAuction = (props: any) => {
         } catch(e) {
             console.error('fetch current stage error occured', e)
         }
-    }, [account, landContract])
+    }, [account, landV2Contract])
 
     const getSignature = async () => {
         const response = (await axios.get(`${apiServer}/shiboshis?address=${account?.toLowerCase()}`)).data
@@ -46,22 +49,22 @@ const useShiberseLandAuction = (props: any) => {
     }
 
     const fetchLandPrice = useCallback(async ({ x: posX, y: posY }) => {
-        if(account && landContract && chainId === mainNetworkChainId) {
+        if(account && landV2Contract && chainId === mainNetworkChainId) {
             if( (posX === 0 || posX) && (posY === 0 || posY) ) {
-                const price = await landContract?.getPriceOf( posX, posY )
+                const price = await landV2Contract?.getPriceOf( posX, posY )
                 return price
             }
         }
-    }, [account, landContract])
+    }, [account, landV2Contract])
 
     const fetchLandCurrentWinner = useCallback(async({ x: posX, y: posY }) => {
-        if(account && landContract && chainId === mainNetworkChainId) {
+        if(account && landV2Contract && chainId === mainNetworkChainId) {
             if( (posX === 0 || posX) && (posY === 0 || posY) ) {
-                const currentBid = await landContract?.getCurrentBid( posX, posY )
+                const currentBid = await landV2Contract?.getCurrentBid( posX, posY )
                 return currentBid.bidder
             }
         }
-    }, [account, landContract])
+    }, [account, landV2Contract])
 
     const fetchIfShiboshiHolder = useCallback(async () => {
         try {
@@ -81,15 +84,15 @@ const useShiberseLandAuction = (props: any) => {
     }, [account, fetchCurrentStage, fetchIfShiboshiHolder, landContract, currentBlockNumber])
 
     const fetchCurrentBidCapacity = useCallback(async() => {
-        if( account && landContract && chainId === mainNetworkChainId ) {
+        if( account && landV2Contract && chainId === mainNetworkChainId ) {
             try {
-                const capacity = await landContract?.availableCapacityOf( account )
+                const capacity = await landV2Contract?.availableCapacityOf( account )
                 setCurrentBidCount( Number(formatFromBalance( capacity, 0 )) )
             } catch(e) {
                 console.error( 'fetchCurrentBidCapaity: ', e)
             }            
         }
-    }, [account, landContract])
+    }, [account, landV2Contract])
 
     useEffect(() => {
         if (account && landContract && chainId === mainNetworkChainId) {
@@ -102,7 +105,7 @@ const useShiberseLandAuction = (props: any) => {
 
     const fetchBidsInfo = useCallback(async () => {
         try {
-            const allBids = await landContract?.allBidInfoOf( account )
+            const allBids = await landV2Contract?.allBidInfoOf( account )
             const result = allBids[0].map((item: any, index: number) => [ item, allBids[1][index] ])
 
             for( let i = 0; i < result.length; i++ ) {
@@ -112,7 +115,7 @@ const useShiberseLandAuction = (props: any) => {
 
             setAllPlacedBids( result )
 
-            const winning = await landContract?.bidInfoOf( account )
+            const winning = await landV2Contract?.bidInfoOf( account )
             const win_result = winning[0].map((item: any, index: number) => [ item, winning[1][index] ])
 
             for( let i = 0; i < win_result.length; i++ ) {
@@ -126,11 +129,12 @@ const useShiberseLandAuction = (props: any) => {
         } catch(e) {
             console.error('fetchbidsInfo: ', e)
         }
-    }, [account, landContract])
+    }, [account, landV2Contract])
 
     useEffect(() => {
         if( account && landContract && chainId === mainNetworkChainId ) {
             fetchBidsInfo()
+            fetchLandNFT()
         }
     }, [account, fetchBidsInfo, landContract, currentBlockNumber])
 
@@ -214,7 +218,7 @@ const useShiberseLandAuction = (props: any) => {
         async( input: any ) => {
             if( input ) {
                 try {
-                    const tx = await landContract?.mintPrivate(input?.x, input?.y, {
+                    const tx = await landV2Contract?.mintPrivate(input?.x, input?.y, {
                         from: account,
                         value: input?.amount
                     })
@@ -225,7 +229,7 @@ const useShiberseLandAuction = (props: any) => {
                 }
             }
         },
-        [addTransaction, landContract]
+        [addTransaction, landV2Contract]
     )
 
     const mintPrivateShiboshiZone = useCallback(
@@ -234,7 +238,7 @@ const useShiberseLandAuction = (props: any) => {
 
             if( input && signature ) {
                 try {
-                    const tx = await landContract?.mintPrivateShiboshiZone(input?.x, input?.y, signature, {
+                    const tx = await landV2Contract?.mintPrivateShiboshiZone(input?.x, input?.y, signature, {
                         from: account,
                         value: input?.amount
                     })
@@ -245,7 +249,45 @@ const useShiberseLandAuction = (props: any) => {
                 }
             }
         },
-        [addTransaction, landContract]
+        [addTransaction, landV2Contract]
+    )
+
+    const mintPrivateMulti = useCallback(
+        async ( input: any ) => {
+            if( input ) {
+                try {
+                    const tx = await landV2Contract?.mintPrivateMulti(input?.xArray, input?.yArray, input?.priceArray, {
+                        from: account,
+                        value: input?.totalAmount
+                    })
+                    addTransaction(tx, { summary: `Mint placed!` })
+                    return tx
+                } catch(e) {
+                    return e
+                }
+            }
+        },
+        [addTransaction, landV2Contract]
+    )
+
+    const mintPrivateShiboshiZoneMulti = useCallback(
+        async( input: any ) => {
+            const signature = await getSignature()
+
+            if( input && signature ) {
+                try {
+                    const tx = await landV2Contract?.mintPrivateShiboshiZoneMulti(input?.xArray, input?.yArray, input?.priceArray, signature, {
+                        from: account,
+                        value: input?.totalAmount
+                    })
+                    addTransaction(tx, { summary: `Mint placed on Shiboshi Zone!` })
+                    return tx
+                } catch(e) {
+                    return e
+                }
+            }
+        },
+        [addTransaction, landV2Contract]
     )
 
     const mintPublic = useCallback(
@@ -270,7 +312,7 @@ const useShiberseLandAuction = (props: any) => {
         async( input: any ) => {
             if( input?.xArray && input?.yArray ) {
                 try {
-                    const tx = await landContract?.mintWinningBid(input?.xArray, input?.yArray)
+                    const tx = await landV2Contract?.mintWinningBid(input?.xArray, input?.yArray)
                     addTransaction(tx, { summary: `Mint Winning Bid succeed!` })
                     return tx
                 } catch(e) {
@@ -278,8 +320,48 @@ const useShiberseLandAuction = (props: any) => {
                 }
             }
         },
-        [addTransaction, landContract]
+        [addTransaction, landV2Contract]
     )
+
+    const web3 = createAlchemyWeb3(
+        alchemyApi[ mainNetworkChainId ].https
+    );
+
+    const fetchLandNFT = useCallback(async () => {
+        if( account && chainId === mainNetworkChainId ) {
+            let pageKey = null
+            let contractNFTs = [] as any
+            while(true) {
+                const nftParam = {
+                    owner : account!,
+                    contractAddresses: [ shiberseContractAddresses[mainNetworkChainId].LAND_NFT ]
+                } as any
+
+                if( pageKey )
+                    nftParam.pageKey = pageKey
+
+                const response = await web3.alchemy.getNfts( nftParam ) as any
+
+                const temp = response.ownedNfts
+                contractNFTs = [ ...contractNFTs, ...temp ]
+
+                pageKey = response.pageKey
+                if( response.error || !response.pageKey )
+                    break
+            }
+            const resultArray = [] as any
+
+            for( let i = 0; i < contractNFTs.length; i++ ) {
+                const newValue = { ...contractNFTs[i] } as any
+                // const tokenId = parseInt( contractNFTs[i].id.tokenId )
+                // newValue.metaInfo = await fetch( metadataURL + tokenId )
+                // newValue.metaInfo = await newValue.metaInfo.json()
+                resultArray.push(newValue)
+            }
+
+            setLandNFTs(resultArray)
+        }
+    }, [account, chainId])
 
     // const signMessage = async (provider: any, account: any, message: any) => {
     //     /**
@@ -298,7 +380,7 @@ const useShiberseLandAuction = (props: any) => {
     // const signMsg = await signMessage(library, account, 'Test Sign Message')
     // console.error(signMsg)
 
-    return { currentBidCount, currentStage, allPlacedBids, winningBids, isShiboshiHolder, bidOne, bidShiboshiZone, bidMulti, bidShiboshiZoneMulti, mintPrivate, mintPrivateShiboshiZone, mintPublic, mintWinningBid, fetchLandPrice, loadingBidsInfo, fetchLandCurrentWinner }
+    return { currentBidCount, currentStage, allPlacedBids, winningBids, isShiboshiHolder, bidOne, bidShiboshiZone, bidMulti, bidShiboshiZoneMulti, mintPrivate, mintPrivateShiboshiZone, mintPrivateMulti, mintPrivateShiboshiZoneMulti, mintPublic, mintWinningBid, fetchLandPrice, loadingBidsInfo, fetchLandCurrentWinner, landNFTs }
 
 }
 

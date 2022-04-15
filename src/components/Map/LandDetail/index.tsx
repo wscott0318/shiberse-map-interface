@@ -18,7 +18,7 @@ import { getLandName, getLandImage } from 'utils/mapHelper';
 import { ReactComponent as Close } from 'assets/images/x.svg'
 import ShiberseLoader from 'components/Loader/loader'
 import BidMultiModal from '../bidMultiModal';
-import MintModal from '../mintModal';
+import MintModal, { MintMultiModal } from '../mintModal';
 
 const LandDetailPanel = styled.div<{ show: boolean }>`
     display: ${({ show }) => (show ? 'block' : 'none')};
@@ -337,7 +337,7 @@ export const LandDetail = () => {
                     { currentStage === Events['Bid'] ? (
                         <>
                             <NormalButton 
-                                className={`px-10 font-bold ${ '' }`}
+                                className={`px-10 font-bold`}
                                 disabled={ !isMultiplePossible() ? true : false }
                                 onClick={toggleBidModal}
                             >
@@ -351,7 +351,23 @@ export const LandDetail = () => {
                                 handleCloseAction={ handleClose }
                             />
                         </>
-                    ) : null }
+                    ) : (
+                        <>
+                            <NormalButton 
+                                className={`px-10 font-bold`}
+                                disabled={ !isMultiplePossible() ? true : false }
+                                onClick={toggleMintModal}
+                            >
+                                Submit Multimint({ selectedInfo.length })
+                            </NormalButton>
+
+                            <MintMultiModal 
+                                isOpen={ showMintModal }
+                                onDismiss={ toggleMintModal }
+                                selectedInfo={ selectedInfo }
+                            />
+                        </>
+                    ) }
                 </div>
             ) }
 

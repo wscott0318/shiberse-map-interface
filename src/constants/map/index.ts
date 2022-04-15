@@ -105,7 +105,7 @@ export const mapLandDataUrl = 'https://shiboshis.mypinata.cloud/ipfs/QmQW8ySF6tu
 
 export const endTime = 1650081599000
 
-export const apiServer = 'https://sbmc.herokuapp.com'
+export const apiServer = 'https://blabla-dev.herokuapp.com'
 
 export const mapLandPriceDataUrl = apiServer + '/yards?$select[]=price&$select[]=id&$select[]=currentBidWinner&$select[]=bidCount'
 

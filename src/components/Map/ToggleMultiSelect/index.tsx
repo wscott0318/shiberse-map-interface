@@ -41,7 +41,7 @@ export const ToggleMultiSelect = () => {
                     </button> 
                 </div>
 
-                <CheckText className="leftSideBar__sizeSelect__item__label">Enabe/Disabe Multiselect</CheckText>
+                <CheckText className="leftSideBar__sizeSelect__item__label">Multiselect Bidding</CheckText>
             </div>
         </ToggleWrapper>
     )

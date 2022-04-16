@@ -30,7 +30,7 @@ const initialState: MapState = {
         gold: false,
         silver: false,
         openforbid: false,
-
+        openforminting: false,
         minPrice: 0.2,
         maxPrice: 1,
 

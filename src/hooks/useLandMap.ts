@@ -78,7 +78,7 @@ const useLandMap = () => {
         fetchInfo()
         fetchAccountBidsInfo()
 
-        const refreshInterval = setInterval(fetchInfo, 30000)
+        const refreshInterval = setInterval(fetchInfo, 30000 * 10)
         return () => clearInterval(refreshInterval)
     }, [setLandData, setLandPriceData, setAccountBidsInfo, account])
 

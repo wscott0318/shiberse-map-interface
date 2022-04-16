@@ -108,6 +108,7 @@ export const MapScene = () => {
 			gold: false,
 			silver: false,
 			openforbid: false,
+			openforminting: false,
 	
 			minPrice: minPrice,
 			maxPrice: maxPrice,

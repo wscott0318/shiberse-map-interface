@@ -89,6 +89,7 @@ import SHIBERSE_SHIBOSHI_TOKEN_ABI from '../constants/abis/shiberse_shiboshi.jso
 
 import SHIBERSE_LANDAUCTION_ABI from '../constants/abis/shiberse_landAuction.json'
 import SHIBERSE_LANDAUCTIONV2_ABI from '../constants/abis/shiberse_landAuctionV2.json'
+import SHIBERSE_LANDREGISTRY from '../constants/abis/shiberse_landregistry.json';
 
 // returns null on errors
 export function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
@@ -457,6 +458,13 @@ export function useShiberseLandAuctionContract( withSignerIfPossible?: boolean )
 export function useShiberseLandAuctionV2Contract( withSignerIfPossible?: boolean ): Contract | null{
     const contractAddress = shiberseContractAddresses[mainNetworkChainId]['LAND_AUCTIONV2']
     const contractAbi = SHIBERSE_LANDAUCTIONV2_ABI
+
+    return useContract( contractAddress, contractAbi, withSignerIfPossible )
+}
+
+export function useShiberseLandRegistryContract( withSignerIfPossible?: boolean ): Contract | null{
+    const contractAddress = shiberseContractAddresses[mainNetworkChainId]['LAND_NFT']
+    const contractAbi = SHIBERSE_LANDREGISTRY
 
     return useContract( contractAddress, contractAbi, withSignerIfPossible )
 }

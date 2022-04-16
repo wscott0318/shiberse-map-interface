@@ -153,7 +153,7 @@ export const LandDetail = () => {
 
     const [isLoading, setIsLoading] = useState(true)
 
-    const { currentStage, currentBidCount, isShiboshiHolder, fetchLandPrice, fetchLandCurrentWinner } = useShiberseLandAuction({})
+    const { currentStage, currentBidCount, isShiboshiHolder, fetchLandPrice, fetchLandCurrentWinner, fetchLandCurrentOwner } = useShiberseLandAuction({})
 
     const canShowButton = useCallback(() => {
         if( currentStage === Events['Public'] )
@@ -199,9 +199,10 @@ export const LandDetail = () => {
                     const price = await fetchLandPrice({ x: selected.coordinates.x, y: selected.coordinates.y })
                     newInfo.price = Number( formatFromBalance(price, 18) )
                     newInfo.bigNumPrice = price
-    
+
                     const currentBidWinner = await fetchLandCurrentWinner({ x: selected.coordinates.x, y: selected.coordinates.y })
-                    newInfo.currentBidWinner = currentBidWinner
+                    const currentBidOwner = await fetchLandCurrentOwner({ landId : selected.id.toString()})
+                    newInfo.currentBidWinner = currentBidOwner || currentBidWinner
                 }
         
                 setCurrentLandInfo( newInfo )
@@ -222,6 +223,7 @@ export const LandDetail = () => {
     }
 
     const hideDetail = (info: any) => info?.tierName === 'road' || info?.tierName === 'hub' || info?.reserved
+
 
     const isMultiplePossible = () => {
         if( selectedInfo.findIndex((item: any) => !item.isShiboshiZone) !== -1 && selectedInfo.length > currentBidCount )

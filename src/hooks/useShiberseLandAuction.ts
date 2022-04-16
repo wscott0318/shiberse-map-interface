@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useActiveWeb3React } from '.'
+import { useActiveWeb3React, useShiberseLandRegistryContract } from '.'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { useShiberseLandAuctionContract, useShiberseLandAuctionV2Contract } from './useContract'
 import { alchemyApi, mainNetworkChainId, shiberseContractAddresses } from '../constants'
@@ -18,6 +18,7 @@ const useShiberseLandAuction = (props: any) => {
 
     const landContract = useShiberseLandAuctionContract(true)
     const landV2Contract = useShiberseLandAuctionV2Contract(true)
+    const landRegistry  = useShiberseLandRegistryContract(true);
 
     const [currentStage, setCurrentStage] = useState(1)
     const [currentBidCount, setCurrentBidCount] = useState(0)
@@ -58,13 +59,28 @@ const useShiberseLandAuction = (props: any) => {
     }, [account, landV2Contract])
 
     const fetchLandCurrentWinner = useCallback(async({ x: posX, y: posY }) => {
-        if(account && landV2Contract && chainId === mainNetworkChainId) {
+        if(account && landContract && chainId === mainNetworkChainId) {
             if( (posX === 0 || posX) && (posY === 0 || posY) ) {
-                const currentBid = await landV2Contract?.getCurrentBid( posX, posY )
+                const currentBid = await landContract?.getCurrentBid( posX, posY )
                 return currentBid.bidder
             }
         }
-    }, [account, landV2Contract])
+    }, [account, landContract])
+
+    const fetchLandCurrentOwner = useCallback(async({ landId }) => {
+        if(account && landRegistry && chainId === mainNetworkChainId) {
+            if( landId ) {
+                try {
+                    const currentOwner = await landRegistry?.ownerOf( landId )
+                    return currentOwner
+                } catch (err) {
+                    // console.error('Owner does not exists', err)
+                    return ""
+                }
+
+            }
+        }
+    }, [account, landRegistry])
 
     const fetchIfShiboshiHolder = useCallback(async () => {
         try {
@@ -380,7 +396,7 @@ const useShiberseLandAuction = (props: any) => {
     // const signMsg = await signMessage(library, account, 'Test Sign Message')
     // console.error(signMsg)
 
-    return { currentBidCount, currentStage, allPlacedBids, winningBids, isShiboshiHolder, bidOne, bidShiboshiZone, bidMulti, bidShiboshiZoneMulti, mintPrivate, mintPrivateShiboshiZone, mintPrivateMulti, mintPrivateShiboshiZoneMulti, mintPublic, mintWinningBid, fetchLandPrice, loadingBidsInfo, fetchLandCurrentWinner, landNFTs }
+    return { currentBidCount, currentStage, allPlacedBids, winningBids, isShiboshiHolder, bidOne, bidShiboshiZone, bidMulti, bidShiboshiZoneMulti, mintPrivate, mintPrivateShiboshiZone, mintPrivateMulti, mintPrivateShiboshiZoneMulti, mintPublic, mintWinningBid, fetchLandPrice, loadingBidsInfo, fetchLandCurrentWinner, fetchLandCurrentOwner, landNFTs }
 
 }
 

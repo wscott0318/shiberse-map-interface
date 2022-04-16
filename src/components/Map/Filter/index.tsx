@@ -205,11 +205,12 @@ const filterData = [
         color: '#31323E',
         text: 'Silver Fur',
         searchOption: 'silver'
-    }, {
-        color: '#49ad4e',
-        text: 'No bids yet',
-        searchOption: 'openforbid'
     },
+    {
+        color: '#49ad4e',
+        text: 'Open for minting',
+        searchOption: 'openforminting'
+    }
 ]
 
 export const MapFilter = () => {
@@ -332,6 +333,7 @@ export const MapFilter = () => {
             gold: false,
             silver: false,
             openforbid: false,
+            openforminting: false,
     
             minPrice: minPrice,
             maxPrice: maxPrice,

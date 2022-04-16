@@ -218,6 +218,7 @@ export const LandDetail = () => {
         setSelectedInfo([])
 
         setShowBidModal(false)
+        setShowMintModal(false)
     }
 
     const hideDetail = (info: any) => info?.tierName === 'road' || info?.tierName === 'hub' || info?.reserved
@@ -277,22 +278,27 @@ export const LandDetail = () => {
                     { hideDetail(currentLandInfo) ? '' : (
                         <>
                             <LandType className='mb-2'>
-                                Highest Bid By:
+                                { currentStage === Events['Bid'] ? 'Highest Bid By:' : 'Owner:' } 
                                 { Number(currentLandInfo?.currentBidWinner)
                                     ? <a className='font-normal ml-1' target='_blank' rel="noreferrer" href={`https://etherscan.io/address/${ currentLandInfo?.currentBidWinner }`} >{shortenAddress(currentLandInfo?.currentBidWinner, 8)}</a> 
                                     : ' None' }
                             </LandType>
 
-                            <BidHistory className='mb-4' onClick={() => setShowBidHistoryModal(prev => !prev)}>Bid history</BidHistory>
+                            { currentStage === Events['Bid'] ? (
+                                <>
+                                    <BidHistory className='mb-4' onClick={() => setShowBidHistoryModal(prev => !prev)}>Bid history</BidHistory>
 
-                            <LandBidHistoryModal 
-                                isOpen={showBidHistoryModal}
-                                onDismiss={() => setShowBidHistoryModal(prev => !prev)}
-                                allPlacedBids={ currentLandInfo?.bids ? currentLandInfo?.bids.sort((a: any,b: any) => b.bidPrice - a.bidPrice) : [] }
-                            />
+                                    <LandBidHistoryModal 
+                                        isOpen={showBidHistoryModal}
+                                        onDismiss={() => setShowBidHistoryModal(prev => !prev)}
+                                        allPlacedBids={ currentLandInfo?.bids ? currentLandInfo?.bids.sort((a: any,b: any) => b.bidPrice - a.bidPrice) : [] }
+                                    />
 
-                            <LandName className='mb-1'>Current price</LandName>
-                            <BidBalance className='mb-2'>{ shortenDouble(Number(currentLandInfo?.price), 2) } ETH</BidBalance>
+                                    <LandName className='mb-1'>Current price</LandName>
+                                    <BidBalance className='mb-2'>{ shortenDouble(Number(currentLandInfo?.price), 2) } ETH</BidBalance>
+                                </>
+                            ): null }
+
                             <OpenType className='mb-4'>{ EventsText[ currentStage ] }</OpenType>
 
                             { canShowButton() ? (
@@ -328,6 +334,7 @@ export const LandDetail = () => {
                                 isOpen={ showMintModal }
                                 onDismiss={ toggleMintModal }
                                 landInfo={ currentLandInfo }
+                                handleCloseAction={ handleClose }
                             />
                         </>
                     )}
@@ -365,6 +372,7 @@ export const LandDetail = () => {
                                 isOpen={ showMintModal }
                                 onDismiss={ toggleMintModal }
                                 selectedInfo={ selectedInfo }
+                                handleCloseAction={ handleClose }
                             />
                         </>
                     ) }

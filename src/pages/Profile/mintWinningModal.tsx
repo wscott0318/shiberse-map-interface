@@ -300,7 +300,7 @@ export const MintWinningMultiModal = (props: any) => {
                             
                             <BalanceWrapper className='flex justify-between w-full'>
                                 <span>{ totalPrice() } ETH</span>
-                                <div>Owned lands: { props.winBids.length } Lands <span>MAX</span></div>
+                                <div>Owned lands: { props.winBids.length } Lands</div>
                             </BalanceWrapper>
                         </ContentWrapper>
 

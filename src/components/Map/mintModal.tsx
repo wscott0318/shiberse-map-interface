@@ -166,6 +166,16 @@ export const MintModal = (props: any) => {
     const { mintPrivate, mintPrivateShiboshiZone } = useShiberseLandAuction({})
 
     useEffect(() => {
+        if( isConfirmedTx ) {
+            if( props.handleCloseAction ) {
+                setTimeout(() => {
+                    props.handleCloseAction()
+                }, 1500)
+            }
+        }
+    }, [isConfirmedTx])
+
+    useEffect(() => {
         if( props.isOpen ) {
             setPendingTx(null)
             setValidateText(null)
@@ -285,6 +295,16 @@ export const MintMultiModal = (props: any) => {
     const isConfirmedTx = pendingTx !== null && !isPending
 
     const {mintPrivateMulti, mintPrivateShiboshiZoneMulti, fetchLandPrice } = useShiberseLandAuction({})
+
+    useEffect(() => {
+        if( isConfirmedTx ) {
+            if( props.handleCloseAction ) {
+                setTimeout(() => {
+                    props.handleCloseAction()
+                }, 1500)
+            }
+        }
+    }, [isConfirmedTx])
 
     useEffect(() => {
         if( props.isOpen ) {

@@ -203,8 +203,9 @@ export const LandDetail = () => {
                     const currentBidWinner = await fetchLandCurrentWinner({ x: selected.coordinates.x, y: selected.coordinates.y })
                     const currentBidOwner = await fetchLandCurrentOwner({ landId : selected.id.toString()})
                     newInfo.currentBidWinner = currentBidOwner || currentBidWinner
+                    newInfo.currentBidOwner = currentBidOwner
                 }
-        
+        console.error('newInfo', newInfo)
                 setCurrentLandInfo( newInfo )
             }
             setIsLoading(false)
@@ -302,6 +303,18 @@ export const LandDetail = () => {
                             ): null }
 
                             <OpenType className='mb-4'>{ EventsText[ currentStage ] }</OpenType>
+
+                            { Number(currentLandInfo?.currentBidOwner) ? (
+                                <div className='text-center'>
+                                    <a href={`https://opensea.io/collection/shibyard/$%7B${ currentLandInfo.id }%7D`} target='_blank' rel="noreferrer">
+                                        <NormalButton
+                                            className={`px-10 font-bold`}
+                                        >
+                                            (Bid)
+                                        </NormalButton>
+                                    </a>
+                                </div>
+                            ): null }
 
                             { canShowButton() ? (
                                 <div className='text-center'>

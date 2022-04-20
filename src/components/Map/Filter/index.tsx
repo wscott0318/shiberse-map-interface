@@ -436,23 +436,23 @@ export const MapFilter = () => {
                 </div>
             </SearchByWrapper>
 
-            <SearchByWrapper className='borderNone'>
-                <SearchDesc>Search by wallet</SearchDesc>
+            {/*<SearchByWrapper className='borderNone'>*/}
+            {/*    <SearchDesc>Search by wallet</SearchDesc>*/}
 
-                <div className='flex justify-between items-center relative'>
-                    <WalletInput 
-                        type='text'
-                        placeholder='Paste your wallet address'
-                        value={ searchWallet } 
-                        onChange={(e) => setSearchWallet(e.target.value)}
-                    />
-                    <CloseIcon onClick={handleClearWalletAddress}>
-                        <CloseColor />
-                    </CloseIcon>
+            {/*    <div className='flex justify-between items-center relative'>*/}
+            {/*        <WalletInput */}
+            {/*            type='text'*/}
+            {/*            placeholder='Paste your wallet address'*/}
+            {/*            value={ searchWallet } */}
+            {/*            onChange={(e) => setSearchWallet(e.target.value)}*/}
+            {/*        />*/}
+            {/*        <CloseIcon onClick={handleClearWalletAddress}>*/}
+            {/*            <CloseColor />*/}
+            {/*        </CloseIcon>*/}
 
-                    <GoButton onClick={updateSearchWallet}>GO</GoButton>
-                </div>
-            </SearchByWrapper>
+            {/*        <GoButton onClick={updateSearchWallet}>GO</GoButton>*/}
+            {/*    </div>*/}
+            {/*</SearchByWrapper>*/}
         </FilterPanel>
     )
 }

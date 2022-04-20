@@ -306,11 +306,11 @@ export const LandDetail = () => {
 
                             { Number(currentLandInfo?.currentBidOwner) ? (
                                 <div className='text-center'>
-                                    <a href={`https://opensea.io/collection/shibyard/$%7B${ currentLandInfo.id }%7D`} target='_blank' rel="noreferrer">
+                                    <a href={`https://opensea.io/assets/0xEfAEd650f1a94801806BB110019d9B0dc79531A8/${currentLandInfo.id}`} target='_blank' rel="noreferrer">
                                         <NormalButton
                                             className={`px-10 font-bold`}
                                         >
-                                            (Bid)
+                                            Bid on Opensea
                                         </NormalButton>
                                     </a>
                                 </div>

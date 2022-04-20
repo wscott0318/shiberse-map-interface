@@ -277,7 +277,12 @@ export default class Map extends Component<MapViewProps> {
 
         if( searchOptions.openforbid && Number(priceData.bidCount) > 0 )
             return false
-        if( (searchOptions.openforminting && Number(priceData.mintCount) > 0) || (searchOptions.openforminting && Number(priceData.bidCount) > 0))
+        if(
+            (searchOptions.openforminting && Number(priceData.mintCount) > 0) ||
+            (searchOptions.openforminting && Number(priceData.bidCount) > 0) ||
+            (searchOptions.openforminting && priceData.currentBidOwner && priceData.currentBidOwner.length > 0) ||
+            (searchOptions.openforminting && priceData.currentBidWinner && priceData.currentBidWinner.length > 0)
+        )
             return false
 
         if( searchOptions.shiboshiZone && item.isShiboshiZone )

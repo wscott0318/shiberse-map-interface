@@ -310,18 +310,36 @@ const useShiberseLandAuction = (props: any) => {
         async( input: any ) => {
             if( input ) {
                 try {
-                    const tx = await landContract?.mintPublic(input?.x, input?.y, {
+                    const tx = await landV2Contract?.mintPublic(input?.x, input?.y, {
                         from: account,
-                        value: formatToBalance(input?.value).value
+                        value: input?.amount
                     })
-                    addTransaction(tx, { summary: `Mint Public succeed!` })
+                    addTransaction(tx, { summary: `Mint succeed!` })
                     return tx
                 } catch(e) {
                     return e
                 }
             }
         },
-        [addTransaction, landContract]
+        [addTransaction, landV2Contract]
+    )
+
+    const mintPublicMulti = useCallback(
+        async ( input: any ) => {
+            if( input ) {
+                try {
+                    const tx = await landV2Contract?.mintPublicMulti(input?.xArray, input?.yArray, input?.priceArray, {
+                        from: account,
+                        value: input?.totalAmount
+                    })
+                    addTransaction(tx, { summary: `Mint placed!` })
+                    return tx
+                } catch(e) {
+                    return e
+                }
+            }
+        },
+        [addTransaction, landV2Contract]
     )
 
     const mintWinningBid = useCallback(
@@ -396,7 +414,7 @@ const useShiberseLandAuction = (props: any) => {
     // const signMsg = await signMessage(library, account, 'Test Sign Message')
     // console.error(signMsg)
 
-    return { currentBidCount, currentStage, allPlacedBids, winningBids, isShiboshiHolder, bidOne, bidShiboshiZone, bidMulti, bidShiboshiZoneMulti, mintPrivate, mintPrivateShiboshiZone, mintPrivateMulti, mintPrivateShiboshiZoneMulti, mintPublic, mintWinningBid, fetchLandPrice, loadingBidsInfo, fetchLandCurrentWinner, fetchLandCurrentOwner, landNFTs }
+    return { currentBidCount, currentStage, allPlacedBids, winningBids, isShiboshiHolder, bidOne, bidShiboshiZone, bidMulti, bidShiboshiZoneMulti, mintPrivate, mintPrivateShiboshiZone, mintPrivateMulti, mintPrivateShiboshiZoneMulti, mintPublic, mintPublicMulti, mintWinningBid, fetchLandPrice, loadingBidsInfo, fetchLandCurrentWinner, fetchLandCurrentOwner, landNFTs }
 
 }
 

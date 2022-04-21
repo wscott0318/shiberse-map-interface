@@ -11,6 +11,7 @@ import { useIsTransactionPending } from 'state/transactions/hooks'
 import { useWeb3React } from '@web3-react/core'
 import { useETHBalances } from 'state/wallet/hooks'
 import Loader from 'components/Loader'
+import { Events } from 'constants/map'
 
 const UpperSection = styled.div`
     position: relative;
@@ -163,7 +164,7 @@ export const MintModal = (props: any) => {
 
     const isConfirmedTx = pendingTx !== null && !isPending
 
-    const { mintPrivate, mintPrivateShiboshiZone } = useShiberseLandAuction({})
+    const { currentStage, mintPrivate, mintPrivateShiboshiZone, mintPublic } = useShiberseLandAuction({})
 
     useEffect(() => {
         if( isConfirmedTx ) {
@@ -198,14 +199,20 @@ export const MintModal = (props: any) => {
         } as any
 
         let tx
-        if( props.landInfo?.isShiboshiZone ) { /* Show shiboshizone */
-            tx = await mintPrivateShiboshiZone(inputData)
+        if( currentStage === Events['Public'] ) {
+            tx = await mintPublic(inputData)
             if( tx.hash )
                 setPendingTx(tx.hash)
         } else {
-            tx = await mintPrivate( inputData )
-            if( tx.hash )
-                setPendingTx(tx.hash)
+            if( props.landInfo?.isShiboshiZone ) { /* Show shiboshizone */
+                tx = await mintPrivateShiboshiZone(inputData)
+                if( tx.hash )
+                    setPendingTx(tx.hash)
+            } else {
+                tx = await mintPrivate( inputData )
+                if( tx.hash )
+                    setPendingTx(tx.hash)
+            }
         }
 
         if( !tx.hash ) {
@@ -294,7 +301,7 @@ export const MintMultiModal = (props: any) => {
 
     const isConfirmedTx = pendingTx !== null && !isPending
 
-    const {mintPrivateMulti, mintPrivateShiboshiZoneMulti, fetchLandPrice } = useShiberseLandAuction({})
+    const {mintPrivateMulti, mintPrivateShiboshiZoneMulti, fetchLandPrice, currentStage, mintPublicMulti} = useShiberseLandAuction({})
 
     useEffect(() => {
         if( isConfirmedTx ) {
@@ -335,14 +342,20 @@ export const MintMultiModal = (props: any) => {
         }
 
         let tx
-        if( props.selectedInfo.findIndex((item: any) => item.isShiboshiZone) !== -1 ) { /* Show shiboshizone */
-            tx = await mintPrivateShiboshiZoneMulti(inputData)
+        if( currentStage === Events['Public'] ) {
+            tx = await mintPublicMulti(inputData)
             if( tx.hash )
                 setPendingTx(tx.hash)
         } else {
-            tx = await mintPrivateMulti(inputData)
-            if( tx.hash )
-                setPendingTx(tx.hash)
+            if( props.selectedInfo.findIndex((item: any) => item.isShiboshiZone) !== -1 ) { /* Show shiboshizone */
+                tx = await mintPrivateShiboshiZoneMulti(inputData)
+                if( tx.hash )
+                    setPendingTx(tx.hash)
+            } else {
+                tx = await mintPrivateMulti(inputData)
+                if( tx.hash )
+                    setPendingTx(tx.hash)
+            }
         }
 
         if( !tx.hash ) {

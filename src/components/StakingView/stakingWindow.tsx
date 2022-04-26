@@ -103,27 +103,36 @@ export const StakingWindow = () => {
     return (
         <Wrapper>
             <StakeContent>
-                <StakeHeader className='w-full relative flex justify-between items-center'>
-                    <div className={`text-center px-2 ${ tokenType === 'leash' ? 'active' : '' }`} onClick={() => setTokenType( 'leash' )}> { 'Leash Locker' } </div>
-                    <div className={`text-center px-2 ${ tokenType === 'shiboshi' ? 'active' : '' }`} onClick={() => setTokenType( 'shiboshi' )}> { 'SHIBOSHIS LOCKER' } </div>
-                    <div className='text-center px-2'> <a target='_blank' rel="noreferrer" href='https://shibaswap.com/#/swap?outputCurrency=0x27C70Cd1946795B66be9d954418546998b546634&inputCurrency=ETH'>{ 'BUY LEASH' }</a> </div>
-                </StakeHeader>
-
-                <p style={{ lineHeight: '19.2px' }} className='text-justify'>
-                    { tokenType === 'leash' 
-                        ? <>Welcome to the LEASH LOCKER feature! Use the scroll bar in order to set and lock your $LEASH, and gain access to the map. This easy-to-use tool allows early entry for you to bid, and purchase plots of land, during the first two stages of this first phase release: BID Event, and HOLDER Event.</> 
-                        : <>Welcome to the SHIBOSHI LOCKER feature! Use the scroll bar in order to set and lock your SHIBOSHI NFT, and gain access to the map. This easy-to-use tool allows early entry for you to bid, and purchase plots of land, during the first two stages of this first phase release: BID Event, and HOLDER Event.</>
+                {/*<StakeHeader className='w-full relative flex justify-between items-center'>*/}
+                {/*    <div className={`text-center px-2 ${ tokenType === 'leash' ? 'active' : '' }`} onClick={() => setTokenType( 'leash' )}> { 'Leash Locker' } </div>*/}
+                {/*    <div className={`text-center px-2 ${ tokenType === 'shiboshi' ? 'active' : '' }`} onClick={() => setTokenType( 'shiboshi' )}> { 'SHIBOSHIS LOCKER' } </div>*/}
+                {/*    <div className='text-center px-2'> <a target='_blank' rel="noreferrer" href='https://shibaswap.com/#/swap?outputCurrency=0x27C70Cd1946795B66be9d954418546998b546634&inputCurrency=ETH'>{ 'BUY LEASH' }</a> </div>*/}
+                {/*</StakeHeader>*/}
+                <br/>
+                <br/>
+                <p style={{ lineHeight: '19.2px', fontSize : '40px',fontWeight : 'bold' }} className='text-center' >
+                    { tokenType === 'leash'
+                        ? <>PUBLIC SALE IS NOW LIVE </>
+                        : <>PUBLIC SALE IS NOW LIVE </>
                     }
 
                 </p>
+                <br/>
+                <br/>
+                <br/>
+                <p style={{lineHeight: '19.2px'}} className='text-justify'>
+                    During this final stage, users will be able to purchase the remaining lands without any restrictions, locking time, or any determined factor. You do not need to use the LEASH or SHIBOSHI Locker, and will not need to hold any of the Shiba ecosystem tokens to be able to acquire a land plot.
+                </p>
+                <br/>
+                <br/>
+                <br/>
+                {/*<div style={{ display: tokenType === 'leash' ? 'block' : 'none' }}>*/}
+                {/*    <StakeLeash />*/}
+                {/*</div>*/}
 
-                <div style={{ display: tokenType === 'leash' ? 'block' : 'none' }}>
-                    <StakeLeash />
-                </div>
-
-                <div style={{ display: tokenType === 'shiboshi' ? 'block' : 'none' }}>
-                    <StakeShiboshi />
-                </div>
+                {/*<div style={{ display: tokenType === 'shiboshi' ? 'block' : 'none' }}>*/}
+                {/*    <StakeShiboshi />*/}
+                {/*</div>*/}
             </StakeContent>
         </Wrapper>
     )

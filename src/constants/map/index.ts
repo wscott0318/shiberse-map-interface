@@ -114,6 +114,10 @@ export const timerInfo = {
         'desc': 'Private Mint event',
         'endTime': 1650686399000,
     },
+    [Events['Public']]: {
+        'desc': 'Private Mint event',
+        'endTime': 1650686399000,
+    },
 }
 
 export const apiServer = 'https://sbmv.herokuapp.com'

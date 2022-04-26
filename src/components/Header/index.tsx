@@ -6,7 +6,7 @@ import { MenuButton } from 'theme'
 import styled from 'styled-components'
 import { useLocation } from 'react-router-dom'
 import { useActiveWeb3React } from 'hooks'
-import { timerInfo } from 'constants/map'
+import { Events, timerInfo } from 'constants/map'
 import { isMobile } from 'react-device-detect'
 import useShiberseLandAuction from 'hooks/useShiberseLandAuction'
 
@@ -100,22 +100,28 @@ export default function Header(): JSX.Element {
 
     const getRemainingTime = () => {
         const info = {} as any
-        let diffTime = (timerInfo[currentStage].endTime - new Date().getTime()) / 1000
+        if(Events['Bid'] || Events['Holder']) {
 
-        info.days = Math.floor( diffTime / (24 * 60 * 60) )
-        diffTime = diffTime % (24 * 60 * 60)
-        info.hours = Math.floor( diffTime / (60 * 60) )
-        diffTime = diffTime % (60 * 60)
-        info.minutes = Math.floor( diffTime / 60 )
-        diffTime = diffTime % (60)
-        info.seconds = Math.floor( diffTime )
+            let diffTime = (timerInfo[currentStage].endTime - new Date().getTime()) / 1000
 
-        if( diffTime < 0 ) {
-            info.days = 0
-            info.hours = 0
-            info.minutes = 0
-            info.seconds = 0
+            info.days = Math.floor( diffTime / (24 * 60 * 60) )
+            diffTime = diffTime % (24 * 60 * 60)
+            info.hours = Math.floor( diffTime / (60 * 60) )
+            diffTime = diffTime % (60 * 60)
+            info.minutes = Math.floor( diffTime / 60 )
+            diffTime = diffTime % (60)
+            info.seconds = Math.floor( diffTime )
+
+            if( diffTime < 0 ) {
+                info.days = 0
+                info.hours = 0
+                info.minutes = 0
+                info.seconds = 0
+            }
+        } else {
+
         }
+
 
         setCurrentTime(info)
     }
@@ -132,13 +138,13 @@ export default function Header(): JSX.Element {
                         </NavLink>
                     </div>
 
-                    { !isMobile ? (
-                        <div>
-                            <TimerWrapper>
-                                <b>{ timerInfo[currentStage].desc }: </b> {`${currentTime.days} day${ currentTime.days > 1 ? 's' : '' }, ${currentTime.hours}h, ${currentTime.minutes}m, ${currentTime.seconds}s`}
-                            </TimerWrapper>
-                        </div>
-                    ) : null }
+                    {/*{ !isMobile ? (*/}
+                    {/*    <div>*/}
+                    {/*        <TimerWrapper>*/}
+                    {/*            <b>{ timerInfo[currentStage].desc }: </b> {`${currentTime.days} day${ currentTime.days > 1 ? 's' : '' }, ${currentTime.hours}h, ${currentTime.minutes}m, ${currentTime.seconds}s`}*/}
+                    {/*        </TimerWrapper>*/}
+                    {/*    </div>*/}
+                    {/*) : null }*/}
 
 
                     <div className="flex items-center">

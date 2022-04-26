@@ -406,7 +406,7 @@ export const MapFilter = () => {
                 />
             </RangeWrapper>
 
-            <SearchByWrapper>
+            <SearchByWrapper className='borderNone'>
                 <SearchDesc>Search by zone</SearchDesc>
 
                 <div className='flex justify-between items-center'>

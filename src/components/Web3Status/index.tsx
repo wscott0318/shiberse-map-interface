@@ -179,19 +179,18 @@ function Web3StatusInner() {
                     <div className="flex justify-between items-center">
                         <div className="pr-2 text-white">{pending?.length} Pending</div> <Loader stroke="white" />
                     </div>
-                ) : CorrectNetwork ?
-                    (
+                ) : CorrectNetwork ? (
                     <div className='flex items-center'>
-                        { isOnMapPage() ? (
+                        {/* { isOnMapPage() ? (
                             <div className='text-white mr-4'>
-                                {/*<div className='network_label text-xs mb-1 text-center'>Bid Power</div>*/}
+                                <div className='network_label text-xs mb-1 text-center'>Bid Power</div>
                                 <div className='flex items-center justify-center'>
                                     <div className='text-base flex items-center'>
-                                        {/*{ currentBidCount } lands*/}
+                                        { currentBidCount } lands
                                     </div>
                                 </div>
                             </div>
-                        ): null }
+                        ): null } */}
 
                         <WalletBalance>
                             <div className='network_label text-xs mb-1 text-center'>{ chainLabel } Network</div>

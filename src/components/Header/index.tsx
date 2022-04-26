@@ -138,13 +138,13 @@ export default function Header(): JSX.Element {
                         </NavLink>
                     </div>
 
-                    {/*{ !isMobile ? (*/}
-                    {/*    <div>*/}
-                    {/*        <TimerWrapper>*/}
-                    {/*            <b>{ timerInfo[currentStage].desc }: </b> {`${currentTime.days} day${ currentTime.days > 1 ? 's' : '' }, ${currentTime.hours}h, ${currentTime.minutes}m, ${currentTime.seconds}s`}*/}
-                    {/*        </TimerWrapper>*/}
-                    {/*    </div>*/}
-                    {/*) : null }*/}
+                    {/* { !isMobile && currentStage !== Events['Public'] ? (
+                        <div>
+                            <TimerWrapper>
+                                <b>{ timerInfo[currentStage].desc }: </b> {`${currentTime.days} day${ currentTime.days > 1 ? 's' : '' }, ${currentTime.hours}h, ${currentTime.minutes}m, ${currentTime.seconds}s`}
+                            </TimerWrapper>
+                        </div>
+                    ) : null } */}
 
 
                     <div className="flex items-center">

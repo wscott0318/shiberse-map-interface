@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useActiveWeb3React, useShiberseLandRegistryContract } from '.'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { useShiberseLandAuctionContract, useShiberseLandAuctionV2Contract } from './useContract'
+import { useShiberseLandAuctionContract, useShiberseLandAuctionV2Contract, useShiberseLandAuctionV3Contract } from './useContract'
 import { alchemyApi, mainNetworkChainId, shiberseContractAddresses } from '../constants'
 import { useBlockNumber } from 'state/application/hooks'
 import { formatFromBalance, formatToBalance } from 'utils'
@@ -18,6 +18,7 @@ const useShiberseLandAuction = (props: any) => {
 
     const landContract = useShiberseLandAuctionContract(true)
     const landV2Contract = useShiberseLandAuctionV2Contract(true)
+    const landV3Contract = useShiberseLandAuctionV3Contract(true)
     const landRegistry  = useShiberseLandRegistryContract(true);
 
     const [currentStage, setCurrentStage] = useState(1)
@@ -106,7 +107,7 @@ const useShiberseLandAuction = (props: any) => {
                 setCurrentBidCount( Number(formatFromBalance( capacity, 0 )) )
             } catch(e) {
                 console.error( 'fetchCurrentBidCapaity: ', e)
-            }            
+            }
         }
     }, [account, landV2Contract])
 
@@ -357,6 +358,36 @@ const useShiberseLandAuction = (props: any) => {
         [addTransaction, landV2Contract]
     )
 
+    const mintPublicWithShib = useCallback(
+        async( input: any ) => {
+            if( input ) {
+                try {
+                    const tx = await landV3Contract?.mintPublicWithShib(input?.x, input?.y)
+                    addTransaction(tx, { summary: `Mint with Shib succeed!` })
+                    return tx                    
+                } catch(e) {
+                    return e
+                }
+            }
+        },
+        [addTransaction, landV3Contract]
+    )
+
+    const mintPublicWithShibMulti = useCallback(
+        async( input: any ) => {
+            if( input ) {
+                try {
+                    const tx = await landV3Contract?.mintPublicWithShibMulti(input?.xArray, input?.yArray, input?.priceArray)
+                    addTransaction(tx, { summary: `MultiMint with Shib succeed!` })
+                    return tx                    
+                } catch(e) {
+                    return e
+                }
+            }
+        },
+        [addTransaction, landV3Contract]
+    )
+
     const web3 = createAlchemyWeb3(
         alchemyApi[ mainNetworkChainId ].https
     );
@@ -414,7 +445,7 @@ const useShiberseLandAuction = (props: any) => {
     // const signMsg = await signMessage(library, account, 'Test Sign Message')
     // console.error(signMsg)
 
-    return { currentBidCount, currentStage, allPlacedBids, winningBids, isShiboshiHolder, bidOne, bidShiboshiZone, bidMulti, bidShiboshiZoneMulti, mintPrivate, mintPrivateShiboshiZone, mintPrivateMulti, mintPrivateShiboshiZoneMulti, mintPublic, mintPublicMulti, mintWinningBid, fetchLandPrice, loadingBidsInfo, fetchLandCurrentWinner, fetchLandCurrentOwner, landNFTs }
+    return { currentBidCount, currentStage, allPlacedBids, winningBids, isShiboshiHolder, bidOne, bidShiboshiZone, bidMulti, bidShiboshiZoneMulti, mintPrivate, mintPrivateShiboshiZone, mintPrivateMulti, mintPrivateShiboshiZoneMulti, mintPublic, mintPublicMulti, mintPublicWithShib, mintPublicWithShibMulti, mintWinningBid, fetchLandPrice, loadingBidsInfo, fetchLandCurrentWinner, fetchLandCurrentOwner, landNFTs }
 
 }
 

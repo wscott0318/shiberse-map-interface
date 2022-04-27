@@ -100,28 +100,23 @@ export default function Header(): JSX.Element {
 
     const getRemainingTime = () => {
         const info = {} as any
-        if(Events['Bid'] || Events['Holder']) {
 
-            let diffTime = (timerInfo[currentStage].endTime - new Date().getTime()) / 1000
+        let diffTime = (timerInfo[currentStage].endTime - new Date().getTime()) / 1000
 
-            info.days = Math.floor( diffTime / (24 * 60 * 60) )
-            diffTime = diffTime % (24 * 60 * 60)
-            info.hours = Math.floor( diffTime / (60 * 60) )
-            diffTime = diffTime % (60 * 60)
-            info.minutes = Math.floor( diffTime / 60 )
-            diffTime = diffTime % (60)
-            info.seconds = Math.floor( diffTime )
+        info.days = Math.floor( diffTime / (24 * 60 * 60) )
+        diffTime = diffTime % (24 * 60 * 60)
+        info.hours = Math.floor( diffTime / (60 * 60) )
+        diffTime = diffTime % (60 * 60)
+        info.minutes = Math.floor( diffTime / 60 )
+        diffTime = diffTime % (60)
+        info.seconds = Math.floor( diffTime )
 
-            if( diffTime < 0 ) {
-                info.days = 0
-                info.hours = 0
-                info.minutes = 0
-                info.seconds = 0
-            }
-        } else {
-
+        if( diffTime < 0 ) {
+            info.days = 0
+            info.hours = 0
+            info.minutes = 0
+            info.seconds = 0
         }
-
 
         setCurrentTime(info)
     }

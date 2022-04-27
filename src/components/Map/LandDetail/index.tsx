@@ -335,12 +335,21 @@ export const LandDetail = () => {
                                             Mint
                                         </NormalButton>
                                     ) : currentStage === Events['Public'] ? (
-                                        <NormalButton 
-                                            className={`px-10 font-bold ${ Number(currentLandInfo?.currentBidWinner) ? 'hidden' : '' }`}
-                                            onClick={toggleMintModal}
-                                        >
-                                            Mint
-                                        </NormalButton>
+                                        <>
+                                            <NormalButton 
+                                                className={`px-6 mb-2 font-bold ${ Number(currentLandInfo?.currentBidWinner) ? 'hidden' : '' }`}
+                                                onClick={toggleMintModal}
+                                            >
+                                                Mint With Eth
+                                            </NormalButton>
+
+                                            <NormalButton 
+                                                className={`px-5 font-bold ${ Number(currentLandInfo?.currentBidWinner) ? 'hidden' : '' }`}
+                                                onClick={toggleMintModal}
+                                            >
+                                                Mint With Shib
+                                            </NormalButton>
+                                        </>
                                     ) : null }
                                 </div>
                             ) : ''}

@@ -1103,15 +1103,16 @@ export const shiberseContractAddresses = {
         'MOCKSALE': '0x736f9284b43c058b84a5e32ab57942db6cc5c1aa',
         'LAND_AUCTION': '0xdafB27Db62c58f993d68Ee86C1efeE065b1a0789',
         'LAND_AUCTIONV2': '0xce03db1843351Cf098629E1aF3a18817a666Fae2',
+        'LAND_AUCTIONV3': '0x203ABC97FD2D78e4d9757866E71ce05e293F5A1E',
         'LAND_NFT': '0xd6b29c319d66910141bef992f4f5932f0d41fdf6'
     }
 }
 
 /* For development network : Rinkby */
-// export const mainNetworkChainId = ChainId.RINKEBY
+export const mainNetworkChainId = ChainId.RINKEBY
 
 /* For product network : Main net */
-export const mainNetworkChainId = ChainId.MAINNET
+// export const mainNetworkChainId = ChainId.MAINNET
 
 export const alchemyApi = {
     [ChainId.MAINNET]: {

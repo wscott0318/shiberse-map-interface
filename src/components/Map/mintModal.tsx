@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { NormalButton } from 'theme'
@@ -12,6 +12,8 @@ import { useWeb3React } from '@web3-react/core'
 import { useETHBalances } from 'state/wallet/hooks'
 import Loader from 'components/Loader'
 import { Events } from 'constants/map'
+import useShibaSwapTokenBalance from 'shiba-hooks/useShibaSwapTokenBalance'
+import { Dots } from 'pages/Pool/styleds'
 
 const UpperSection = styled.div`
     position: relative;
@@ -154,17 +156,22 @@ const ValidationText = styled.p`
 
 export const MintModal = (props: any) => {
     const { account } = useWeb3React()
+
     const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
     const currentBalance = parseFloat(userEthBalance?.toSignificant() as any)
 
     const [validateText, setValidateText] = useState(null) as any
     const [ pendingTx, setPendingTx ] = useState<string | null>(null)
+    const [requestedApproval, setRequestedApproval] = useState(false)
 
     const isPending = useIsTransactionPending(pendingTx ?? undefined)
 
     const isConfirmedTx = pendingTx !== null && !isPending
 
-    const { currentStage, mintPrivate, mintPrivateShiboshiZone, mintPublic } = useShiberseLandAuction({})
+    const { currentStage, mintPrivate, mintPrivateShiboshiZone, mintPublic, mintPublicWithShib, shibTokenAddress, shibAllowance, shibApprove } = useShiberseLandAuction({})
+
+    const shibaBalanceBigInt = useShibaSwapTokenBalance(shibTokenAddress ? shibTokenAddress : '')
+    const shibaBalanceValue = parseFloat(formatFromBalance(shibaBalanceBigInt?.value, shibaBalanceBigInt?.decimals))
 
     useEffect(() => {
         if( isConfirmedTx ) {
@@ -185,8 +192,13 @@ export const MintModal = (props: any) => {
 
     const handleMint = async () => {
 
-        if( Number(currentBalance) < Number(props.landInfo.price) ) {
+        if( props.mintType === 'eth' && Number(currentBalance) < Number(props.landInfo.price) ) {
             setValidateText('Insufficient ETH balance!')
+            return
+        }
+
+        if( props.mintType === 'shib' && Number(shibaBalanceValue) < Number(props.landInfo.shibPrice) ) {
+            setValidateText('Insufficient SHIB balance!')
             return
         }
 
@@ -200,7 +212,13 @@ export const MintModal = (props: any) => {
 
         let tx
         if( currentStage === Events['Public'] ) {
-            tx = await mintPublic(inputData)
+            if( props.mintType === 'eth' )
+                tx = await mintPublic(inputData)
+            else if( props.mintType === 'shib' ) {
+                inputData.amount = props.landInfo?.bigNumbShibPrice
+                tx = await mintPublicWithShib(inputData)
+            }
+
             if( tx.hash )
                 setPendingTx(tx.hash)
         } else {
@@ -221,6 +239,18 @@ export const MintModal = (props: any) => {
             }
         }
     }
+
+    const handleApprove = useCallback(async () => {
+        try {
+            const txHash = await shibApprove()
+            // user rejected tx or didn't go thru
+            if (!txHash || txHash.code !== 4001) {
+                setRequestedApproval(true)
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }, [shibApprove, setRequestedApproval])
 
     return (
         <Modal isOpen={ props.isOpen } onDismiss={ props.onDismiss } minHeight={false} maxHeight={80}>
@@ -245,16 +275,25 @@ export const MintModal = (props: any) => {
                             </MintWrapper>
                             
                             <BalanceWrapper className='flex justify-between w-full'>
-                                <span>{ shortenDouble( Number(props.landInfo.price), 2 ) } ETH</span>
-                                <span>Current Balance: { shortenDouble( Number(currentBalance), 2 ) } ETH</span>
+                                <span>{ props.mintType === 'eth' ? `${shortenDouble( Number(props.landInfo.price), 2 )} ETH` : `${shortenDouble( Number(props.landInfo.shibPrice), 2 )} SHIB` }</span>
+                                <span>Current Balance: { props.mintType === 'eth' ? `${shortenDouble( Number(currentBalance), 2 )} ETH` : `${shortenDouble( Number(shibaBalanceValue), 2 )} SHIB` }</span>
                             </BalanceWrapper>
 
                             <ValidationText className={`text-red ${!validateText ? 'hidden' : ''}`}>{ validateText }</ValidationText>
                         </ContentWrapper>
 
-                        <NormalButton className='px-12' onClick={ handleMint }>
-                            MINT
-                        </NormalButton>
+                        { props.mintType === 'shib' && (!shibAllowance || Number(shibAllowance) === 0) ? (
+                            <NormalButton className='px-12' 
+                                disabled={requestedApproval} 
+                                onClick={ handleApprove }
+                            >
+                                { !requestedApproval ? 'APPROVE' : <Dots>APPROVING</Dots> }
+                            </NormalButton>                            
+                        ) : (
+                            <NormalButton className='px-12' onClick={ handleMint }>
+                                MINT
+                            </NormalButton>
+                        ) }
                     </ConnectWalletWrapper>
                 ) : isPending ? (
                     <ConnectWalletWrapper className='relative flex flex-col items-center'>
@@ -289,6 +328,7 @@ export const MintMultiModal = (props: any) => {
 
     const [validateText, setValidateText] = useState(null) as any
     const [ pendingTx, setPendingTx ] = useState<string | null>(null)
+    const [requestedApproval, setRequestedApproval] = useState(false)
 
     const [formattedTotalPrice, setFormattedTotalPrice] = useState(0)
     const [totalPrice, setTotalPrice] = useState()
@@ -301,7 +341,10 @@ export const MintMultiModal = (props: any) => {
 
     const isConfirmedTx = pendingTx !== null && !isPending
 
-    const {mintPrivateMulti, mintPrivateShiboshiZoneMulti, fetchLandPrice, currentStage, mintPublicMulti} = useShiberseLandAuction({})
+    const {mintPrivateMulti, mintPrivateShiboshiZoneMulti, fetchLandPrice, currentStage, mintPublicMulti, mintPublicWithShibMulti, shibTokenAddress, fetchLandShibPrice, shibAllowance, shibApprove} = useShiberseLandAuction({})
+
+    const shibaBalanceBigInt = useShibaSwapTokenBalance(shibTokenAddress ? shibTokenAddress : '')
+    const shibaBalanceValue = parseFloat(formatFromBalance(shibaBalanceBigInt?.value, shibaBalanceBigInt?.decimals))
 
     useEffect(() => {
         if( isConfirmedTx ) {
@@ -322,8 +365,13 @@ export const MintMultiModal = (props: any) => {
 
     const handleMint = async () => {
 
-        if( Number(currentBalance) < Number(formattedTotalPrice) ) {
+        if( props.mintType === 'eth' && Number(currentBalance) < Number(formattedTotalPrice) ) {
             setValidateText('Insufficient ETH balance!')
+            return
+        }
+
+        if( props.mintType === 'shib' && Number(shibaBalanceValue) < Number(formattedTotalPrice) ) {
+            setValidateText('Insufficient SHIB balance!')
             return
         }
 
@@ -343,7 +391,10 @@ export const MintMultiModal = (props: any) => {
 
         let tx
         if( currentStage === Events['Public'] ) {
-            tx = await mintPublicMulti(inputData)
+            if( props.mintType === 'eth' )
+                tx = await mintPublicMulti(inputData)
+            else if( props.mintType === 'shib' )
+                tx = await mintPublicWithShibMulti(inputData)
             if( tx.hash )
                 setPendingTx(tx.hash)
         } else {
@@ -375,7 +426,11 @@ export const MintMultiModal = (props: any) => {
                 let totalPrice
                 const pArray = [] as any
                 for( let i = 0; i < props.selectedInfo.length; i++ ) {
-                    const price = await fetchLandPrice({ x: props.selectedInfo[i].coordinates.x, y: props.selectedInfo[i].coordinates.y })
+                    let price
+                    if( props.mintType === 'eth' )
+                        price = await fetchLandPrice({ x: props.selectedInfo[i].coordinates.x, y: props.selectedInfo[i].coordinates.y })
+                    else if( props.mintType === 'shib' )
+                        price = await fetchLandShibPrice({ x: props.selectedInfo[i].coordinates.x, y: props.selectedInfo[i].coordinates.y })
                     if( !totalPrice )
                         totalPrice = price
                     else
@@ -393,6 +448,18 @@ export const MintMultiModal = (props: any) => {
 
         getPrice()
     }, [props.isOpen]);
+
+    const handleApprove = useCallback(async () => {
+        try {
+            const txHash = await shibApprove()
+            // user rejected tx or didn't go thru
+            if (!txHash || txHash.code !== 4001) {
+                setRequestedApproval(true)
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }, [shibApprove, setRequestedApproval])
 
     return (
         <Modal isOpen={ props.isOpen } onDismiss={ props.onDismiss } minHeight={false} maxHeight={80}>
@@ -418,16 +485,25 @@ export const MintMultiModal = (props: any) => {
                             </div>
                             
                             <BalanceWrapper className='flex justify-between w-full'>
-                                <span>{ isLoading ? <Loader stroke="white" /> : `Total Price: ${shortenDouble( Number(formattedTotalPrice), 2 )} ETH` }</span>
-                                <span>Current Balance: { shortenDouble( Number(currentBalance), 2 ) } ETH</span>
+                                <span>{ isLoading ? <Loader stroke="white" /> : `Total Price: ${shortenDouble( Number(formattedTotalPrice), 2 )} ${ props.mintType === 'eth' ? 'ETH' : 'SHIB' }` }</span>
+                                <span>Current Balance: { props.mintType === 'eth' ? `${shortenDouble( Number(currentBalance), 2 )} ETH` : `${shortenDouble( Number(shibaBalanceValue), 2 )} SHIB` }</span>
                             </BalanceWrapper>
 
                             <ValidationText className={`text-red ${!validateText ? 'hidden' : ''}`}>{ validateText }</ValidationText>
                         </ContentWrapper>
 
-                        <NormalButton className='px-12' onClick={ handleMint }>
-                            MINT
-                        </NormalButton>
+                        { props.mintType === 'shib' && (!shibAllowance || Number(shibAllowance) === 0) ? (
+                            <NormalButton className='px-12' 
+                                disabled={requestedApproval} 
+                                onClick={ handleApprove }
+                            >
+                                { !requestedApproval ? 'APPROVE' : <Dots>APPROVING</Dots> }
+                            </NormalButton>
+                        ) : (
+                            <NormalButton className='px-12' onClick={ handleMint }>
+                                MINT
+                            </NormalButton>
+                        ) }
                     </ConnectWalletWrapper>
                 ) : isPending ? (
                     <ConnectWalletWrapper className='relative flex flex-col items-center'>

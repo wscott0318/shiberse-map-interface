@@ -1,15 +1,17 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useActiveWeb3React, useShiberseLandRegistryContract } from '.'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { useShiberseLandAuctionContract, useShiberseLandAuctionV2Contract, useShiberseLandAuctionV3Contract } from './useContract'
+import { useShibaSwapTokenContract, useShiberseLandAuctionContract, useShiberseLandAuctionV2Contract, useShiberseLandAuctionV3Contract } from './useContract'
 import { alchemyApi, mainNetworkChainId, shiberseContractAddresses } from '../constants'
 import { useBlockNumber } from 'state/application/hooks'
-import { formatFromBalance, formatToBalance } from 'utils'
+import { formatFromBalance } from 'utils'
 import axios from 'axios'
 import { apiServer } from 'constants/map'
 import { ethers } from 'ethers'
-import { getFixedValue } from 'utils/mapHelper'
 import { createAlchemyWeb3 } from "@alch/alchemy-web3";
+import { Fraction } from '../entities'
+
+const { BigNumber } = ethers
 
 const useShiberseLandAuction = (props: any) => {
     const { account, chainId } = useActiveWeb3React()
@@ -20,6 +22,7 @@ const useShiberseLandAuction = (props: any) => {
     const landV2Contract = useShiberseLandAuctionV2Contract(true)
     const landV3Contract = useShiberseLandAuctionV3Contract(true)
     const landRegistry  = useShiberseLandRegistryContract(true);
+    const shibTokenContract = useShibaSwapTokenContract( shiberseContractAddresses[mainNetworkChainId]['SHIB_TOKEN'] ,true)
 
     const [currentStage, setCurrentStage] = useState(1)
     const [currentBidCount, setCurrentBidCount] = useState(0)
@@ -29,13 +32,64 @@ const useShiberseLandAuction = (props: any) => {
     const [loadingBidsInfo, setLoadingBidsInfo] = useState(true)
     const [landNFTs, setLandNFTs] = useState([]) as any
 
+    const [shibTokenAddress, setShibTokenAddress] = useState() as any
+
+    //allowance state variable
+    const [shibAllowance, setShibAllowance] = useState('0')
+
+    const fetchShibAllowance = useCallback(async () => {
+        if (account) {
+            try {
+                const allowance = await shibTokenContract?.allowance(account, landV3Contract?.address)
+                const formatted = Fraction.from(BigNumber.from(allowance), BigNumber.from(10).pow(18)).toString()
+                setShibAllowance(formatted)
+            } catch(e) {
+                console.error('fetchShibAllowance occured error: ', e)
+                setShibAllowance('0')
+            }
+        }
+    }, [account, landV3Contract, shibTokenContract])
+
+    useEffect(() => {
+        
+        if (account && shibTokenContract && landV3Contract && chainId === mainNetworkChainId) {
+            fetchShibAllowance()
+        }
+        const refreshInterval = setInterval(fetchShibAllowance, 10000)
+        return () => clearInterval(refreshInterval)
+
+
+    }, [account, landV3Contract, fetchShibAllowance, shibTokenContract])
+
+    const shibApprove = useCallback(async () => {
+        try {
+            const tx = await shibTokenContract?.approve(landV3Contract?.address, ethers.constants.MaxUint256.toString())
+            return addTransaction(tx, { summary: 'Approve' })
+        } catch (e) {
+            return e
+        }
+    }, [addTransaction, landV3Contract, shibTokenContract])
+
+    const fetchShibTokenAddress = useCallback(async () => {
+        try {
+            const address = await landV3Contract?.SHIB()
+            setShibTokenAddress(address)
+        } catch(e) {
+            console.error('fetchShibTokenAddress error occured', e)
+        }
+    }, [landV3Contract])
+
+    useEffect(() => {
+        if (account && landV3Contract && chainId === mainNetworkChainId) {
+            fetchShibTokenAddress()
+        }
+    }, [account, fetchShibTokenAddress, landV3Contract])
+
     // fetch current event stage
     const fetchCurrentStage = useCallback(async () => {
         try {
             const current = await landV2Contract?.currentStage()
 
-            // setCurrentStage(2)
-            
             setCurrentStage(Number(current))
         } catch(e) {
             console.error('fetch current stage error occured', e)
@@ -58,6 +112,15 @@ const useShiberseLandAuction = (props: any) => {
             }
         }
     }, [account, landV2Contract])
+
+    const fetchLandShibPrice = useCallback(async ({ x: posX, y: posY }) => {
+        if(account && landV3Contract && chainId === mainNetworkChainId) {
+            if( (posX === 0 || posX) && (posY === 0 || posY) ) {
+                const price = await landV3Contract?.getReservePriceShib( posX, posY )
+                return price
+            }
+        }
+    }, [account, landV3Contract])
 
     const fetchLandCurrentWinner = useCallback(async({ x: posX, y: posY }) => {
         if(account && landContract && chainId === mainNetworkChainId) {
@@ -445,7 +508,7 @@ const useShiberseLandAuction = (props: any) => {
     // const signMsg = await signMessage(library, account, 'Test Sign Message')
     // console.error(signMsg)
 
-    return { currentBidCount, currentStage, allPlacedBids, winningBids, isShiboshiHolder, bidOne, bidShiboshiZone, bidMulti, bidShiboshiZoneMulti, mintPrivate, mintPrivateShiboshiZone, mintPrivateMulti, mintPrivateShiboshiZoneMulti, mintPublic, mintPublicMulti, mintPublicWithShib, mintPublicWithShibMulti, mintWinningBid, fetchLandPrice, loadingBidsInfo, fetchLandCurrentWinner, fetchLandCurrentOwner, landNFTs }
+    return { currentBidCount, currentStage, allPlacedBids, winningBids, isShiboshiHolder, bidOne, bidShiboshiZone, bidMulti, bidShiboshiZoneMulti, mintPrivate, mintPrivateShiboshiZone, mintPrivateMulti, mintPrivateShiboshiZoneMulti, mintPublic, mintPublicMulti, mintPublicWithShib, mintPublicWithShibMulti, mintWinningBid, fetchLandPrice, loadingBidsInfo, fetchLandCurrentWinner, fetchLandCurrentOwner, landNFTs, shibTokenAddress, fetchLandShibPrice, shibAllowance, shibApprove }
 
 }
 

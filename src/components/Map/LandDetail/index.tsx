@@ -131,7 +131,8 @@ export const LandDetail = () => {
     const [ showBidModal, setShowBidModal ] = useState(false)
     const [ showMintModal, setShowMintModal ] = useState(false)
     const [ currentLandInfo, setCurrentLandInfo ] = useState({}) as any
-    
+    const [ mintType, setMintType ] = useState('eth')
+
     const { account } = useWeb3React()
 
     const { stakedBalance: leashStakedBalance } = useShiberseStakeToken({ tokenType: 'leash' })
@@ -153,7 +154,7 @@ export const LandDetail = () => {
 
     const [isLoading, setIsLoading] = useState(true)
 
-    const { currentStage, currentBidCount, isShiboshiHolder, fetchLandPrice, fetchLandCurrentWinner, fetchLandCurrentOwner } = useShiberseLandAuction({})
+    const { currentStage, currentBidCount, isShiboshiHolder, fetchLandPrice, fetchLandCurrentWinner, fetchLandCurrentOwner, fetchLandShibPrice } = useShiberseLandAuction({})
 
     const canShowButton = useCallback(() => {
         if( currentStage === Events['Public'] )
@@ -199,13 +200,16 @@ export const LandDetail = () => {
                     const price = await fetchLandPrice({ x: selected.coordinates.x, y: selected.coordinates.y })
                     newInfo.price = Number( formatFromBalance(price, 18) )
                     newInfo.bigNumPrice = price
+                    
+                    const shibPrice = await fetchLandShibPrice({ x: selected.coordinates.x, y: selected.coordinates.y })
+                    newInfo.shibPrice = Number( formatFromBalance(shibPrice, 18) )
+                    newInfo.bigNumbShibPrice = shibPrice
 
                     const currentBidWinner = await fetchLandCurrentWinner({ x: selected.coordinates.x, y: selected.coordinates.y })
                     const currentBidOwner = await fetchLandCurrentOwner({ landId : selected.id.toString()})
                     newInfo.currentBidWinner = currentBidOwner || currentBidWinner
                     newInfo.currentBidOwner = currentBidOwner
                 }
-        console.error('newInfo', newInfo)
                 setCurrentLandInfo( newInfo )
             }
             setIsLoading(false)
@@ -227,7 +231,7 @@ export const LandDetail = () => {
 
 
     const isMultiplePossible = () => {
-        if( selectedInfo.findIndex((item: any) => !item.isShiboshiZone) !== -1 && selectedInfo.length > currentBidCount )
+        if( currentStage !== Events['Public'] && selectedInfo.findIndex((item: any) => !item.isShiboshiZone) !== -1 && selectedInfo.length > currentBidCount )
             return false
 
         if( selectedInfo.findIndex((item: any) => item.isShiboshiZone) !== -1 && selectedInfo.findIndex((item: any) => !item.isShiboshiZone) !== -1 )
@@ -338,14 +342,14 @@ export const LandDetail = () => {
                                         <>
                                             <NormalButton 
                                                 className={`px-6 mb-2 font-bold ${ Number(currentLandInfo?.currentBidWinner) ? 'hidden' : '' }`}
-                                                onClick={toggleMintModal}
+                                                onClick={() => { toggleMintModal(); setMintType('eth') }}
                                             >
                                                 Mint With Eth
                                             </NormalButton>
 
                                             <NormalButton 
                                                 className={`px-5 font-bold ${ Number(currentLandInfo?.currentBidWinner) ? 'hidden' : '' }`}
-                                                onClick={toggleMintModal}
+                                                onClick={() => { toggleMintModal(); setMintType('shib') }}
                                             >
                                                 Mint With Shib
                                             </NormalButton>
@@ -366,6 +370,7 @@ export const LandDetail = () => {
                                 onDismiss={ toggleMintModal }
                                 landInfo={ currentLandInfo }
                                 handleCloseAction={ handleClose }
+                                mintType={ mintType }
                             />
                         </>
                     )}
@@ -392,11 +397,19 @@ export const LandDetail = () => {
                     ) : (
                         <>
                             <NormalButton 
-                                className={`px-10 font-bold`}
+                                className={`px-3 m-0 mb-2 font-bold`}
                                 disabled={ !isMultiplePossible() ? true : false }
-                                onClick={toggleMintModal}
+                                onClick={() => { toggleMintModal(); setMintType('eth') }}
                             >
-                                Submit Multimint({ selectedInfo.length })
+                                Submit Multimint With Eth({ selectedInfo.length })
+                            </NormalButton>
+
+                            <NormalButton 
+                                className={`px-3 m-0 font-bold`}
+                                disabled={ !isMultiplePossible() ? true : false }
+                                onClick={() => { toggleMintModal(); setMintType('shib') }}
+                            >
+                                Submit Multimint With Shib({ selectedInfo.length })
                             </NormalButton>
 
                             <MintMultiModal 
@@ -404,6 +417,7 @@ export const LandDetail = () => {
                                 onDismiss={ toggleMintModal }
                                 selectedInfo={ selectedInfo }
                                 handleCloseAction={ handleClose }
+                                mintType={ mintType }
                             />
                         </>
                     ) }

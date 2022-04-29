@@ -189,27 +189,26 @@ export default class Map extends Component<MapViewProps> {
                     spritesArray[i].x = Math.ceil((mapLandInfo.coordinates.x - this.props.mapCenterPos.x) * this.props.mapZoomLevel + this.app.screen.width / 2)
                     spritesArray[i].y = Math.ceil((-mapLandInfo.coordinates.y - this.props.mapCenterPos.y) * this.props.mapZoomLevel + this.app.screen.height / 2)
 
+                    spritesArray[i].tint = TileColors[ mapLandInfo.tierName as keyof typeof TileColors ]
+
+                    if( !this.isApplyFilter( mapLandInfo ) )
+                        spritesArray[i].tint = DarkTileColors[ mapLandInfo.tierName as keyof typeof DarkTileColors ]
+                    else
+                        hasFilterLand = true
+
+                    if( mapLandInfo.isRoad && mapLandInfo.primaryRoadName !== '' ) {
+                        spritesArray[i].width = Math.ceil(this.props.mapZoomLevel * (1))
+                        spritesArray[i].height = Math.ceil(this.props.mapZoomLevel * (1))
+                        if( this.isApplyFilter( mapLandInfo ) )
+                            spritesArray[i].tint = RoadColors[ mapLandInfo.primaryRoadName as keyof typeof RoadColors ]
+                        else
+                            spritesArray[i].tint = DarkRoadColors[ mapLandInfo.primaryRoadName as keyof typeof DarkRoadColors ]
+                    }
+
                     const selectIndex = this.props.selectedInfo.findIndex((item: any) => mapLandInfo.coordinates.x === item?.coordinates?.x && mapLandInfo.coordinates.y === item?.coordinates?.y)
 
                     if( selectIndex !== -1 )
                         spritesArray[i].tint = 0x49ad4e
-                    else {
-                        spritesArray[i].tint = TileColors[ mapLandInfo.tierName as keyof typeof TileColors ]
-
-                        if( !this.isApplyFilter( mapLandInfo ) )
-                            spritesArray[i].tint = DarkTileColors[ mapLandInfo.tierName as keyof typeof DarkTileColors ]
-                        else
-                            hasFilterLand = true
-
-                        if( mapLandInfo.isRoad && mapLandInfo.primaryRoadName !== '' ) {
-                            spritesArray[i].width = Math.ceil(this.props.mapZoomLevel * (1))
-                            spritesArray[i].height = Math.ceil(this.props.mapZoomLevel * (1))
-                            if( this.isApplyFilter( mapLandInfo ) )
-                                spritesArray[i].tint = RoadColors[ mapLandInfo.primaryRoadName as keyof typeof RoadColors ]
-                            else
-                                spritesArray[i].tint = DarkRoadColors[ mapLandInfo.primaryRoadName as keyof typeof DarkRoadColors ]
-                        }
-                    }
                 }
 
                 if( (hasFilterLand && this.props.clearFilter) || (!hasFilterLand && !this.props.clearFilter) )

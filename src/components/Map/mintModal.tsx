@@ -414,6 +414,8 @@ export const MintMultiModal = (props: any) => {
                 setValidateText('Minimum bid amount not met, try some higher amount')
             } else if( JSON.stringify(tx.message).includes('ERR_CANNOT_OUTBID_YOURSELF') ) {
                 setValidateText('You cannot outbid yourself')
+            } else if( JSON.stringify(tx.message).includes('ERC721: token already minted') ) {
+                setValidateText('You cannot mint already minted land')
             }
         }
     }

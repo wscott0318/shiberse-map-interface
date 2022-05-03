@@ -312,7 +312,7 @@ export const LandDetail = () => {
                                 <div className='text-center'>
                                     <a href={`https://opensea.io/assets/0xEfAEd650f1a94801806BB110019d9B0dc79531A8/${currentLandInfo.id}`} target='_blank' rel="noreferrer">
                                         <NormalButton
-                                            className={`px-10 font-bold`}
+                                            className={`px-6 m-0 font-bold`}
                                         >
                                             Bid on Opensea
                                         </NormalButton>

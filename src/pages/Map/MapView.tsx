@@ -277,11 +277,8 @@ export default class Map extends Component<MapViewProps> {
         if( searchOptions.openforbid && Number(priceData.bidCount) > 0 )
             return false
         if(
-            // (searchOptions.openforminting && Number(priceData.mintCount) > 0) ||
             (searchOptions.openforminting && Number(priceData.bidCount) > 0) ||
             (searchOptions.openforminting && priceData.minted)
-            // (searchOptions.openforminting && priceData.owner && priceData.owner.length > 0)
-            // (searchOptions.openforminting && priceData.currentBidWinner && priceData.currentBidWinner.length > 0)
         )
             return false
 

@@ -195,7 +195,7 @@ const useShiberseLandAuction = (props: any) => {
 
             setAllPlacedBids( result )
 
-            const winning = await landV2Contract?.bidInfoOf( account )
+            const winning = await landV3Contract?.bidInfoOf( account )
             const win_result = winning[0].map((item: any, index: number) => [ item, winning[1][index] ])
 
             for( let i = 0; i < win_result.length; i++ ) {
@@ -209,7 +209,7 @@ const useShiberseLandAuction = (props: any) => {
         } catch(e) {
             console.error('fetchbidsInfo: ', e)
         }
-    }, [account, landV2Contract])
+    }, [account, landV2Contract, landV3Contract])
 
     useEffect(() => {
         if( account && landContract && chainId === mainNetworkChainId ) {
@@ -481,9 +481,6 @@ const useShiberseLandAuction = (props: any) => {
 
             for( let i = 0; i < contractNFTs.length; i++ ) {
                 const newValue = { ...contractNFTs[i] } as any
-                // const tokenId = parseInt( contractNFTs[i].id.tokenId )
-                // newValue.metaInfo = await fetch( metadataURL + tokenId )
-                // newValue.metaInfo = await newValue.metaInfo.json()
                 resultArray.push(newValue)
             }
 

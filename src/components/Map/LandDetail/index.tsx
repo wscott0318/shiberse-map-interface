@@ -200,15 +200,17 @@ export const LandDetail = () => {
                     const price = await fetchLandPrice({ x: selected.coordinates.x, y: selected.coordinates.y })
                     newInfo.price = Number( formatFromBalance(price, 18) )
                     newInfo.bigNumPrice = price
-                    
-                    const shibPrice = await fetchLandShibPrice({ x: selected.coordinates.x, y: selected.coordinates.y })
-                    newInfo.shibPrice = Number( formatFromBalance(shibPrice, 18) )
-                    newInfo.bigNumbShibPrice = shibPrice
 
                     const currentBidWinner = await fetchLandCurrentWinner({ x: selected.coordinates.x, y: selected.coordinates.y })
                     const currentBidOwner = await fetchLandCurrentOwner({ landId : selected.id.toString()})
                     newInfo.currentBidWinner = currentBidOwner || currentBidWinner
                     newInfo.currentBidOwner = currentBidOwner
+
+                    if( !currentBidWinner || !Number(currentBidWinner) ) {
+                        const shibPrice = await fetchLandShibPrice({ x: selected.coordinates.x, y: selected.coordinates.y })
+                        newInfo.shibPrice = Number( formatFromBalance(shibPrice, 18) )
+                        newInfo.bigNumbShibPrice = shibPrice
+                    }
                 }
                 setCurrentLandInfo( newInfo )
             }

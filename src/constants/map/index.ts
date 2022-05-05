@@ -117,9 +117,9 @@ export const timerInfo = {
     },
 }
 
-// export const apiServer = 'https://sbmv.herokuapp.com'
+export const apiServer = 'https://sbmv.herokuapp.com'
 
-export const apiServer = 'https://blabla-dev.herokuapp.com'
+// export const apiServer = 'https://blabla-dev.herokuapp.com'
 
 export const mapLandPriceDataUrl = apiServer + '/yards?$select[]=price&$select[]=id&$select[]=bidCount&$select[]=minted'
 

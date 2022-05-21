@@ -17,6 +17,7 @@ import BidModal from 'components/Map/bidModal'
 import useLandMap from 'hooks/useLandMap'
 import { getLandImage, getLandName } from 'utils/mapHelper'
 import ShiberseLoader from 'components/Loader/loader'
+import { useIsTransactionPending } from 'state/transactions/hooks'
 
 const ProfileWrapper = styled.div`
     position: relative;
@@ -237,10 +238,10 @@ export const Profile = () => {
         return index !== -1 ? true : false
     })
 
-    const { stakedBalance: leashStakedBalance, unlockAt: leashUnlockAt } = useShiberseStakeToken({ tokenType: 'leash' })
-    const { stakedBalance: shiboshiStakedBalance, unlockAt: shiboshiUnlockAt } = useShiberseStakeNFT({ tokenType: 'shiboshi' })
+    const { stakedBalance: leashStakedBalance, unlockAt: leashUnlockAt, unlock: unLockLeash } = useShiberseStakeToken({ tokenType: 'leash' })
+    const { stakedBalance: shiboshiStakedBalance, unlockAt: shiboshiUnlockAt, unlock: unLockShiboshi } = useShiberseStakeNFT({ tokenType: 'shiboshi' })
 
-    const getRemainingDays = ( timestamp: any ) => (Number( timestamp )*1000 - (new Date().getTime()) < 0 ? 0 : Math.ceil( Number( timestamp )*1000 - (new Date().getTime()) / 60 / 60 / 24))
+    const getRemainingDays = ( timestamp: any ) => ( Number( timestamp ) * 1000 - new Date().getTime()) < 0 ? 0 : Math.ceil( (Number( timestamp ) * 1000 - new Date().getTime()) / 1000 / 60 / 60 / 24)
 
     const toggleBidModal = () => setShowBidModal(prev => !prev)
 
@@ -262,6 +263,29 @@ export const Profile = () => {
     }
 
     const isBidEvent = currentStage === Events['Bid']
+
+    const [ pendingUnlockLeashTx, setPendingUnlockLeashTx ] = useState<string | null>(null)
+    const [ pendingUnlockShiboshiTx, setPendingUnlockShiboshiTx ] = useState<string | null>(null)
+
+    const isPendingUnlockLeash = useIsTransactionPending(pendingUnlockLeashTx ?? undefined)
+    const isPendingUnlockShiboshi = useIsTransactionPending(pendingUnlockShiboshiTx ?? undefined)
+
+    const isConfirmedUnlockLeashTx = pendingUnlockLeashTx !== null && !isPendingUnlockLeash
+    const isConfirmedUnlockShiboshiTx = pendingUnlockShiboshiTx !== null && !isPendingUnlockShiboshi
+
+    const handleUnLockLeash = async () => {
+        const tx = await unLockLeash()
+
+        if( tx.hash )
+            setPendingUnlockLeashTx(tx.hash)
+    }
+
+    const handleUnLockShiboshi = async () => {
+        const tx = await unLockShiboshi()
+
+        if( tx.hash )
+            setPendingUnlockShiboshiTx(tx.hash)
+    }
 
     return (
         <ProfileWrapper className='container'>
@@ -562,24 +586,26 @@ export const Profile = () => {
                         </LockRewards> */}
 
                         <MintButton 
-                            disabled={ true || Number(leashStakedBalance) === 0 || (new Date().getTime()) <= Number( leashUnlockAt ) ? true : false }
+                            onClick={ handleUnLockLeash }
+                            disabled={ ((!isConfirmedUnlockLeashTx && pendingUnlockLeashTx) || Number(leashStakedBalance) === 0 || ( new Date().getTime() <= Number(leashUnlockAt) * 1000 )) ? true : false }
                             className='mb-4'>
-                                UNLOCK
+                                { (isConfirmedUnlockLeashTx || !pendingUnlockLeashTx) ? 'UNLOCK' : <ShiberseLoader size='30px' /> }
                         </MintButton>
 
-                        {/* <OpenType>Your locking will end in { getRemainingDays( leashUnlockAt ) } days</OpenType> */}
+                        <OpenType>Your locking will end in { getRemainingDays( leashUnlockAt ) } days</OpenType>
                     </ItemWrapper>
 
                     <ItemWrapper className='flex flex-col justify-between'>
                         <TotalLocked className='mb-4'>Total Shiboshis locked: { shiboshiStakedBalance }</TotalLocked>
                         <div>
                             <MintButton 
-                                disabled={ true || Number(shiboshiStakedBalance) === 0 || (new Date().getTime()) <= Number( shiboshiUnlockAt ) ? true : false }
+                                onClick={ handleUnLockShiboshi }
+                                disabled={ ((!isConfirmedUnlockShiboshiTx && pendingUnlockShiboshiTx) || Number(shiboshiStakedBalance) === 0 || ( new Date().getTime() <= Number(shiboshiUnlockAt) * 1000 )) ? true : false }
                                 className='mb-4'>
-                                    UNLOCK
+                                    { (isConfirmedUnlockShiboshiTx || !pendingUnlockShiboshiTx) ? 'UNLOCK' : <ShiberseLoader size='30px' /> }
                             </MintButton>
 
-                            {/* <OpenType>Your locking will end in { getRemainingDays( shiboshiUnlockAt ) } days</OpenType> */}
+                            <OpenType>Your locking will end in { getRemainingDays( shiboshiUnlockAt ) } days</OpenType>
                         </div>
                     </ItemWrapper>
                 </div>

@@ -65,6 +65,16 @@ const useShiberseStakeToken = (props:any) => {
         }
     }, [addTransaction, stakeContract, tokenContract])
 
+    const unlock = useCallback(async() => {
+        try {
+            const tx = await stakeContract?.unlock()
+            return addTransaction(tx, { summary: 'Unlock Succeed' })
+        } catch(e) {
+            console.error('Unlock error: ', e)
+            return e
+        }
+    }, [addTransaction, stakeContract])
+
     const stake = useCallback(
         // todo: this should be updated with BigNumber as opposed to string
         async (input: any | undefined) => {
@@ -98,6 +108,7 @@ const useShiberseStakeToken = (props:any) => {
             const unlockTime = await stakeContract?.unlockAt( account )
             setUnlockAt( unlockTime )
         } catch(e) {
+            console.error(e)
             return e
         }
     }, [account, chainId, stakeContract, currentBlockNumber])
@@ -129,7 +140,7 @@ const useShiberseStakeToken = (props:any) => {
             fetchStakeLimitInfo()
     }, [account, chainId, fetchStakeLimitInfo])
 
-    return {allowance, approve, stake, stakedBalance, lockDays, stakeLimitInfo, unlockAt}
+    return {allowance, approve, stake, stakedBalance, lockDays, stakeLimitInfo, unlockAt, unlock}
 
 }
 

@@ -65,6 +65,16 @@ const useShiberseStakeNFT = (props:any) => {
         }
     }, [addTransaction, stakeContract, tokenContract])
 
+    const unlock = useCallback(async() => {
+        try {
+            const tx = await stakeContract?.unlock()
+            return addTransaction(tx, { summary: 'Unlock Succeed' })
+        } catch(e) {
+            console.error('Unlock error: ', e)
+            return e
+        }
+    }, [addTransaction, stakeContract])
+
     const stake = useCallback(
         // todo: this should be updated with BigNumber as opposed to string
         async (input: any | undefined) => {
@@ -168,7 +178,7 @@ const useShiberseStakeNFT = (props:any) => {
             fetchStakeLimitInfo()
     }, [ account, chainId, fetchStakeLimitInfo ])
 
-    return {isApproved, approve, stake, stakedBalance, fetchWalletNFT, lockDays, stakeLimitInfo, unlockAt}
+    return {isApproved, approve, stake, stakedBalance, fetchWalletNFT, lockDays, stakeLimitInfo, unlockAt, unlock}
 }
 
 export default useShiberseStakeNFT
